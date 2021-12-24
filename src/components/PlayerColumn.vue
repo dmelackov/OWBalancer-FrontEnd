@@ -63,11 +63,11 @@ export default {
     },
     methods: {
         async createPlayer() {
-            await sendPOST("/api/players/createPlayer", {
+            await axios.post("/api/players/createPlayer", {
                 Username: this.createPlayerNickname,
             });
             this.createPlayerNickname = "";
-            this.updatePlayers();
+            this.eventBus.$emit("updatePlayers");
         },
         updatePlayers() {
             axios
@@ -90,13 +90,11 @@ export default {
         },
     },
     async created() {
+        this.eventBus.$on("updatePlayers", () => this.updatePlayers())
         this.updatePlayers();
     },
 };
 
-async function sendPOST(url, params) {
-    await axios.post(url, params);
-}
 </script>
 
 <style scoped>

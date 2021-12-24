@@ -12,7 +12,7 @@
             @mouseenter="active = true"
             @mouseleave="active = false"
         >
-            <p class="player_username">{{ player.Username }}</p>
+            <p class="player_username">{{ player.Player.Username }}</p>
             <div class="sr_lobby" v-if="!active">
                 <div class="sr_lobby_icon" v-if="!player.isFlex">
                     <img
@@ -20,7 +20,7 @@
                         alt=""
                         width="15"
                         :class="{ role_icon: true, innactive: !role.active }"
-                        v-for="(role, index) in player.RolesPriority"
+                        v-for="(role, index) in player.Roles"
                         :key="index"
                     />
                 </div>
@@ -31,43 +31,25 @@
                     width="16"
                 />
             </div>
-            <p class="author-right">{{ player.Author.username }}</p>
+            <p class="author-right">{{ player.Creator.username }}</p>
             <p class="X" v-if="active" @click="deleteFromLobby">✖</p>
         </div>
         <div class="lobby_menu" :style="styleObj">
             <hr />
             <div class="sr lobby_sr">
-                <template v-for="(role, index) in player.RolesPriority">
-                    <div :key="index">
-                        <div class="role">
-                            <img
-                                :src="'/static/img/' + role.role + '_icon.png'"
-                                alt=""
-                                width="30"
-                                :class="{
-                                    role_icon: true,
-                                    innactive: !role.active,
-                                }"
-                                @click="toggleRole(role.role)"
-                            />
-                            <sr-input
-                                v-if="player.editable"
-                                :role="role"
-                                :CustomID="player.CustomID"
-                            />
-                            <p v-if="!player.editable">{{ role.sr }}</p>
-                        </div>
-                        <p
-                            :class="{
-                                switch_button: true,
-                                opacity_disable: !isPerm('change_player_roles'),
-                            }"
-                            v-if="index != 2"
-                            @click="swapRoles(index)"
-                        >
-                            ⇆
-                        </p>
-                    </div>
+                <template v-for="(role, index) in player.Roles">
+                    <RoleComponent :role="role" :custom="player" :key="index" />
+                    <p
+                        :key="index"
+                        :class="{
+                            switch_button: true,
+                            opacity_disable: !isPerm('change_player_roles'),
+                        }"
+                        v-if="index != 2"
+                        @click="swapRoles(index)"
+                    >
+                        ⇆
+                    </p>
                 </template>
                 <img
                     src="/static/img/flex.svg"
@@ -88,9 +70,13 @@
 <script>
 import axios from "axios";
 import app from "../pages/index_page/App.vue";
+import RoleComponent from "./RoleComponent.vue";
+
 export default {
     props: ["player", "opened"],
-
+    components: {
+        RoleComponent,
+    },
     data() {
         return {
             menuOpened: false,
@@ -118,30 +104,15 @@ export default {
         },
         async deleteFromLobby() {
             await sendPOST("/api/lobby/deleteFromLobby", {
-                id: this.player.CustomID,
+                id: this.player.ID,
             });
-            app.updateLobby();
-        },
-        async toggleRole(ARGrole) {
-            let newRoleStr = "";
-            let roleIndex;
-            for (roleIndex in this.player.RolesPriority) {
-                let role = this.player.RolesPriority[roleIndex];
-                let tempActive = role.active;
-                if (role.role == ARGrole) tempActive = !tempActive;
-                if (tempActive) newRoleStr += role.role;
-            }
-            await sendPOST("/api/players/setRoles", {
-                id: this.player.CustomID,
-                roles: newRoleStr,
-            });
-            app.updateLobby();
+            this.eventBus.$emit("updateLobby")
         },
         async swapRoles(index) {
             let newRoleStr = "";
             let roleIndex;
-            for (roleIndex in this.player.RolesPriority) {
-                let role = this.player.RolesPriority[roleIndex];
+            for (roleIndex in this.player.Roles) {
+                let role = this.player.Roles[roleIndex];
                 if (role.active) newRoleStr += role.role;
             }
             let tempMass = newRoleStr.split("");
@@ -149,18 +120,18 @@ export default {
             tempMass[index] = tempMass[index + 1];
             tempMass[index + 1] = tempChar;
             await sendPOST("/api/players/setRoles", {
-                id: this.player.CustomID,
+                id: this.player.ID,
                 roles: tempMass.join(""),
             });
-            app.updateLobby();
+            this.eventBus.$emit("updateLobby")
         },
         async toggleFlex() {
             await sendPOST("/api/players/setFlex", {
                 id: this.player.CustomID,
                 status: !this.player.isFlex,
             });
-            app.updateLobby();
-        }
+            this.eventBus.$emit("updateLobby")
+        },
     },
     created() {
         this.menuOpened = this.opened;
@@ -186,7 +157,7 @@ async function sendPOST(url, params) {
     display: flex;
 }
 
-.sr_lobby_icon>.role_icon {
+.sr_lobby_icon > .role_icon {
     margin-left: 4px;
 }
 
@@ -199,17 +170,12 @@ async function sendPOST(url, params) {
     flex-direction: column;
     flex-wrap: wrap;
     align-content: center;
-    align-items: center
+    align-items: center;
 }
 
-.role>p {
+.role > p {
     text-align: center;
     margin: 0;
-}
-
-.player_username {
-    font-size: 18px;
-    margin-top: 0;
 }
 
 .innactive {
@@ -225,7 +191,6 @@ async function sendPOST(url, params) {
     padding: 5px;
 }
 
-
 .author-right {
     position: absolute;
     color: #3b4b5f;
@@ -234,5 +199,30 @@ async function sendPOST(url, params) {
     width: max-content;
     margin: 0;
     font-size: 12px;
+}
+
+.sr {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.switch_button {
+    font-size: 30px;
+    margin: 0;
+    cursor: pointer;
+}
+
+.lobby_sr_input {
+    width: 35px;
+    background-color: #171e27;
+    color: white;
+    border: none;
+    text-align: center;
+    font-size: 16px;
+    -moz-appearance: textfield;
+    appearance: none;
+}
+.role_with_swap {
+    display: flex;
 }
 </style>

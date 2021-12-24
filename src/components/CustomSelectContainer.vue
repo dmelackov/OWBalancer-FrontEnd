@@ -40,21 +40,21 @@ export default {
     },
     methods: {
         async createCustom() {
-            await axios.post("/api/customs/createCustom", { "id": this.target.player.id });
+            await axios.post("/api/customs/createCustom", { "id": this.target.player.ID });
                 this.close();
                 this.eventBus.$emit("updateLobby")
         },
         async open(target) {
             this.target = target;
             const res = await axios.get(
-                "/api/customs/getCustoms/" + target.player.id
+                "/api/customs/getCustoms/" + target.player.ID
             );
             const resData = res.data;
             console.log(resData)
             if (resData.type == "custom") {
                 this.close();
                 await axios.post("/api/lobby/addToLobby", {
-                    id: resData.data.CustomID,
+                    id: resData.data.ID,
                 });
                 this.eventBus.$emit("updateLobby")
                 return;

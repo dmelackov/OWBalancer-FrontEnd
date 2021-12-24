@@ -54,7 +54,7 @@ export default {
         },
         async clearLobby() {
             await sendPOST("/api/lobby/clearLobby", {});
-            this.updateLobby();
+            this.eventBus.$emit("updateLobby")
         },
     },
 

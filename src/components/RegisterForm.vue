@@ -91,7 +91,7 @@ export default {
             );
             let ResData = res.data;
             if (ResData.status == 200) {
-                window.location.href = "/";
+                window.location.href = "/login";
             } else {
                 if (ResData.status == 400 && ResData.message) {
                     this.form_error = ResData.message;

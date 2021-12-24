@@ -9,7 +9,7 @@
                         alt=""
                         width="12"
                         :class="{
-                            innactive: !custom.Roles.Tank,
+                            innactive: !roles.T,
                             role_icon: true,
                         }"
                     />
@@ -18,7 +18,7 @@
                         alt=""
                         width="12"
                         :class="{
-                            innactive: !custom.Roles.Damage,
+                            innactive: !roles.D,
                             role_icon: true,
                         }"
                     />
@@ -27,19 +27,19 @@
                         alt=""
                         width="12"
                         :class="{
-                            innactive: !custom.Roles.Heal,
+                            innactive: !roles.H,
                             role_icon: true,
                         }"
                     />
                 </div>
 
                 <div class="sr_numbers">
-                    <p>{{ custom.SR.Tank }}</p>
-                    <p>{{ custom.SR.Damage }}</p>
-                    <p>{{ custom.SR.Heal }}</p>
+                    <p>{{ SR.T }}</p>
+                    <p>{{ SR.D }}</p>
+                    <p>{{ SR.H }}</p>
                 </div>
             </div>
-            <p class="author-left">by {{ custom.Author.username }}</p>
+            <p class="author-left">by {{ custom.Creator.username }}</p>
         </div>
     </div>
 </template>
@@ -49,19 +49,32 @@ import axios from "axios";
 
 export default {
     props: ["custom"],
+    data() {
+        return {
+            roles: {},
+            SR: {},
+        };
+    },
     methods: {
         async addToLobby() {
             this.eventBus.$emit("closeCustomMenu");
             await axios.post("/api/lobby/addToLobby", {
-                id: this.custom.CustomID,
+                id: this.custom.ID,
             });
             this.eventBus.$emit("updateLobby");
-
+        },
+        getRolesInfo() {
+            for (const key in this.custom.Roles) {
+                const element = this.custom.Roles[key];
+                this.roles[element.role] = element.active;
+                this.SR[element.role] = element.sr;
+            }
+            return false;
         },
     },
     created() {
-        console.log(this.custom)
-    }
+        this.getRolesInfo()
+    },
 };
 </script>
 
@@ -91,7 +104,6 @@ export default {
     background-color: #242e3b;
 }
 
-
 .sr {
     display: flex;
     flex-direction: row;
@@ -114,7 +126,6 @@ export default {
     line-height: 1px;
     font-size: 12px;
 }
-
 
 .author-left {
     position: absolute;
