@@ -5,9 +5,9 @@
     padding: 6px;
     background-color: #090C10;
     box-shadow: none;
-    border: solid 1px #444444;
     color: #d8d8d8;
     cursor: pointer;
+    border: none;
 }
 
 body {
@@ -64,8 +64,8 @@ hr {
 }
 
 *::-webkit-scrollbar {
-    height: 12px;
-    width: 12px;
+    height: 8px;
+    width: 8px;
 }
 
 *::-webkit-scrollbar-track {

@@ -1,7 +1,7 @@
 <template>
     <div class="role">
         <img
-            :src="'/static/img/' + role.role + '_icon.png'"
+            :src="'/img/' + role.role + '_icon.png'"
             alt=""
             width="30"
             :class="{
@@ -10,7 +10,15 @@
             }"
             @click="toggleRole(role.role)"
         />
-        <input type="number" v-model="role.sr" class="lobby_sr_input" @onFocus="this.select()" @keydown.enter="this.blur()" />
+        <input
+            type="number"
+            v-model="role.sr"
+            v-if="custom.editable"
+            class="lobby_sr_input"
+            @focus="$event.target.select()"
+            @keydown.enter="$event.target.blur()"
+            @change="setSR()"
+        />
         <p v-if="!custom.editable">{{ role.sr }}</p>
     </div>
 </template>
@@ -21,10 +29,12 @@ import axios from "axios";
 export default {
     props: ["role", "custom"],
     data() {
-        return {};
+        return {
+        };
     },
     methods: {
         async toggleRole(ARGrole) {
+            if (this.custom.isFlex) return;
             let newRoleStr = "";
             let roleIndex;
             for (roleIndex in this.custom.Roles) {
@@ -39,6 +49,15 @@ export default {
             });
             this.eventBus.$emit("updateLobby");
         },
+        async setSR() {
+            if (this.role.sr > 5000) {
+                this.role.sr = 5000;
+            } else if (this.role.sr < 0) {
+                this.role.sr = 0;
+            }
+            await axios.post("/api/customs/changeRoleSr", { "role": this.role.role, "rating": this.role.sr, "customId": this.custom.ID })
+            this.eventBus.$emit("updateLobby")
+        },
     },
 };
 </script>
@@ -51,10 +70,10 @@ export default {
     flex-direction: column;
     flex-wrap: wrap;
     align-content: center;
-    align-items: center
+    align-items: center;
 }
 
-.role>p {
+.role > p {
     text-align: center;
     margin: 0;
 }
@@ -78,5 +97,4 @@ export default {
     margin-bottom: 1px;
     cursor: pointer;
 }
-
 </style>

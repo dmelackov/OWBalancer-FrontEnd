@@ -16,7 +16,7 @@
             <div class="sr_lobby" v-if="!active">
                 <div class="sr_lobby_icon" v-if="!player.isFlex">
                     <img
-                        :src="'/static/img/' + role.role + '_icon.png'"
+                        :src="'/img/' + role.role + '_icon.png'"
                         alt=""
                         width="15"
                         :class="{ role_icon: true, innactive: !role.active }"
@@ -25,7 +25,7 @@
                     />
                 </div>
                 <img
-                    src="/static/img/flex.svg"
+                    src="/img/flex.svg"
                     alt=""
                     v-if="player.isFlex"
                     width="16"
@@ -40,24 +40,23 @@
                 <template v-for="(role, index) in player.Roles">
                     <RoleComponent :role="role" :custom="player" :key="index" />
                     <p
-                        :key="index"
+                        :key="index + player.ID * 10000"
                         :class="{
                             switch_button: true,
                             opacity_disable: !isPerm('change_player_roles'),
                         }"
-                        v-if="index != 2"
+                        v-if="index != 2 && !player.isFlex"
                         @click="swapRoles(index)"
                     >
                         ⇆
                     </p>
                 </template>
                 <img
-                    src="/static/img/flex.svg"
+                    src="/img/flex.svg"
                     alt=""
                     width="30"
                     :class="{
                         role_icon: true,
-                        flex: true,
                         innactive: !player.isFlex,
                     }"
                     @click="toggleFlex"
@@ -69,11 +68,10 @@
 
 <script>
 import axios from "axios";
-import app from "../pages/index_page/App.vue";
 import RoleComponent from "./RoleComponent.vue";
 
 export default {
-    props: ["player", "opened"],
+    props: ["player"],
     components: {
         RoleComponent,
     },
@@ -83,32 +81,29 @@ export default {
             active: false,
         };
     },
+    created(){
+        this.eventBus.$on("lobbyCustomMenuOpen", (e) => {
+            if(e != this) this.close()
+        })
+    },
     methods: {
         open(event) {
-            if (app.activeLobbyMenu == this) {
-                this.close();
-                return;
-            }
-            if (app.activeLobbyMenu) {
-                app.activeLobbyMenu.close();
-            }
             if (event.target.classList.contains("X")) return;
-            app.activeLobbyMenu = this;
+            if (this.menuOpened) {this.close(); return}
             this.menuOpened = true;
-            app.activeLobbyId = this.player.CustomID;
+            this.eventBus.$emit("lobbyCustomMenuOpen", this)
         },
         close() {
             this.menuOpened = false;
-            app.activeLobbyMenu = null;
-            app.activeLobbyId = null;
         },
         async deleteFromLobby() {
             await sendPOST("/api/lobby/deleteFromLobby", {
                 id: this.player.ID,
             });
-            this.eventBus.$emit("updateLobby")
+            this.eventBus.$emit("updateLobby");
         },
         async swapRoles(index) {
+            if(this.player.isFlex) return;
             let newRoleStr = "";
             let roleIndex;
             for (roleIndex in this.player.Roles) {
@@ -123,18 +118,15 @@ export default {
                 id: this.player.ID,
                 roles: tempMass.join(""),
             });
-            this.eventBus.$emit("updateLobby")
+            this.eventBus.$emit("updateLobby");
         },
         async toggleFlex() {
             await sendPOST("/api/players/setFlex", {
-                id: this.player.CustomID,
+                id: this.player.ID,
                 status: !this.player.isFlex,
             });
-            this.eventBus.$emit("updateLobby")
+            this.eventBus.$emit("updateLobby");
         },
-    },
-    created() {
-        this.menuOpened = this.opened;
     },
     computed: {
         styleObj: function () {
@@ -153,12 +145,16 @@ async function sendPOST(url, params) {
 @import "../assets/css/global.css";
 @import "../assets/css/playerContainer.css";
 
+.error {
+    box-shadow: 0 1px 0 #c72727a8;
+}
 .sr_lobby_icon {
     display: flex;
 }
 
-.sr_lobby_icon > .role_icon {
+.role_icon {
     margin-left: 4px;
+    cursor: pointer;
 }
 
 .lobby_sr {

@@ -1,11 +1,17 @@
 <template>
-    <div class="player_container" @click="addToLobby">
+    <div
+        :class="{
+            player_container: true,
+            my_custom_warn: isMyCustom,
+        }"
+        @click="addToLobby"
+    >
         <div class="player_inner_container">
-            <p class="player_username">{{ custom.Username }}</p>
+            <p class="player_username">{{ custom.Player.Username }}</p>
             <div class="sr">
                 <div class="sr_icon">
                     <img
-                        src="/static/img/T_icon.png"
+                        src="../../public/img/T_icon.png"
                         alt=""
                         width="12"
                         :class="{
@@ -14,7 +20,7 @@
                         }"
                     />
                     <img
-                        src="/static/img/D_icon.png"
+                        src="../../public/img/D_icon.png"
                         alt=""
                         width="12"
                         :class="{
@@ -23,7 +29,7 @@
                         }"
                     />
                     <img
-                        src="/static/img/H_icon.png"
+                        src="../../public/img/H_icon.png"
                         alt=""
                         width="12"
                         :class="{
@@ -53,6 +59,7 @@ export default {
         return {
             roles: {},
             SR: {},
+            isMyCustom: false,
         };
     },
     methods: {
@@ -73,35 +80,18 @@ export default {
         },
     },
     created() {
-        this.getRolesInfo()
+        this.getRolesInfo();
+        if (this.custom.Creator.ID == this.UserInfo.ID) this.isMyCustom = true;
     },
 };
 </script>
 
 <style scoped>
 @import "../assets/css/global.css";
+@import "../assets/css/playerContainer.css";
 
-.player_inner_container {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    position: relative;
-    border-radius: 12px;
-    min-height: 50px;
-    width: 100%;
-    cursor: pointer;
-    padding: 6px 12px;
-    box-sizing: border-box;
-}
-
-.player_container {
-    background-color: #171e27;
-    border-radius: 12px;
-    border: solid 1px #444444;
-}
-
-.player_inner_container:hover {
-    background-color: #242e3b;
+.my_custom_warn {
+    box-shadow: 0 1px 0 #1abe5fa8;
 }
 
 .sr {

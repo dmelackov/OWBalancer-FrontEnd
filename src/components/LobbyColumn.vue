@@ -18,12 +18,8 @@
         <hr />
         <div class="lobby_list">
             <div id="lobby_list">
-                <template v-for="player in lobbyPlayerList">
-                    <LobbyPlayerContainer
-                        :player="player"
-                        :opened="player.CustomID == activeLobbyId"
-                        :key="player.CustomID"
-                    />
+                <template v-for="player in lobbyPlayerList" >
+                    <LobbyPlayerContainer :player="player" :key="player.ID"/>
                 </template>
             </div>
         </div>
@@ -37,12 +33,10 @@ export default {
     components: {
         LobbyPlayerContainer,
     },
-    
+
     data() {
         return {
-            lobbyPlayerList: [],
-            activeLobbyMenu: null,
-            activeLobbyId: null,
+            lobbyPlayerList: []
         };
     },
 
@@ -54,7 +48,7 @@ export default {
         },
         async clearLobby() {
             await sendPOST("/api/lobby/clearLobby", {});
-            this.eventBus.$emit("updateLobby")
+            this.eventBus.$emit("updateLobby");
         },
     },
 
@@ -66,7 +60,7 @@ export default {
 
     async created() {
         this.updateLobby();
-        this.eventBus.$on("updateLobby", () => this.updateLobby())
+        this.eventBus.$on("updateLobby", () => this.updateLobby());
     },
 };
 
@@ -81,7 +75,6 @@ async function sendPOST(url, params) {
     display: flex;
     flex-direction: column;
     border-radius: 6px;
-    border: solid 1px #444444;
     margin: 8px;
     margin-top: 10px;
     padding: 16px 16px;
@@ -97,7 +90,7 @@ async function sendPOST(url, params) {
 }
 .lobby_list {
     overflow-y: scroll;
-    height: 100%
+    height: 100%;
 }
 
 #lobby_list {

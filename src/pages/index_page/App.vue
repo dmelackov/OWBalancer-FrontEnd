@@ -36,13 +36,14 @@ axios.get("/api/profile/getCurrentUserInfo").then((response) => {
 
 Vue.mixin({
     data() {
-        return {};
+        return {
+            UserInfo: UserInfo
+        };
     },
     methods: {
         isPerm() {
             return perms;
-        },
-        sendPOST() {},
+        }
     },
 });
 
@@ -52,11 +53,6 @@ document.body.addEventListener("mousedown", (e) => {
     if (!e.target.closest(".customSelect")) {
         new Vue().eventBus.$emit("closeCustomMenu");
     }
-    //if (!e.target.closest(".lobby_container")) {
-    //    if (app.activeLobbyMenu) {
-    //        app.activeLobbyMenu.close();
-    //    }
-    //}
 });
 
 export default {

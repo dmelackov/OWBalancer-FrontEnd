@@ -3,7 +3,7 @@
     flex-direction: row;
     justify-content: space-between;
     position: relative;
-    border-radius: 12px;
+    border-radius: inherit;
     min-height: 50px;
     width: 100%;
     cursor: pointer;
@@ -13,8 +13,9 @@
 
 .player_container {
     background-color: #171e27;
-    border-radius: 12px;
-    border: solid 1px #444444;
+    border-radius: 5px;
+    box-shadow: 0 1px 0 #3a4b68a8;
+    margin-bottom: 5px;
 }
 
 .player_inner_container:hover {

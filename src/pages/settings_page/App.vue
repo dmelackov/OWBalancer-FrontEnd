@@ -1,36 +1,58 @@
 <template>
-  <div id="app">
-    <h1>My Todo App!</h1>
-    
-  </div>
+      <div id="app">
+        <HeaderMenu />
+
+    </div>
 </template>
 
 <script>
+import HeaderMenu from "../../components/HeaderMenu.vue";
+import Vue from "vue";
+import axios from "axios";
+
+let perms = [];
+axios
+    .get("/api/profile/getPermissions")
+    .then((response) => (perms = response.data));
+
+let UserInfo = {};
+axios.get("/api/profile/getCurrentUserInfo").then((response) => {
+    console.log(response)
+    UserInfo = response.data;
+    console.log(UserInfo.Username)
+    if (UserInfo.Username == null) {
+        window.location.href = "/login";
+    }
+});
+
+Vue.mixin({
+    data() {
+        return {
+            UserInfo: UserInfo
+        };
+    },
+    methods: {
+        isPerm() {
+            return perms;
+        }
+    },
+});
+
+Vue.prototype.eventBus = new Vue();
 
 export default {
   components: {
+    HeaderMenu
   }
 }
 </script>
 
-<style>
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-#app {
-  max-width: 400px;
-  margin: 0 auto;
-  line-height: 1.4;
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #000;
-}
-
-h1 {
-  text-align: center;
+<style scoped>
+@import "../../assets/css/global.css";
+.content {
+    height: 92%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
 }
 </style>

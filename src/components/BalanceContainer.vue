@@ -46,7 +46,7 @@ import axios from "axios"
 export default {
     data: function () {
         return {
-            imageSrc: "/static/img/balance_alt.png",
+            imageSrc: "./img/balance_alt.png",
             currentImageIndex: 0,
             balanceLenght: 0,
         };
@@ -62,7 +62,7 @@ export default {
             this.updateImage();
         },
         async getBalances() {
-            this.imageSrc = "/static/img/balance_load.png";
+            this.imageSrc = "/img/balance_load.png";
             let res = await axios.get("/api/profile/getBalances");
             let balance = res.data;
             if (balance["ok"] && balance.Balances.length > 0) {
@@ -70,7 +70,7 @@ export default {
                 localStorage.setItem("balance_index", 0);
                 this.updateImage();
             } else {
-                this.imageSrc = "/static/img/balance_404.png";
+                this.imageSrc = "/img/balance_404.png";
                 if (localStorage.getItem("balance"))
                     localStorage.removeItem("balance");
                 if (localStorage.getItem("balance_index"))
@@ -97,6 +97,87 @@ export default {
                 this.balanceLenght = 0;
             }
         },
+        async updateImage() {
+                let index = parseInt(localStorage.getItem("balance_index"))
+                let balances = JSON.parse(localStorage.getItem("balance"))
+                if (!balances) return;
+                let current_balance = balances["Balances"][index]
+                let image = await axios.post('/api/profile/balanceImage', { "playersData": current_balance, "theme": localStorage.getItem("theme") != null ? parseInt(localStorage.getItem("theme")) : 0 }, { responseType: 'blob' })
+                let imageBlob = image.data
+                let urlCreator = window.URL || window.webkitURL;
+                let imageUrl = urlCreator.createObjectURL(imageBlob);
+                this.imageSrc = imageUrl
+            },
     },
 };
 </script>
+
+<style scoped>
+@import "../assets/css/global.css";
+
+.balance_container {
+    margin-right: 50px;
+    margin-left: 50px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    width: 60%;
+}
+
+#balance_image {
+    width: 100%;
+}
+
+.balance_controlls {
+    border-radius: 6px;
+    padding: 8px 16px;
+    height: max-content;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-content: center;
+    justify-content: space-between;
+}
+
+.balance_button {
+    cursor: pointer;
+    height: max-content;
+    background-color: #11161d;
+    border-radius: 6px;
+    padding: 8px 32px;
+    box-shadow: 0 1px 0 #3a4b68a8;
+}
+
+.balance_button:hover {
+    background-color: #242e3b;
+}
+
+.balance_button::selection {
+    background: transparent;
+}
+
+#balance_count {
+    padding-left: 20px;
+    padding-right: 20px;
+    margin: 0;
+}
+
+#balance_count::selection {
+    background: transparent;
+}
+
+.balance_controlls_right {
+    display: flex;
+    flex-wrap: nowrap;
+    align-content: center;
+    align-items: center;
+    height: max-content;
+}
+
+.balance_controlls_left {
+    display: flex;
+    align-items: center;
+    height: max-content;
+}
+</style>

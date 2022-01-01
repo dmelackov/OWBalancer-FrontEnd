@@ -39,7 +39,7 @@
         <div class="player_list">
             <div id="players_list">
                 <template v-for="player in filteredPlayerList">
-                    <PlayerContainer :player="player" :key="player.id" />
+                    <PlayerContainer :player="player" :key="player.ID" />
                 </template>
             </div>
         </div>
@@ -103,7 +103,6 @@ export default {
     display: flex;
     flex-direction: column;
     border-radius: 6px;
-    border: solid 1px #444444;
     margin: 8px;
     margin-top: 10px;
     padding: 16px 16px;

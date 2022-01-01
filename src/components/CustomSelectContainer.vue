@@ -50,7 +50,6 @@ export default {
                 "/api/customs/getCustoms/" + target.player.ID
             );
             const resData = res.data;
-            console.log(resData)
             if (resData.type == "custom") {
                 this.close();
                 await axios.post("/api/lobby/addToLobby", {
@@ -87,7 +86,7 @@ export default {
             }
             return {
                 top: totalHeight + "px",
-                left: lineRect.x + lineRect.width + 10 + "px",
+                left: lineRect.x + lineRect.width + 20 + "px",
                 display: "block",
             };
         },
@@ -104,18 +103,18 @@ export default {
 
 .customSelect {
     position: fixed;
-    background-color: #171e27;
+    background-color: #151a20;
     border-radius: 6px;
-    border: solid 1px #444444;
     width: 15%;
     height: max-content;
     padding: 16px 8px;
     padding-bottom: 2px;
+    box-shadow: -6px 0 0 0 #283649;
 }
 
 .customs {
     overflow-y: auto;
-    height: 150px;
+    height: 250px;
     margin-bottom: 10px;
 }
 .create_container {
