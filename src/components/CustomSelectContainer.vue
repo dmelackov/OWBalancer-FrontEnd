@@ -6,7 +6,7 @@
                     <template v-for="custom in customList">
                         <CustomPattern
                             :custom="custom"
-                            :key="custom.CustomID"
+                            :key="custom.ID"
                         />
                     </template>
                 </div>

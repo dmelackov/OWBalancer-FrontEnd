@@ -1,12 +1,23 @@
 <template>
-      <div id="app">
+    <div id="app">
         <HeaderMenu />
-
+        <div class="content">
+            <SettingsColumn>
+                <template slot="default">
+                    <CheckboxSetting
+                        setting="AutoCustom"
+                        title="Custom Autochoice"
+                    />
+                </template>
+            </SettingsColumn>
+        </div>
     </div>
 </template>
 
 <script>
 import HeaderMenu from "../../components/HeaderMenu.vue";
+import SettingsColumn from "../../components/SettingsColumn.vue";
+import CheckboxSetting from "../../components/CheckboxSetting.vue";
 import Vue from "vue";
 import axios from "axios";
 
@@ -17,9 +28,9 @@ axios
 
 let UserInfo = {};
 axios.get("/api/profile/getCurrentUserInfo").then((response) => {
-    console.log(response)
+    console.log(response);
     UserInfo = response.data;
-    console.log(UserInfo.Username)
+    console.log(UserInfo.Username);
     if (UserInfo.Username == null) {
         window.location.href = "/login";
     }
@@ -28,23 +39,29 @@ axios.get("/api/profile/getCurrentUserInfo").then((response) => {
 Vue.mixin({
     data() {
         return {
-            UserInfo: UserInfo
+            UserInfo: UserInfo,
         };
     },
     methods: {
         isPerm() {
             return perms;
-        }
+        },
     },
 });
 
 Vue.prototype.eventBus = new Vue();
 
 export default {
-  components: {
-    HeaderMenu
-  }
-}
+    components: {
+        HeaderMenu,
+        SettingsColumn,
+        CheckboxSetting,
+    },
+    async created() {
+        let token = await axios.get("/api/profile/auth/getCSRF");
+        axios.defaults.headers.common["X-CSRF-TOKEN"] = token.data;
+    },
+};
 </script>
 
 <style scoped>

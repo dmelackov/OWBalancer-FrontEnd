@@ -126,4 +126,8 @@ export default {
     margin: 0;
     font-size: 12px;
 }
+
+.innactive {
+    filter: brightness(0.3);
+}
 </style>

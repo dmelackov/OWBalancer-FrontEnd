@@ -98,17 +98,20 @@ export default {
             }
         },
         async updateImage() {
-                let index = parseInt(localStorage.getItem("balance_index"))
-                let balances = JSON.parse(localStorage.getItem("balance"))
-                if (!balances) return;
-                let current_balance = balances["Balances"][index]
-                let image = await axios.post('/api/profile/balanceImage', { "playersData": current_balance, "theme": localStorage.getItem("theme") != null ? parseInt(localStorage.getItem("theme")) : 0 }, { responseType: 'blob' })
-                let imageBlob = image.data
-                let urlCreator = window.URL || window.webkitURL;
-                let imageUrl = urlCreator.createObjectURL(imageBlob);
-                this.imageSrc = imageUrl
-            },
+            let index = parseInt(localStorage.getItem("balance_index"))
+            let balances = JSON.parse(localStorage.getItem("balance"))
+            if (!balances) return;
+            let current_balance = balances["Balances"][index]
+            let image = await axios.post('/api/profile/balanceImage', { "playersData": current_balance, "theme": localStorage.getItem("theme") != null ? parseInt(localStorage.getItem("theme")) : 0 }, { responseType: 'blob' })
+            let imageBlob = image.data
+            let urlCreator = window.URL || window.webkitURL;
+            let imageUrl = urlCreator.createObjectURL(imageBlob);
+            this.imageSrc = imageUrl
+        },
     },
+    created(){
+        this.updateImage()
+    }
 };
 </script>
 
