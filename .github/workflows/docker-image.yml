@@ -18,7 +18,7 @@ jobs:
     - name: Login to Registry
       uses: docker/login-action@v1
       with:
-        registry: owbalancer.ddns.net:8083
+        registry: owbalancer.ddns.net
         username: ${{ secrets.DOCKER_HUB_USERNAME }}
         password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
     - name: Set up Docker Buildx
@@ -30,6 +30,6 @@ jobs:
           file: ./Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: true
-          tags: owbalancer.ddns.net:8083/${{ secrets.DOCKER_HUB_USERNAME }}/owbalancer-frontend:latest
-          cache-from: type=registry,ref=owbalancer.ddns.net:8083/${{ secrets.DOCKER_HUB_USERNAME }}/owbalancer-frontend:buildcache
-          cache-to: type=registry,ref=owbalancer.ddns.net:8083/${{ secrets.DOCKER_HUB_USERNAME }}/owbalancer-frontend:buildcache,mode=max
+          tags: owbalancer.ddns.net/${{ secrets.DOCKER_HUB_USERNAME }}/owbalancer-frontend:latest
+          cache-from: type=registry,ref=owbalancer.ddns.net/${{ secrets.DOCKER_HUB_USERNAME }}/owbalancer-frontend:buildcache
+          cache-to: type=registry,ref=owbalancer.ddns.net/${{ secrets.DOCKER_HUB_USERNAME }}/owbalancer-frontend:buildcache,mode=max
