@@ -3,18 +3,23 @@ FROM yicktop/nginx-node:latest
 EXPOSE 8080
 
 
+WORKDIR /usr/share/node/html
+
+
+
+COPY ./src /usr/share/node/html/src
+COPY ./public /usr/share/node/html/public
+COPY ./babel.config.js /usr/share/node/html
+COPY ./vue.config.js /usr/share/node/html
+COPY ./package.json /usr/share/node/html
+
+RUN npm install && \
+    npm run build
+RUN cp -R /usr/share/node/html/dist /usr/share/nginx/html
+RUN apt-get -qy autoremove
+RUN rm -R /usr/share/node/html
+
 WORKDIR /usr/share/nginx/html
-
-
-
-COPY ./src /usr/share/nginx/html/src
-COPY ./public /usr/share/nginx/html/public
-COPY ./babel.config.js /usr/share/nginx/html
-COPY ./vue.config.js /usr/share/nginx/html
-COPY ./package.json /usr/share/nginx/html
-
-RUN npm install
-RUN npm run build
 
 COPY ./nginx/ /etc/nginx/
 
