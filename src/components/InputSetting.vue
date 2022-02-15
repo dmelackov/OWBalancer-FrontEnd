@@ -1,14 +1,13 @@
 <template>
     <div class="settings_checkbox">
-        <input type="checkbox" name="checkbox" v-model="value">
-        <p class="checkbox_title">{{ title }}</p>
+        <input class="custom_input" :type=type name="input" v-model="value">
     </div>
 </template>
 
 <script>
 import axios from 'axios'
 export default {
-    props: ["title", "setting"],
+    props: ["setting", "type", "inputName"],
     data(){
         return {
             SettingValue: false
@@ -27,7 +26,8 @@ export default {
     },
     methods: {
         async getValueFromServer(){
-            this.SettingValue = (await axios.get('/api/profile/settings/getSettings')).data[this.setting]
+            let val = (await axios.get('/api/profile/settings/getSettings')).data[this.inputName]
+            this.SettingValue = this.type == "number" ? parseInt(val) : val
         }
     },
     created(){
@@ -37,6 +37,8 @@ export default {
 </script>
 
 <style scoped>
+@import "../assets/css/global.css";
+
 .settings_checkbox {
     display: flex;
     flex-direction: row;
@@ -48,5 +50,8 @@ export default {
 
 .checkbox_title {
     margin: 0;
+}
+.custom_input {
+    text-align: center;
 }
 </style>
