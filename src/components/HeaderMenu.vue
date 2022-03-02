@@ -2,13 +2,15 @@
     <div class="header">
         <nav class="menu">
             <div class="menu-left">
-                <a href="/">Main page</a>
-                <a href="/settings">Settings</a>
+                <router-link to="/">Games</router-link>
+                <router-link to="/balancer">Balancer</router-link>
+                <router-link to="/settings">Settings</router-link>
             </div>
             <div class="menu-right">
-                <a href="/api/profile/auth/logout" data-tooltip="Quit">{{
+                <a to="/settings" href="/api/profile/auth/logout" data-tooltip="Quit" v-if="Username != null">{{
                     Username
                 }}</a>
+                <router-link to="/login" v-if="Username == null">Authorization</router-link>
             </div>
         </nav>
     </div>
@@ -30,6 +32,7 @@ export default {
         },
     },
     created() {
+        this.emitter.on("UpdateLoginState", () => this.getUserData())
         this.getUserData();
     },
 };

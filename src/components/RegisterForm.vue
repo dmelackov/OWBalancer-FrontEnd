@@ -110,7 +110,6 @@ export default {
     border-radius: 6px;
     padding: 20px;
     background-color: #11161d;
-    border: solid 1px #444444;
 }
 
 .login_form > .title > p {

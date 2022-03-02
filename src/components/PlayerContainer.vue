@@ -26,7 +26,7 @@ export default {
         openCustomsMenu() {
             if (!this.isPerm("add_customs_tolobby")) return;
             this.active = true;
-            this.eventBus.$emit("openCustomMenu", this)
+            this.emitter.emit("openCustomMenu", this)
         }
     },
 };

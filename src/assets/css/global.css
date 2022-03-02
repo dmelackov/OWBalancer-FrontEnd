@@ -64,8 +64,8 @@ hr {
 }
 
 *::-webkit-scrollbar {
-    height: 8px;
-    width: 8px;
+    height: 4px;
+    width: 4px;
 }
 
 *::-webkit-scrollbar-track {

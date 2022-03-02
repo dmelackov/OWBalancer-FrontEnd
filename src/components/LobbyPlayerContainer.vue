@@ -37,15 +37,13 @@
         <div class="lobby_menu" :style="styleObj">
             <hr />
             <div class="sr lobby_sr">
-                <template v-for="(role, index) in player.Roles">
-                    <RoleComponent :role="role" :custom="player" :key="index" />
+                <template v-for="(role, index) in player.Roles" :key="index + player.ID * 10000">
+                    <RoleComponent :role="role" :custom="player" />
                     <p
-                        :key="index + player.ID * 10000"
                         :class="{
-                            switch_button: true,
-                            opacity_disable: !isPerm('change_player_roles'),
+                            switch_button: true
                         }"
-                        v-if="index != 2 && !player.isFlex"
+                        v-if="index != 2 && !player.isFlex && isPerm('change_player_roles')"
                         @click="swapRoles(index)"
                     >
                         ⇆
@@ -82,7 +80,7 @@ export default {
         };
     },
     created(){
-        this.eventBus.$on("lobbyCustomMenuOpen", (e) => {
+        this.emitter.on("lobbyCustomMenuOpen", (e) => {
             if(e != this) this.close()
         })
     },
@@ -91,7 +89,7 @@ export default {
             if (event.target.classList.contains("X")) return;
             if (this.menuOpened) {this.close(); return}
             this.menuOpened = true;
-            this.eventBus.$emit("lobbyCustomMenuOpen", this)
+            this.emitter.emit("lobbyCustomMenuOpen", this)
         },
         close() {
             this.menuOpened = false;
@@ -100,7 +98,7 @@ export default {
             await sendPOST("/api/lobby/deleteFromLobby", {
                 id: this.player.ID,
             });
-            this.eventBus.$emit("updateLobby");
+            this.emitter.emit("updateLobby");
         },
         async swapRoles(index) {
             if(this.player.isFlex) return;
@@ -118,14 +116,14 @@ export default {
                 id: this.player.ID,
                 roles: tempMass.join(""),
             });
-            this.eventBus.$emit("updateLobby");
+            this.emitter.emit("updateLobby");
         },
         async toggleFlex() {
             await sendPOST("/api/players/setFlex", {
                 id: this.player.ID,
                 status: !this.player.isFlex,
             });
-            this.eventBus.$emit("updateLobby");
+            this.emitter.emit("updateLobby");
         },
     },
     computed: {

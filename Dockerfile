@@ -1,10 +1,6 @@
 FROM yicktop/nginx-node:latest
 
-EXPOSE 8080
-
-
 WORKDIR /usr/share/node/html
-
 
 
 COPY ./src /usr/share/node/html/src

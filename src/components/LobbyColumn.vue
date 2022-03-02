@@ -4,8 +4,8 @@
         <div class="players_count">
             <p id="lobby_count">Players in lobby: {{ lobbyPlayerCount }}</p>
             <p
+                v-if="isPerm('add_customs_tolobby')"
                 :class="{
-                    opacity_disable: !isPerm('add_customs_tolobby'),
                     clear: true,
                 }"
                 id="clear_button"
@@ -16,27 +16,26 @@
         </div>
 
         <hr />
-        <div class="lobby_list">
-            <div id="lobby_list">
-                <template v-for="player in lobbyPlayerList" >
-                    <LobbyPlayerContainer :player="player" :key="player.ID"/>
-                </template>
-            </div>
-        </div>
+        <Scrollbar class="lobby_list">
+            <template v-for="player in lobbyPlayerList" :key="player.ID">
+                <LobbyPlayerContainer :player="player" />
+            </template>
+        </Scrollbar>
     </div>
 </template>
 
 <script>
 import axios from "axios";
 import LobbyPlayerContainer from "./LobbyPlayerContainer.vue";
+import Scrollbar from "vue3-smooth-scrollbar";
 export default {
     components: {
-        LobbyPlayerContainer,
+        LobbyPlayerContainer, Scrollbar
     },
 
     data() {
         return {
-            lobbyPlayerList: []
+            lobbyPlayerList: [],
         };
     },
 
@@ -48,7 +47,7 @@ export default {
         },
         async clearLobby() {
             await sendPOST("/api/lobby/clearLobby", {});
-            this.eventBus.$emit("updateLobby");
+            this.emitter.emit("updateLobby");
         },
     },
 
@@ -60,7 +59,7 @@ export default {
 
     async created() {
         this.updateLobby();
-        this.eventBus.$on("updateLobby", () => this.updateLobby());
+        this.emitter.on("updateLobby", () => this.updateLobby());
     },
 };
 
@@ -89,7 +88,6 @@ async function sendPOST(url, params) {
     text-align: center;
 }
 .lobby_list {
-    overflow-y: scroll;
     height: 100%;
 }
 
@@ -121,5 +119,13 @@ async function sendPOST(url, params) {
 
 .clear:hover {
     color: #b3b3b3;
+}
+
+.scroll {
+    width: 6px;
+    border: 0;
+}
+.scroll::before {
+    background-color: #42556d9f;
 }
 </style>

@@ -3,8 +3,8 @@
         <div class="column_controlls">
             <p class="column_title">Players</p>
             <div
+                v-if="isPerm('create_player')"
                 :class="{
-                    opacity_disable: !isPerm('create_player'),
                     user_create_container: true,
                 }"
             >
@@ -24,7 +24,7 @@
                     Create
                 </button>
             </div>
-            <hr />
+            <hr v-if="isPerm('create_player')" />
             <input
                 type="text"
                 id="PlayersSearch"
@@ -36,23 +36,22 @@
         </div>
 
         <hr />
-        <div class="player_list">
-            <div id="players_list">
-                <template v-for="player in filteredPlayerList">
-                    <PlayerContainer :player="player" :key="player.ID" />
-                </template>
-            </div>
-        </div>
+        <Scrollbar class="player_list">
+            <template v-for="player in filteredPlayerList" :key="player.ID">
+                <PlayerContainer :player="player" />
+            </template>
+        </Scrollbar>
     </div>
 </template>
 
 <script>
 import PlayerContainer from "./PlayerContainer.vue";
 import axios from "axios";
+import Scrollbar from "vue3-smooth-scrollbar";
 
 export default {
     components: {
-        PlayerContainer,
+        PlayerContainer, Scrollbar
     },
     data() {
         return {
@@ -67,7 +66,7 @@ export default {
                 Username: this.createPlayerNickname,
             });
             this.createPlayerNickname = "";
-            this.eventBus.$emit("updatePlayers");
+            this.emitter.emit("updatePlayers");
         },
         updatePlayers() {
             axios
@@ -90,15 +89,15 @@ export default {
         },
     },
     async created() {
-        this.eventBus.$on("updatePlayers", () => this.updatePlayers())
+        this.emitter.on("updatePlayers", () => this.updatePlayers());
         this.updatePlayers();
     },
 };
-
 </script>
 
 <style scoped>
 @import "../assets/css/global.css";
+
 .column_widget {
     display: flex;
     flex-direction: column;
@@ -112,13 +111,7 @@ export default {
 }
 
 .player_list {
-    overflow-y: scroll;
-    height: 100%;
-}
-
-#players_list {
-    width: 100%;
-    table-layout: fixed;
+    max-height: 100%;
 }
 
 .user_create_container {

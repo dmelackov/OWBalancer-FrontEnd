@@ -47,7 +47,7 @@ export default {
                 id: this.custom.ID,
                 roles: newRoleStr,
             });
-            this.eventBus.$emit("updateLobby");
+            this.emitter.emit("updateLobby");
         },
         async setSR() {
             if (this.role.sr > 5000) {
@@ -56,7 +56,7 @@ export default {
                 this.role.sr = 0;
             }
             await axios.post("/api/customs/changeRoleSr", { "role": this.role.role, "rating": this.role.sr, "customId": this.custom.ID })
-            this.eventBus.$emit("updateLobby")
+            this.emitter.emit("updateLobby")
         },
     },
 };

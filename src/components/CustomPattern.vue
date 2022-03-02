@@ -64,11 +64,11 @@ export default {
     },
     methods: {
         async addToLobby() {
-            this.eventBus.$emit("closeCustomMenu");
+            this.emitter.emit("closeCustomMenu");
             await axios.post("/api/lobby/addToLobby", {
                 id: this.custom.ID,
             });
-            this.eventBus.$emit("updateLobby");
+            this.emitter.emit("updateLobby");
         },
         getRolesInfo() {
             for (const key in this.custom.Roles) {

@@ -56,7 +56,7 @@
 
 <script>
 import axios from "axios";
-
+import router from "../router"
 export default {
     data() {
         return {
@@ -89,7 +89,8 @@ export default {
             );
             let ResData = res.data;
             if (ResData.status == 200) {
-                window.location.href = "/";
+                this.emitter.emit("UpdateLoginState")
+                router.push({path: "/"})
             } else {
                 if (ResData.status == 400 && ResData.message) {
                     this.form_error = ResData.message;
@@ -108,7 +109,6 @@ export default {
     border-radius: 6px;
     padding: 20px;
     background-color: #11161d;
-    border: solid 1px #444444;
 }
 
 .login_form > .title > p {

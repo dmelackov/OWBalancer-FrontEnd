@@ -3,18 +3,17 @@
         <div class="custom_select">
             <div class="customs" v-if="customList.length > 0">
                 <div id="CustomTableSelect">
-                    <template v-for="custom in customList">
+                    <template v-for="custom in customList" :key="custom.ID">
                         <CustomPattern
                             :custom="custom"
-                            :key="custom.ID"
                         />
                     </template>
                 </div>
             </div>
             <button
+            v-if="isPerm('create_custom')"
                 :class="{
-                    create_container: true,
-                    opacity_disable: !isPerm('create_custom'),
+                    create_container: true
                 }"
                 @click="createCustom"
             >
@@ -42,7 +41,7 @@ export default {
         async createCustom() {
             await axios.post("/api/customs/createCustom", { "id": this.target.player.ID });
                 this.close();
-                this.eventBus.$emit("updateLobby")
+                this.emitter.emit("updateLobby")
         },
         async open(target) {
             this.target = target;
@@ -55,7 +54,7 @@ export default {
                 await axios.post("/api/lobby/addToLobby", {
                     id: resData.data.ID,
                 });
-                this.eventBus.$emit("updateLobby")
+                this.emitter.emit("updateLobby")
                 return;
             }
             if (resData.data) {
@@ -92,8 +91,8 @@ export default {
         },
     },
     created() {
-        this.eventBus.$on("openCustomMenu", (e) => this.open(e));
-        this.eventBus.$on("closeCustomMenu", () => this.close());
+        this.emitter.on("openCustomMenu", (e) => this.open(e));
+        this.emitter.on("closeCustomMenu", () => this.close());
     },
 };
 </script>
@@ -110,6 +109,7 @@ export default {
     padding: 16px 8px;
     padding-bottom: 2px;
     box-shadow: -6px 0 0 0 #283649;
+    z-index: 999;
 }
 
 .customs {
