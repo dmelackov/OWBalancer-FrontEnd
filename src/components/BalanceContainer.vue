@@ -61,6 +61,10 @@ export default {
             this.emitter.emit("updateBalanceImage");
         },
         async getBalances() {
+            this.$notify({title: "Vue 3 notification 🎉", type: "warn"})
+            this.$notify({title: "Vue 3 notification 🎉", type: "error"})
+            this.$notify({title: "Vue 3 notification 🎉", type: "success"})
+            this.$notify({title: "Vue 3 notification 🎉", type: "info"})
             this.imageSrc = "/img/balance_load.png";
             let res = await axios.get("/api/profile/getBalances");
             let balance = res.data;
