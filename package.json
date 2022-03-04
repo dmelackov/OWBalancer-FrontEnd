@@ -16,9 +16,7 @@
     "mitt": "^3.0.0",
     "vue": "^3.2.31",
     "vue-router": "^4.0.13",
-    "vue3-smooth-scrollbar": "^1.0.2"
-  },
-  "devDependencies": {
+    "vue3-smooth-scrollbar": "^1.0.2",
     "@vue/cli-service": "~4.5.15",
     "vue-template-compiler": "^2.6.14"
   },
