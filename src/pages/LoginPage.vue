@@ -1,7 +1,7 @@
 <template>
     <div class="content">
         <LoginForm style="margin-bottom: 15px"/>
-        <a href="/register" class="reg_button">Registration</a>
+        <router-link to="/register" class="reg_button">Registration</router-link>
         <Contacts />
     </div>
 </template>
