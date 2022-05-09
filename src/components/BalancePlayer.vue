@@ -178,7 +178,7 @@ export default {
 }
 .selectedRole {
     width: 90px;
-    opacity: 30%;
+    opacity: 0.3;
     position: absolute;
     top: 0;
     filter: drop-shadow(1px 1px 0 black) drop-shadow(-1px -1px 0 black);
@@ -203,11 +203,11 @@ export default {
 .mainRole {
     height: 60px;
     margin-right: 10px;
-    opacity: 40%;
+    opacity: 0.4;
 }
 .secondRole {
     height: 40px;
-    opacity: 40%;
+    opacity: 0.4;
 }
 .roles {
     height: max-content;

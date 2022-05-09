@@ -13,7 +13,8 @@ const router = createRouter({
             component: GamesPage,
             meta: {
                 title: "Games"
-            }
+            },
+            redirect: {path: "balancer"}
         },
         {
             path: "/login",

@@ -139,7 +139,7 @@ export default {
 
 @font-face {
     font-family: "VSFont";
-    src: url("/VS_Font.otf");
+    src: url("/VSfont.otf");
 }
 
 p {
