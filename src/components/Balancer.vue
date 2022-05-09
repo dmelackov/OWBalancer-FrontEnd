@@ -1,62 +1,70 @@
 <template>
-    <div id="balance">
-        <div class="balanceInfo">
-            <p class="leftTeamName">{{ USettings.TeamNames[1] }}</p>
-            <div class="evaluation">
-                <div class="stat">
-                    <p class="infoStat">Evaluation:</p>
-                    <p class="statValue">{{ Balance.active.result }}</p>
-                </div>
-            </div>
-            <p class="rightTeamName">{{ USettings.TeamNames[2] }}</p>
-        </div>
-        <div class="players">
-            <div class="playerColumnLeft">
-                <div class="stat" v-if="USettings.ExpandedResult">
-                    <p class="infoStat" >Fairness:</p>
-                    <p class="statValue">
-                        {{
-                            Math.round(
-                                (Balance.active.dpFairness +
-                                    Balance.active.rgRolesFairness) *
-                                    100
-                            ) / 100
-                        }}
-                    </p>
-                </div>
-                <div class="leftPlayers">
-                    <BalancePlayer
-                        v-for="item in fTeam"
-                        :key="item.staticId"
-                        :PlayerStatic="Balance.static[item.staticId]"
-                        :USettings="USettings"
-                        :PlayerRole="item.roleMask"
-                        :PlayerTeam="1"
-                        :StaticID="item.staticId"
-                    />
-                </div>
-            </div>
+    <svg id="svgBalance" xmlns="http://www.w3.org/2000/svg" width="100%" :viewBox="viewbox">
+        <foreignObject class="node" x="0" y="0" width="1920px" height="100%">
+            <body xmlns="http://www.w3.org/1999/xhtml">
+                <div id="balance">
+                    <div class="balanceInfo">
+                        <p class="leftTeamName">{{ USettings.TeamNames[1] }}</p>
+                        <div class="evaluation">
+                            <div class="stat">
+                                <p class="infoStat">Evaluation:</p>
+                                <p class="statValue">{{ Balance.active.result }}</p>
+                            </div>
+                        </div>
+                        <p class="rightTeamName">{{ USettings.TeamNames[2] }}</p>
+                    </div>
+                    <div class="players">
+                        <div class="playerColumnLeft">
+                            <div class="stat" v-if="USettings.ExpandedResult">
+                                <p class="infoStat extStat">Fairness:</p>
+                                <p class="statValue extStat">
+                                    {{
+                                        Math.round(
+                                            (Balance.active.dpFairness +
+                                                Balance.active.rgRolesFairness) *
+                                                100
+                                        ) / 100
+                                    }}
+                                </p>
+                            </div>
+                            <div class="leftPlayers">
+                                <BalancePlayer
+                                    v-for="item in fTeam"
+                                    :key="item.staticId"
+                                    :PlayerStatic="Balance.static[item.staticId]"
+                                    :USettings="USettings"
+                                    :PlayerRole="item.roleMask"
+                                    :PlayerTeam="1"
+                                    :StaticID="item.staticId"
+                                />
+                            </div>
+                        </div>
 
-            <p class="vs">VS</p>
-            <div class="playerColumnRight">
-                <div class="stat" v-if="USettings.ExpandedResult">
-                    <p class="infoStat">Uniformity:</p>
-                    <p class="statValue">{{ Balance.active.vqUniformity }}</p>
+                        <p class="vs">VS</p>
+                        <div class="playerColumnRight">
+                            <div class="stat" v-if="USettings.ExpandedResult">
+                                <p class="infoStat extStat">Uniformity:</p>
+                                <p class="statValue extStat">
+                                    {{ Balance.active.vqUniformity }}
+                                </p>
+                            </div>
+                            <div class="rightPlayers">
+                                <BalancePlayer
+                                    v-for="item in sTeam"
+                                    :key="item.staticId"
+                                    :PlayerStatic="Balance.static[item.staticId]"
+                                    :USettings="USettings"
+                                    :PlayerRole="item.roleMask"
+                                    :PlayerTeam="2"
+                                    :StaticID="item.staticId"
+                                />
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="rightPlayers">
-                    <BalancePlayer
-                        v-for="item in sTeam"
-                        :key="item.staticId"
-                        :PlayerStatic="Balance.static[item.staticId]"
-                        :USettings="USettings"
-                        :PlayerRole="item.roleMask"
-                        :PlayerTeam="2"
-                        :StaticID="item.staticId"
-                    />
-                </div>
-            </div>
-        </div>
-    </div>
+            </body>
+        </foreignObject>
+    </svg>
 </template>
 
 <script>
@@ -65,6 +73,11 @@ import BalancePlayer from "./BalancePlayer.vue";
 export default {
     components: { BalancePlayer },
     props: ["Balance", "USettings"],
+    data() {
+        return {
+            viewbox: "0 0 1920 1080"
+        }
+    },
     computed: {
         fTeam: {
             get() {
@@ -111,6 +124,10 @@ export default {
             },
         },
     },
+    mounted() {
+        this.viewbox = "0 0 1920 "
+        this.viewbox += document.getElementById("balance").offsetHeight
+    },
 };
 </script>
 
@@ -134,7 +151,8 @@ p {
     color: #ffffff;
     display: flex;
     flex-direction: column;
-    zoom: 60%;
+    box-sizing: border-box;
+    border: solid transparent 16px;
 }
 
 .players {
@@ -212,5 +230,9 @@ p {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding-bottom: 40px;
+}
+.extStat {
+    margin-top: -60px;
 }
 </style>

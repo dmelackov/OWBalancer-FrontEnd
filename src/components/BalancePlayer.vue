@@ -43,7 +43,6 @@
 </template>
 
 <script>
-import html2canvas from "html2canvas";
 export default {
     props: ["PlayerStatic", "USettings", "PlayerRole", "PlayerTeam", "StaticID"],
     methods: {
@@ -151,10 +150,12 @@ export default {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    cursor: pointer;
+    margin-bottom: -2px;
 }
 
 .player:hover .username {
-    text-decoration: underline
+    text-decoration: underline #5f636e
 }
 
 .username {
@@ -215,6 +216,8 @@ export default {
     gap: 3px;
 }
 .overDrag {
-    box-shadow: inset 0 0px 0px 8px #ffffff;
+    background-color: #222631;
+    box-sizing: border-box;
+    border: inset 5px #5f636e;
 }
 </style>

@@ -131,4 +131,8 @@ export default {
     margin-bottom: 5px;
     text-align: center;
 }
+
+.column_controlls {
+    width: 100%;
+}
 </style>

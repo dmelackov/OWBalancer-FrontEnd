@@ -113,7 +113,7 @@
             <p class="column_title">Balance Design</p>
             <select name="theme" v-model="theme" class="custom_input">
                 <option value="0">Design 1</option>
-                <option value="1">Design 2</option>
+                <!--<option value="1">Design 2</option>-->
             </select>
             <img class="balance_preview" :src="themeImgSrc" alt="" />
         </slot>

@@ -3,7 +3,7 @@
     width: 100%;
     border-radius: 3px;
     padding: 6px;
-    background-color: #090C10;
+    background-color: #090c10;
     box-shadow: none;
     color: #d8d8d8;
     cursor: pointer;
@@ -11,10 +11,10 @@
 }
 
 body {
-    background-color: #090C10;
+    background-color: #090c10;
     min-width: 1200px;
     color: #d8d8d8;
-    font-family: 'Open Sans', sans-serif;
+    font-family: "Open Sans", sans-serif;
     width: 100vw;
     height: 100vh;
     margin: 0 auto;
@@ -39,6 +39,10 @@ button {
     background-color: #069401;
 }
 
+.btn-submit:hover {
+    background-color: #2fce29;
+}
+
 p {
     user-select: none;
 }
@@ -54,7 +58,6 @@ hr {
     border-radius: 1px;
     width: 90%;
 }
-
 
 /* ScrollBar */
 
@@ -98,8 +101,8 @@ input[type="number"]:focus {
     -moz-appearance: number-input;
 }
 
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }

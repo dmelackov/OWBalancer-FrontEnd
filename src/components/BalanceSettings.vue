@@ -1,5 +1,5 @@
 <template>
-    <SettingsColumn ColumnName="Balance Settings">
+    <SettingsColumn ColumnName="Math">
         <slot>
             <div class="num_input">
                 <p class="checkbox_title">Balance Limit</p>

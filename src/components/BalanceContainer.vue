@@ -26,6 +26,13 @@
                 >
                     Balance teams
                 </button>
+                <button
+                    class="btn copy_button btn-submit"
+                    id="copy_button"
+                    @click="copyBalance"
+                >
+                    Copy
+                </button>
             </div>
             <div class="balance_controlls_right">
                 <button
@@ -51,6 +58,7 @@
 <script>
 import axios from "axios";
 import Balancer from "./Balancer.vue";
+import * as domtoimage from "html-to-image";
 
 export default {
     components: { Balancer },
@@ -116,17 +124,26 @@ export default {
             let index = parseInt(localStorage.getItem("balance_index"));
             let balance_active = JSON.parse(localStorage.getItem("balance_active"));
             let balance_static = JSON.parse(localStorage.getItem("balance_static"));
-            
+
             if (!balance_active) return;
             if (index === undefined) return;
             if (!balance_static) return;
-            
+
             this.imageSrc = null;
             this.currentBalance.active = balance_active[index];
             this.currentBalance.static = balance_static;
         },
         async getValuesFromServer() {
             this.Settings = (await axios.get("/api/profile/settings/getSettings")).data;
+        },
+        async copyBalance() {
+            let balance = document.getElementById("svgBalance");
+            let img = await domtoimage.toBlob(balance)
+            console.log(img)
+            // eslint-disable-next-line no-undef
+            const item = new ClipboardItem({ "image/png": img });
+            navigator.clipboard.write([item]);
+            this.$notify({ title: "Balance success copy to clipboard", type: "success" });
         },
     },
     async created() {
@@ -135,17 +152,22 @@ export default {
             this.updateImage();
         });
         this.emitter.on("BalancerDragEnd", async (players) => {
-            if(players[0] == players[1]) return;
-            let tempEl = this.currentBalance.static[players[0]]
-            this.currentBalance.static[players[0]] = this.currentBalance.static[players[1]]
-            this.currentBalance.static[players[1]] = tempEl
-            let res = await axios.post("/api/profile/balance/calcBalance", this.currentBalance)
-            console.log("DROP")
-            if(res == false) {
-                return
+            if (players[0] == players[1]) return;
+            let tempEl = this.currentBalance.static[players[0]];
+            this.currentBalance.static[players[0]] = this.currentBalance.static[
+                players[1]
+            ];
+            this.currentBalance.static[players[1]] = tempEl;
+            let res = await axios.post(
+                "/api/profile/balance/calcBalance",
+                this.currentBalance
+            );
+            console.log("DROP");
+            if (res == false) {
+                return;
             }
             this.currentBalance.active = res.data;
-        })
+        });
         this.setBalanceLenght();
         await this.getValuesFromServer();
         this.emitter.emit("updateBalanceImage");
@@ -220,8 +242,17 @@ export default {
     display: flex;
     align-items: center;
     height: max-content;
+    gap: 20px;
 }
 .balance_controlls {
     padding: 8px 0;
+}
+
+.copy_button {
+    cursor: pointer;
+    height: max-content;
+    border-radius: 6px;
+    padding: 8px 32px;
+    box-shadow: 0 1px 0 #082c0aa8;
 }
 </style>
