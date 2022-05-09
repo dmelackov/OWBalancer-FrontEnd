@@ -4,7 +4,7 @@
             <p>Registration</p>
         </div>
         <div class="form" @submit.prevent="submit">
-            <form action="" name="register_form">
+            <form class="form" action="" name="register_form">
                 <p>
                     <input
                         class="field form-control custom_input"
@@ -104,6 +104,9 @@ export default {
 
 
 <style scoped>
+.title {
+    margin-bottom: 20px;
+}
 .login_form {
     width: max-content;
     height: max-content;
@@ -138,5 +141,11 @@ input.error {
 .form_error {
     color: #da0000;
     font-size: 12px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 </style>

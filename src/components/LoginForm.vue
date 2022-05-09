@@ -99,6 +99,9 @@ export default {
 </script>
 
 <style scoped>
+.title {
+    margin-bottom: 20px;
+}
 .login_form {
     width: max-content;
     height: max-content;
@@ -138,6 +141,6 @@ input.error {
 .form {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 10px;
 }
 </style>
