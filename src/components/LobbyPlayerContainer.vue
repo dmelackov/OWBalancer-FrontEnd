@@ -37,7 +37,7 @@
         <div class="lobby_menu" :style="styleObj">
             <hr />
             <div class="sr lobby_sr">
-                <template v-for="(role, index) in player.Roles" :key="index + player.ID * 10000">
+                <template v-for="(role, index) in player.Roles" :key="role">
                     <RoleComponent :role="role" :custom="player" />
                     <p
                         :class="{

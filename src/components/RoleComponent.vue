@@ -1,25 +1,25 @@
 <template>
     <div class="role">
         <img
-            :src="'/img/' + role.role + '_icon.png'"
+            :src="'/img/' + roleInst.role + '_icon.png'"
             alt=""
             width="30"
             :class="{
                 role_icon: true,
-                innactive: !role.active,
+                innactive: !roleInst.active,
             }"
             @click="toggleRole(role.role)"
         />
         <input
             type="number"
-            v-model="role.sr"
+            v-model="roleInst.sr"
             v-if="custom.editable"
             class="lobby_sr_input"
             @focus="$event.target.select()"
             @keydown.enter="$event.target.blur()"
             @change="setSR()"
         />
-        <p v-if="!custom.editable">{{ role.sr }}</p>
+        <p v-if="!custom.editable">{{ roleInst.sr }}</p>
     </div>
 </template>
 
@@ -30,6 +30,7 @@ export default {
     props: ["role", "custom"],
     data() {
         return {
+            roleInst: this.role,
         };
     },
     methods: {
@@ -51,12 +52,16 @@ export default {
         },
         async setSR() {
             if (this.role.sr > 5000) {
-                this.role.sr = 5000;
+                this.roleInst.sr = 5000;
             } else if (this.role.sr < 0) {
-                this.role.sr = 0;
+                this.roleInst.sr = 0;
             }
-            await axios.post("/api/customs/changeRoleSr", { "role": this.role.role, "rating": this.role.sr, "customId": this.custom.ID })
-            this.emitter.emit("updateLobby")
+            await axios.post("/api/customs/changeRoleSr", {
+                role: this.role.role,
+                rating: this.role.sr,
+                customId: this.custom.ID,
+            });
+            this.emitter.emit("updateLobby");
         },
     },
 };
@@ -96,5 +101,9 @@ export default {
     display: block;
     margin-bottom: 1px;
     cursor: pointer;
+}
+
+p {
+    font-size: 16px;
 }
 </style>

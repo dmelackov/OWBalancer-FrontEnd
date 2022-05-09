@@ -37,9 +37,11 @@
 
         <hr />
         <Scrollbar class="player_list">
-            <template v-for="player in filteredPlayerList" :key="player.ID">
-                <PlayerContainer :player="player" />
-            </template>
+            <PlayerContainer
+                :player="player"
+                v-for="player in filteredPlayerList"
+                :key="player.ID"
+            />
         </Scrollbar>
     </div>
 </template>
@@ -51,7 +53,8 @@ import Scrollbar from "vue3-smooth-scrollbar";
 
 export default {
     components: {
-        PlayerContainer, Scrollbar
+        PlayerContainer,
+        Scrollbar,
     },
     data() {
         return {

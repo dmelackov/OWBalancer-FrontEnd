@@ -4,7 +4,7 @@
             <p>Authorisation</p>
         </div>
         <div class="form" @submit.prevent="submit">
-            <form action="" name="login_form">
+            <form action="" name="login_form" class="form">
                 <p>
                     <input
                         class="field form-control custom_input"
@@ -53,10 +53,9 @@
     </div>
 </template>
 
-
 <script>
 import axios from "axios";
-import router from "../router"
+import router from "../router";
 export default {
     data() {
         return {
@@ -82,15 +81,13 @@ export default {
             bodyFormData.set("login", this.form.login);
             bodyFormData.set("password", this.form.password);
             bodyFormData.set("remember_me", this.form.remember_me);
-            let res = await axios.post(
-                "/api/profile/auth/login",
-                bodyFormData,
-                { headers: { "Content-Type": "multipart/form-data" } }
-            );
+            let res = await axios.post("/api/profile/auth/login", bodyFormData, {
+                headers: { "Content-Type": "multipart/form-data" },
+            });
             let ResData = res.data;
             if (ResData.status == 200) {
-                this.emitter.emit("UpdateLoginState")
-                router.push({path: "/"})
+                this.emitter.emit("UpdateLoginState");
+                router.push({ path: "/" });
             } else {
                 if (ResData.status == 400 && ResData.message) {
                     this.form_error = ResData.message;
@@ -100,7 +97,6 @@ export default {
     },
 };
 </script>
-
 
 <style scoped>
 .login_form {
@@ -137,5 +133,11 @@ input.error {
 .form_error {
     color: #da0000;
     font-size: 12px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 </style>

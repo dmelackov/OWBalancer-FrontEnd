@@ -10,39 +10,42 @@
             <p class="player_username">{{ custom.Player.Username }}</p>
             <div class="sr">
                 <div class="sr_icon">
-                    <img
-                        src="../../public/img/T_icon.png"
-                        alt=""
-                        width="12"
-                        :class="{
-                            innactive: !roles.T,
-                            role_icon: true,
-                        }"
-                    />
-                    <img
-                        src="../../public/img/D_icon.png"
-                        alt=""
-                        width="12"
-                        :class="{
-                            innactive: !roles.D,
-                            role_icon: true,
-                        }"
-                    />
-                    <img
-                        src="../../public/img/H_icon.png"
-                        alt=""
-                        width="12"
-                        :class="{
-                            innactive: !roles.H,
-                            role_icon: true,
-                        }"
-                    />
-                </div>
-
-                <div class="sr_numbers">
-                    <p>{{ SR.T }}</p>
-                    <p>{{ SR.D }}</p>
-                    <p>{{ SR.H }}</p>
+                    <div class="roleSr">
+                        <img
+                            src="../../public/img/T_icon.png"
+                            alt=""
+                            width="12"
+                            :class="{
+                                innactive: !roles.T,
+                                role_icon: true,
+                            }"
+                        />
+                        <p>{{ SR.T }}</p>
+                    </div>
+                    <div class="roleSr">
+                        <img
+                            src="../../public/img/D_icon.png"
+                            alt=""
+                            width="12"
+                            :class="{
+                                innactive: !roles.D,
+                                role_icon: true,
+                            }"
+                        />
+                        <p>{{ SR.D }}</p>
+                    </div>
+                    <div class="roleSr">
+                        <img
+                            src="../../public/img/H_icon.png"
+                            alt=""
+                            width="12"
+                            :class="{
+                                innactive: !roles.H,
+                                role_icon: true,
+                            }"
+                        />
+                        <p>{{ SR.H }}</p>
+                    </div>
                 </div>
             </div>
             <p class="author-left">by {{ custom.Creator.username }}</p>
@@ -116,7 +119,14 @@ export default {
     line-height: 1px;
     font-size: 12px;
 }
-
+.roleSr > p {
+    font-size: 14px;
+}
+.roleSr {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
 .author-left {
     position: absolute;
     color: #3b4b5f;

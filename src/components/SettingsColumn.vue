@@ -1,13 +1,17 @@
 <template>
     <div class="column_widget lobby">
-        <p class="column_title">Settings</p>
+        <p class="column_title">{{ ColumnName }}</p>
         <hr>
         <div class="players_count">
             <slot> </slot>
         </div>
     </div>
 </template>
-
+<script>
+export default {
+    props: ["ColumnName"]
+}
+</script>
 <style scoped>
 @import "../assets/css/global.css";
 

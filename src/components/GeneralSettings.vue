@@ -1,5 +1,5 @@
 <template>
-    <SettingsColumn>
+    <SettingsColumn ColumnName="Settings">
         <slot>
             <div class="checkbox_container">
                 <input
@@ -23,30 +23,19 @@
                 <input
                     type="checkbox"
                     class="checkbox_input"
-                    v-model="Settings.Autoincrement"
+                    v-model="Settings.ExpandedResult"
                     @change="sendNewSettings"
                 />
-                <p class="checkbox_title">Autoincrement</p>
+                <p class="checkbox_title">Extended Result</p>
             </div>
-            <hr />
-            <div class="column_title">Balance</div>
             <div class="checkbox_container">
                 <input
                     type="checkbox"
                     class="checkbox_input"
-                    v-model="Settings.Network"
+                    v-model="Settings.Autoincrement"
                     @change="sendNewSettings"
                 />
-                <p class="checkbox_title">Neuro Network</p>
-            </div>
-            <div class="balance_limit">
-                <p class="checkbox_title">Balance Limit</p>
-                <input
-                    type="number"
-                    class="custom_input"
-                    v-model="Settings.BalanceLimit"
-                    @change="sendNewSettings"
-                />
+                <p class="checkbox_title">Autoincrement</p>
             </div>
             <hr />
             <div class="column_title">Role amount settings</div>
@@ -80,7 +69,7 @@
                 </div>
             </div>
             <hr />
-            <div class="column_title">Team Names</div>
+            <p class="column_title">Teams</p>
             <div class="team_name_settings">
                 <div class="team">
                     <p class="title">Team 1:</p>
@@ -92,11 +81,30 @@
                     />
                 </div>
                 <div class="team">
+                    <p class="title">Team 1 color:</p>
+                    <input
+                        type="color"
+                        class="custom_input"
+                        v-model="Settings.fColor"
+                        @change="sendNewSettings"
+                    />
+                </div>
+
+                <div class="team">
                     <p class="title">Team 2:</p>
                     <input
                         type="text"
                         class="custom_input"
                         v-model="Settings.TeamNames['2']"
+                        @change="sendNewSettings"
+                    />
+                </div>
+                <div class="team">
+                    <p class="title">Team 2 color:</p>
+                    <input
+                        type="color"
+                        class="custom_input"
+                        v-model="Settings.sColor"
                         @change="sendNewSettings"
                     />
                 </div>
@@ -124,15 +132,27 @@ export default {
         return {
             Settings: {
                 Amount: { D: null, H: null, T: null },
+                Math: {
+                    alpha: null,
+                    beta: null,
+                    gamma: null,
+                    p: null,
+                    q: null,
+                    tWeight: null,
+                    dWeight: null,
+                    hWeight: null,
+                },
                 AutoCustom: null,
                 Autoincrement: null,
                 BalanceLimit: null,
                 ExtendedLobby: null,
-                Network: null,
+                ExpandedResult: null,
                 TeamNames: {
                     1: null,
                     2: null,
                 },
+                fColor: null,
+                sColor: null,
             },
             themeID: 0,
         };
@@ -143,16 +163,13 @@ export default {
     },
     methods: {
         async getValuesFromServer() {
-            this.Settings = (
-                await axios.get("/api/profile/settings/getSettings")
-            ).data;
+            this.Settings = (await axios.get("/api/profile/settings/getSettings")).data;
         },
         async sendNewSettings() {
             let seti = this.Settings;
             seti.Amount.T = parseInt(seti.Amount.T);
             seti.Amount.D = parseInt(seti.Amount.D);
             seti.Amount.H = parseInt(seti.Amount.H);
-            seti.BalanceLimit = parseInt(seti.BalanceLimit);
             await axios.post("/api/profile/settings/setSettings", seti);
         },
         getTheme() {
@@ -180,7 +197,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 @import "../assets/css/global.css";
 
 .role {
@@ -201,24 +218,25 @@ export default {
 }
 .column_title {
     margin-bottom: 12px;
+    display: flex;
+    justify-content: center;
 }
+
 .team,
 .balance_limit {
     display: flex;
     align-items: center;
     margin-bottom: 3px;
     height: max-content;
-}
-.team > .title,
-.balance_limit > .title {
-    min-width: max-content;
-    margin: 0;
-    margin-right: 6px;
-}
-.team > input,
-.balance_limit > input {
-    height: 30px;
-    margin: 0;
+    .title {
+        min-width: max-content;
+        margin: 0;
+        margin-right: 6px;
+    }
+    input {
+        height: 30px;
+        margin: 0;
+    }
 }
 .balance_preview {
     margin-top: 12px;

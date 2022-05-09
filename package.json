@@ -11,14 +11,28 @@
   },
   "dependencies": {
     "@kyvg/vue3-notification": "^2.3.4",
-    "axios": "^0.26.0",
-    "core-js": "^3.21.0",
+    "@vue/cli-service": "~5.0.4",
+    "axios": "^0.26.1",
+    "core-js": "^3.22.0",
+    "html2canvas": "^1.4.1",
     "mitt": "^3.0.0",
-    "vue": "^3.2.31",
-    "vue-router": "^4.0.13",
-    "vue3-smooth-scrollbar": "^1.0.2",
-    "@vue/cli-service": "~4.5.15",
-    "vue-template-compiler": "^2.6.14"
+    "vue": "^3.2.33",
+    "vue-native-color-picker": "^1.2.0",
+    "vue-router": "^4.0.14",
+    "vue-template-compiler": "^2.6.14",
+    "vue3-smooth-scrollbar": "^1.0.2"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.12",
+    "@vue/cli-plugin-eslint": "~4.5.12",
+    "@vue/cli-plugin-router": "~4.5.12",
+    "@vue/cli-service": "~4.5.12",
+    "@vue/compiler-sfc": "^3.0.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^7.0.0",
+    "sass": "^1.26.5",
+    "sass-loader": "^8.0.2"
   },
   "eslintConfig": {
     "root": true,
@@ -26,13 +40,17 @@
       "node": true
     },
     "extends": [
-      "plugin:vue/essential",
+      "plugin:vue/vue3-essential",
       "eslint:recommended"
     ],
     "parserOptions": {
       "parser": "babel-eslint"
     },
-    "rules": {}
+    "rules": {
+      "no-unused-vars": "off",
+      "vue/no-multiple-template-root": "off",
+      "vue/html-self-closing": "off"
+    }
   },
   "browserslist": [
     "> 1%",

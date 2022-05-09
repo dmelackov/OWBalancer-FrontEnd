@@ -1,15 +1,17 @@
 <template>
     <div class="content">
         <GeneralSettings />
+        <BalanceSettings />
     </div>
 </template>
 
 <script>
 import GeneralSettings from "../components/GeneralSettings.vue";
-
+import BalanceSettings from "../components/BalanceSettings.vue";
 export default {
     components: {
         GeneralSettings,
+        BalanceSettings
     }
 };
 </script>

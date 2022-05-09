@@ -1,11 +1,22 @@
 <template>
     <div class="balance_container">
-        <img :src="imageSrc" alt="" id="balance_image" />
+        <Balancer
+            :Balance="currentBalance"
+            :USettings="Settings"
+            v-if="this.imageSrc == null"
+        />
+        <img
+            :src="this.imageSrc"
+            alt=""
+            v-if="this.imageSrc != null"
+            id="balance_image"
+        />
         <div
             v-if="isPerm('do_balance')"
             :class="{
                 balance_controlls: true,
             }"
+            class="balance_controlls"
         >
             <div class="balance_controlls_left">
                 <button
@@ -24,9 +35,7 @@
                 >
                     ❮
                 </button>
-                <p id="balance_count">
-                    {{ currentImageIndex }}/{{ balanceLenght }}
-                </p>
+                <p id="balance_count">{{ currentImageIndex }}/{{ balanceLenght }}</p>
                 <button
                     class="btn balance_button"
                     id="balance_button_right"
@@ -41,13 +50,17 @@
 
 <script>
 import axios from "axios";
+import Balancer from "./Balancer.vue";
 
 export default {
+    components: { Balancer },
     data: function () {
         return {
             imageSrc: "./img/balance_alt.png",
             currentImageIndex: 0,
             balanceLenght: 0,
+            currentBalance: {},
+            Settings: {},
         };
     },
     methods: {
@@ -61,26 +74,17 @@ export default {
             this.emitter.emit("updateBalanceImage");
         },
         async getBalances() {
-            this.$notify({title: "Vue 3 notification 🎉", type: "warn"})
-            this.$notify({title: "Vue 3 notification 🎉", type: "error"})
-            this.$notify({title: "Vue 3 notification 🎉", type: "success"})
-            this.$notify({title: "Vue 3 notification 🎉", type: "info"})
             this.imageSrc = "/img/balance_load.png";
-            let res = await axios.get("/api/profile/getBalances");
+            let res = await axios.get("/api/profile/balance/getBalances");
             let balance = res.data;
-            if (balance["ok"]) {
-                localStorage.setItem(
-                    "balance_static",
-                    JSON.stringify(balance.static)
-                );
-                localStorage.setItem(
-                    "balance_active",
-                    JSON.stringify(balance.active)
-                );
+            if (balance["result"] == 200) {
+                localStorage.setItem("balance_static", JSON.stringify(balance.static));
+                localStorage.setItem("balance_active", JSON.stringify(balance.active));
                 localStorage.setItem("balance_index", 0);
                 this.emitter.emit("updateBalanceImage");
             } else {
                 this.imageSrc = "/img/balance_404.png";
+                this.$notify({ title: balance["status"], type: "error" });
                 if (localStorage.getItem("balance_static"))
                     localStorage.removeItem("balance_static");
                 if (localStorage.getItem("balance_active"))
@@ -88,7 +92,6 @@ export default {
                 if (localStorage.getItem("balance_index"))
                     localStorage.removeItem("balance_index");
             }
-            this.setCurrentImageIndex();
             this.setBalanceLenght();
         },
 
@@ -109,36 +112,43 @@ export default {
                 this.balanceLenght = 0;
             }
         },
-        async updateImage() {
+        updateImage() {
             let index = parseInt(localStorage.getItem("balance_index"));
             let balance_active = JSON.parse(localStorage.getItem("balance_active"));
             let balance_static = JSON.parse(localStorage.getItem("balance_static"));
+            
             if (!balance_active) return;
-            if (!index) return;
+            if (index === undefined) return;
             if (!balance_static) return;
-            let current_balance = balance_active["balance_active"][index];
-            let image = await axios.post(
-                "/api/profile/balanceImage",
-                {
-                    active: current_balance,
-                    static: balance_static,
-                    theme:
-                        localStorage.getItem("theme") != null
-                            ? parseInt(localStorage.getItem("theme"))
-                            : 0,
-                },
-                { responseType: "blob" }
-            );
-            let imageBlob = image.data;
-            let urlCreator = window.URL || window.webkitURL;
-            let imageUrl = urlCreator.createObjectURL(imageBlob);
-            this.imageSrc = imageUrl;
+            
+            this.imageSrc = null;
+            this.currentBalance.active = balance_active[index];
+            this.currentBalance.static = balance_static;
+        },
+        async getValuesFromServer() {
+            this.Settings = (await axios.get("/api/profile/settings/getSettings")).data;
         },
     },
-    created() {
-        this.updateImage();
-        this.setCurrentImageIndex();
+    async created() {
+        this.emitter.on("updateBalanceImage", () => {
+            this.setCurrentImageIndex();
+            this.updateImage();
+        });
+        this.emitter.on("BalancerDragEnd", async (players) => {
+            if(players[0] == players[1]) return;
+            let tempEl = this.currentBalance.static[players[0]]
+            this.currentBalance.static[players[0]] = this.currentBalance.static[players[1]]
+            this.currentBalance.static[players[1]] = tempEl
+            let res = await axios.post("/api/profile/balance/calcBalance", this.currentBalance)
+            console.log("DROP")
+            if(res == false) {
+                return
+            }
+            this.currentBalance.active = res.data;
+        })
         this.setBalanceLenght();
+        await this.getValuesFromServer();
+        this.emitter.emit("updateBalanceImage");
     },
 };
 </script>
@@ -210,5 +220,8 @@ export default {
     display: flex;
     align-items: center;
     height: max-content;
+}
+.balance_controlls {
+    padding: 8px 0;
 }
 </style>
