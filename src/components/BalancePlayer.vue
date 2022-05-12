@@ -1,6 +1,6 @@
 <template>
     <div
-        class="player"
+        :class="{player: true, overDrag: dragCount != 0}"
         draggable="true"
         @dragenter="onDragEnter"
         @dragleave="onDragLeave"
@@ -45,6 +45,11 @@
 <script>
 export default {
     props: ["PlayerStatic", "USettings", "PlayerRole", "PlayerTeam", "StaticID"],
+    data(){
+        return {
+            dragCount: 0
+        }
+    },
     methods: {
         getColor() {
             if (this.PlayerTeam == 1) return this.USettings.fColor;
@@ -103,16 +108,11 @@ export default {
             return roles.reverse();
         },
         onDragEnter(ev) {
-            if (ev.target != this.$el) {
-                this.$el.classList.add("overDrag");
-            }
+            this.dragCount += 1
             ev.preventDefault();
         },
         onDragLeave(ev) {
-            if (ev.target != this.$el) {
-                this.$el.classList.remove("overDrag");
-            }
-
+            this.dragCount -= 1
             ev.preventDefault();
         },
         onDragOver(ev) {
@@ -121,8 +121,10 @@ export default {
         onDragStart(ev) {
             ev.dataTransfer.dropEffect = "move";
             ev.dataTransfer.setData("text/plain", this.StaticID);
+            ev.dataTransfer.setDragImage(new Image(), 5000, 5000)
         },
         onDrop(ev) {
+            this.dragCount = 0
             this.$el.classList.remove("overDrag");
             ev.preventDefault();
             console.log(ev.dataTransfer.getData("text"));
@@ -155,7 +157,7 @@ export default {
 }
 
 .player:hover .username {
-    text-decoration: underline #5f636e
+    text-decoration: underline #5f636e;
 }
 
 .username {

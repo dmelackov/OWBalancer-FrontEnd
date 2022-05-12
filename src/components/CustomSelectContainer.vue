@@ -1,19 +1,25 @@
 <template>
-    <div id="customSelect" :class="['customSelect']" :style="styleObj">
+    <div
+        id="customSelect"
+        :class="['customSelect']"
+        :style="{
+            opacity: this.customMenuVisible ? '1' : '0',
+            left: left + 'px',
+            top: top + 'px',
+        }"
+    >
         <div class="custom_select">
             <div class="customs" v-if="customList.length > 0">
                 <div id="CustomTableSelect">
                     <template v-for="custom in customList" :key="custom.ID">
-                        <CustomPattern
-                            :custom="custom"
-                        />
+                        <CustomPattern :custom="custom" />
                     </template>
                 </div>
             </div>
             <button
-            v-if="isPerm('create_custom')"
+                v-if="isPerm('create_custom')"
                 :class="{
-                    create_container: true
+                    create_container: true,
                 }"
                 @click="createCustom"
             >
@@ -25,7 +31,7 @@
 
 <script>
 import CustomPattern from "./CustomPattern.vue";
-import axios from "axios"
+import axios from "axios";
 export default {
     components: {
         CustomPattern,
@@ -35,26 +41,26 @@ export default {
             customList: [],
             customMenuVisible: false,
             target: null,
+            left: 0,
+            top: 0,
         };
     },
     methods: {
         async createCustom() {
-            await axios.post("/api/customs/createCustom", { "id": this.target.player.ID });
-                this.close();
-                this.emitter.emit("updateLobby")
+            await axios.post("/api/customs/createCustom", { id: this.target.player.ID });
+            this.close();
+            this.emitter.emit("updateLobby");
         },
         async open(target) {
             this.target = target;
-            const res = await axios.get(
-                "/api/customs/getCustoms/" + target.player.ID
-            );
+            const res = await axios.get("/api/customs/getCustoms/" + target.player.ID);
             const resData = res.data;
             if (resData.type == "custom") {
                 this.close();
                 await axios.post("/api/lobby/addToLobby", {
                     id: resData.data.ID,
                 });
-                this.emitter.emit("updateLobby")
+                this.emitter.emit("updateLobby");
                 return;
             }
             if (resData.data) {
@@ -69,31 +75,38 @@ export default {
             if (this.target) this.target.active = false;
             this.customMenuVisible = false;
         },
-    },
-    computed: {
-        styleObj: function () {
-            if (!this.customMenuVisible || this.target == null)
-                return { display: "none" };
+
+        resize() {
             let lineRect = this.target.$el.getBoundingClientRect();
             let totalHeight = lineRect.y;
-            if (lineRect.y + 200 > document.documentElement.clientHeight - 20) {
+            let thiselementRect = this.$el.getBoundingClientRect();
+            if (
+                lineRect.y + thiselementRect.height >
+                document.documentElement.clientHeight - 20
+            ) {
                 totalHeight -=
                     lineRect.y +
-                    200 -
+                    thiselementRect.height -
                     document.documentElement.clientHeight +
                     20;
             }
-            return {
-                top: totalHeight + "px",
-                left: lineRect.x + lineRect.width + 20 + "px",
-                display: "block",
-            };
+            this.left = lineRect.x + lineRect.width + 20;
+            this.top = totalHeight;
+        },
+    },
+    watch: {
+        customMenuVisible(newVisible, oldVisible) {
+            if (!newVisible) return;
+            this.resize()
         },
     },
     created() {
         this.emitter.on("openCustomMenu", (e) => this.open(e));
         this.emitter.on("closeCustomMenu", () => this.close());
     },
+    updated() {
+        this.resize()
+    }
 };
 </script>
 
