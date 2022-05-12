@@ -3,7 +3,7 @@
         id="customSelect"
         :class="['customSelect']"
         :style="{
-            opacity: this.customMenuVisible ? '1' : '0',
+            display: this.customMenuVisible ? 'block' : 'none',
             left: left + 'px',
             top: top + 'px',
         }"
