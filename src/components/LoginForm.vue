@@ -87,7 +87,7 @@ export default {
             let ResData = res.data;
             if (ResData.status == 200) {
                 this.emitter.emit("UpdateLoginState");
-                router.back()
+                router.push("/balancer")
             } else {
                 if (ResData.status == 400 && ResData.message) {
                     this.form_error = ResData.message;
