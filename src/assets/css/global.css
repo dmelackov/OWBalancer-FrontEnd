@@ -10,7 +10,7 @@
     border: none;
 }
 
-body {
+#body {
     background-color: #090c10;
     min-width: 1200px;
     color: #d8d8d8;

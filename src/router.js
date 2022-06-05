@@ -12,7 +12,8 @@ const router = createRouter({
             path: "/",
             component: BalancerPage,
             meta: {
-                title: "OWBalancer"
+                title: "OWBalancer",
+                requiresAuth: true
             }
         },
         {
@@ -57,6 +58,15 @@ const router = createRouter({
             meta: {
                 requiresAuth: true,
                 title: "Statistics"
+            },
+
+        },
+        {
+            path: "/profile", 
+            //component: BalancerPage,
+            meta: {
+                requiresAuth: true,
+                title: "Profile"
             },
 
         },

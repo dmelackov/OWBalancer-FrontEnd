@@ -1,7 +1,7 @@
 <template>
     <svg id="svgBalance" xmlns="http://www.w3.org/2000/svg" width="100%" :viewBox="viewbox">
         <foreignObject class="node" x="0" y="0" width="1920px" height="100%">
-            <body xmlns="http://www.w3.org/1999/xhtml">
+            <body xmlns="http://www.w3.org/1999/xhtml" width="100%">
                 <div id="balance">
                     <div class="balanceInfo">
                         <p class="leftTeamName">{{ USettings.TeamNames[1] }}</p>
