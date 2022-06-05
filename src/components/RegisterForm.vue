@@ -32,7 +32,7 @@
                         class="field form-control custom_input"
                         id="password_again"
                         name="password_again"
-                        placeholder="Password"
+                        placeholder="Repeat password"
                         required=""
                         type="password"
                         v-model="form.repeat_password"
@@ -104,6 +104,9 @@ export default {
 
 
 <style scoped>
+p {
+    margin: 0
+}
 .title {
     margin-bottom: 20px;
 }
@@ -146,6 +149,6 @@ input.error {
 .form {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 20px;
 }
 </style>

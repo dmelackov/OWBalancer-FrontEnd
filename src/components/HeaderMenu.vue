@@ -1,27 +1,56 @@
 <template>
     <div class="header">
-        <nav class="menu">
+        <div class="menu">
             <div class="menu-left">
-                <router-link to="/">Games</router-link>
-                <router-link to="/balancer">Balancer</router-link>
-                <router-link to="/settings">Settings</router-link>
+                <div class="linkContainer">
+                    <router-link class="link" to="/">Balancer</router-link>
+                </div>
+                <div class="linkContainer">
+                    <router-link class="link" to="/workspace">Workspace</router-link>
+                </div>
+                <div class="linkContainer">
+                    <router-link class="link" to="/statistics">Statistics</router-link>
+                </div>
             </div>
-            <div class="menu-right">
-                <a to="/settings" href="/api/profile/auth/logout" data-tooltip="Quit" v-if="Username != null">{{
-                    Username
-                }}</a>
-                <router-link to="/login" v-if="Username == null">Authorization</router-link>
+            <div class="menu-right" >
+                <div :class="{ usernameMenuOpened: menuOpened }">
+                    <p class="username" v-if="Username != null" @click="toggleMenu">
+                        {{ Username }}
+                    </p>
+                    <router-link class="link" to="/login" v-else
+                        >Authorization</router-link
+                    >
+                </div>
             </div>
-        </nav>
+        </div>
+    </div>
+    <div class="profileMenu" v-show="menuOpened">
+        <p class="workspaceName">WorkspaceName</p>
+        <p class="workspaceStatus">WorkspaceStatus</p>
+        <hr />
+        <div class="linkContainer">
+            <router-link class="link" to="/profile">Profile</router-link>
+        </div>
+        <div class="linkContainer">
+            <router-link class="link" to="/settings">Settings</router-link>
+        </div>
+        <div class="linkContainer">
+            <a class="link" href="">Guide</a>
+        </div>
+        <div class="linkContainer">
+            <a class="link exit" @click="exit">Exit</a>
+        </div>
     </div>
 </template>
 
 <script>
 import axios from "axios";
+import router from "../router";
 export default {
     data() {
         return {
             Username: "",
+            menuOpened: false,
         };
     },
     methods: {
@@ -30,57 +59,146 @@ export default {
             let infoContent = info.data;
             this.Username = infoContent.Username;
         },
+        toggleMenu() {
+            this.menuOpened = !this.menuOpened;
+        },
+        async exit() {
+            this.menuOpened = false;
+            let res = await axios.post("/api/profile/auth/logout");
+            let ResData = res.data;
+            if (ResData.status == 200) {
+                this.emitter.emit("UpdateLoginState");
+                setTimeout(() => {
+                    router.push("/login");
+                }, 100);
+            } 
+        },
     },
     created() {
-        this.emitter.on("UpdateLoginState", () => this.getUserData())
+        this.emitter.on("UpdateLoginState", () => this.getUserData());
         this.getUserData();
     },
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 @import "../assets/css/global.css";
 
 .header {
-    height: 32px;
+    height: 64px;
     background-color: #161b22;
-    padding: 16px 32px;
     display: flex;
+    .menu {
+        display: flex;
+        flex-direction: row;
+        align-content: center;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+
+        div {
+            height: 100%;
+        }
+
+        .menu-left {
+            display: flex;
+
+            .link {
+                height: 100%;
+                display: flex;
+                align-items: center;
+                padding: 0 16px 0 16px;
+                &.router-link-active {
+                    background: rgba(255, 255, 255, 0.025);
+                }
+                &:hover {
+                    background: rgba(255, 255, 255, 0.05);
+                }
+            }
+        }
+        .menu-right {
+            height: 100%;
+            display: flex;
+
+            div {
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                .username {
+                    color: #ffffff;
+                    width: 128px;
+                    padding: 0 16px 0 16px;
+                    text-overflow: clip;
+                    height: 100%;
+                    text-align: center;
+                    line-height: 64px;
+                }
+                .link {
+                    text-align: center;
+                    line-height: 64px;
+                    width: 128px;
+                    padding: 0 16px 0 16px;
+                }
+                &.usernameMenuOpened {
+                    background: #242d38;
+                }
+
+                &:hover {
+                    cursor: pointer;
+                    background: rgba(255, 255, 255, 0.05);
+                }
+            }
+        }
+    }
 }
-
-.menu {
-    display: flex;
-    flex-direction: row;
-    align-content: center;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-}
-
-
-[data-tooltip] {
-    position: relative;
-}
-
-[data-tooltip]::after {
-    content: attr(data-tooltip);
+.profileMenu {
     position: absolute;
-    width: max-content;
-    left: 50%;
-    transform: translate(-50%, 0);
-    top: 0;
-    background: #444444;
-    color: #fff;
-    padding: 0.5em;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-    pointer-events: none;
-    opacity: 0;
-    transition: 0.5s;
-    border-radius: 6px;
-}
+    right: 0;
+    top: 64px;
 
-[data-tooltip]:hover::after {
-    opacity: 0.3;
-    top: 2em;
+    background: #1b222b;
+    border-radius: 0 0 0 10px;
+
+    height: max-content;
+    width: 160px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .workspaceName,
+    .workspaceStatus {
+        color: rgb(199, 199, 199);
+        margin: 0;
+    }
+    .workspaceName {
+        font-size: 16px;
+    }
+    .workspaceStatus {
+        font-size: 12px;
+    }
+    hr {
+        margin-top: 4px;
+        margin-bottom: 4px;
+    }
+    .linkContainer {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        .link {
+            width: 100%;
+            height: max-content;
+            padding: 4px 0 4px 0;
+            &:hover {
+                background: rgba(255, 255, 255, 0.05);
+            }
+            &.exit {
+                cursor: pointer;
+                color: rgb(253, 191, 191);
+            }
+        }
+    }
 }
 </style>

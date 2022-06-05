@@ -10,11 +10,10 @@ const router = createRouter({
     routes: [
         {
             path: "/",
-            component: GamesPage,
+            component: BalancerPage,
             meta: {
-                title: "Games"
-            },
-            redirect: {path: "balancer"}
+                title: "OWBalancer"
+            }
         },
         {
             path: "/login",
@@ -44,10 +43,20 @@ const router = createRouter({
 
         },
         {
-            path: "/balancer", component: BalancerPage,
+            path: "/workspace",
+            //component: SettingsPage,
             meta: {
                 requiresAuth: true,
-                title: "OWBalancer"
+                title: "Workspace"
+            },
+
+        },
+        {
+            path: "/statistics", 
+            //component: BalancerPage,
+            meta: {
+                requiresAuth: true,
+                title: "Statistics"
             },
 
         },

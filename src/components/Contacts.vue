@@ -34,12 +34,12 @@ export default {
     font-size: 14px;
 }
 
-
 .contacts {
     width: max-content;
     display: flex;
     align-content: center;
     align-items: center;
     flex-wrap: nowrap;
+    gap: 10px;
 }
 </style>

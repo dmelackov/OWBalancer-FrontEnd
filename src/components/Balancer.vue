@@ -131,7 +131,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 @font-face {
     font-family: "TeamFont";
     src: url("/TeamFont.ttf");

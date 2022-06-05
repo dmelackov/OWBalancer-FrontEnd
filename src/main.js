@@ -20,8 +20,8 @@ import Notifications from '@kyvg/vue3-notification'
     emitter.on("UpdateLoginState", async () => {
         UserInfo = (await axios.get("/api/profile/getCurrentUserInfo")).data
         axios
-        .get("/api/profile/getPermissions")
-        .then((response) => (perms = response.data));
+            .get("/api/profile/getPermissions")
+            .then((response) => (perms = response.data));
     })
 
     axios.defaults.headers.common["X-CSRF-TOKEN"] = (await axios.get("/api/profile/auth/getCSRF")).data
@@ -36,13 +36,13 @@ import Notifications from '@kyvg/vue3-notification'
             } else {
                 next("/login");
             }
-        } else if(to.matched.some((route) => route.meta.requiresNotAuth)) {
+        } else if (to.matched.some((route) => route.meta.requiresNotAuth)) {
             if (UserInfo.Auth) {
                 next("/");
             } else {
                 next();
             }
-        } 
+        }
         else {
             next();
         }

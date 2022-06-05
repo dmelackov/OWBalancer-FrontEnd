@@ -13,8 +13,8 @@
             @mouseleave="active = false"
         >
             <p class="player_username">{{ player.Player.Username }}</p>
-            <div class="sr_lobby" v-if="!active">
-                <div class="sr_lobby_icon" v-if="!player.isFlex">
+            <div class="sr_lobby" v-show="!active">
+                <div class="sr_lobby_icon" v-show="!player.isFlex">
                     <img
                         :src="'/img/' + role.role + '_icon.png'"
                         alt=""
@@ -32,7 +32,7 @@
                 />
             </div>
             <p class="author-right">{{ player.Creator.username }}</p>
-            <p class="X" v-if="active" @click="deleteFromLobby">✖</p>
+            <p class="X" v-show="active" @click="deleteFromLobby">✖</p>
         </div>
         <div class="lobby_menu" :style="styleObj">
             <hr />

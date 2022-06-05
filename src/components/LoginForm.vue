@@ -87,7 +87,9 @@ export default {
             let ResData = res.data;
             if (ResData.status == 200) {
                 this.emitter.emit("UpdateLoginState");
-                router.push("/balancer")
+                setTimeout(() => {
+                    router.push("/");
+                }, 100);
             } else {
                 if (ResData.status == 400 && ResData.message) {
                     this.form_error = ResData.message;
@@ -99,6 +101,9 @@ export default {
 </script>
 
 <style scoped>
+p {
+    margin: 0
+}
 .title {
     margin-bottom: 20px;
 }
@@ -141,6 +146,6 @@ input.error {
 .form {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 20px;
 }
 </style>

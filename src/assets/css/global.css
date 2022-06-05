@@ -29,7 +29,9 @@ button {
     background-color: transparent;
     cursor: pointer;
 }
-
+p {
+    margin: 0
+}
 .btn {
     width: max-content;
     padding: 5px 10px 5px 10px;
@@ -50,7 +52,6 @@ p {
 a {
     text-decoration: none;
     color: #ffffff;
-    padding: 10px;
 }
 
 hr {
