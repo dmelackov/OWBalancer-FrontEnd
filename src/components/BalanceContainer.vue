@@ -145,13 +145,11 @@ export default {
             navigator.clipboard.write([item]);
             this.$notify({ title: "Balance success copy to clipboard", type: "success" });
         },
-    },
-    async created() {
-        this.emitter.on("updateBalanceImage", () => {
+        updateBalanceImage(){
             this.setCurrentImageIndex();
             this.updateImage();
-        });
-        this.emitter.on("BalancerDragEnd", async (players) => {
+        },
+        async balancerDragEnd(players){
             if (players[0] == players[1]) return;
             let tempEl = this.currentBalance.static[players[0]];
             this.currentBalance.static[players[0]] = this.currentBalance.static[
@@ -167,11 +165,19 @@ export default {
                 return;
             }
             this.currentBalance.active = res.data;
-        });
+        }
+    },
+    async created() {
+        this.emitter.on("updateBalanceImage", this.updateBalanceImage);
+        this.emitter.on("BalancerDragEnd", this.balancerDragEnd);
         this.setBalanceLenght();
         await this.getValuesFromServer();
         this.emitter.emit("updateBalanceImage");
     },
+    unmounted(){
+        this.emitter.off("updateBalanceImage", this.updateBalanceImage);
+        this.emitter.off("BalancerDragEnd", this.balancerDragEnd);
+    }
 };
 </script>
 

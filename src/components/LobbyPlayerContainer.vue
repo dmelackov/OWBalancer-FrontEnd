@@ -80,11 +80,16 @@ export default {
         };
     },
     created(){
-        this.emitter.on("lobbyCustomMenuOpen", (e) => {
-            if(e != this) this.close()
-        })
+        this.emitter.on("lobbyCustomMenuOpen", this.lobbyCustomMenuOpen)
     },
+    unmounted(){
+        this.emitter.off("lobbyCustomMenuOpen", this.lobbyCustomMenuOpen)
+    },
+    
     methods: {
+        lobbyCustomMenuOpen(e) {
+            if(e != this) this.close()
+        },
         open(event) {
             if (event.target.classList.contains("X")) return;
             if (this.menuOpened) {this.close(); return}

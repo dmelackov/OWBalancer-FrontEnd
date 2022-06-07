@@ -92,9 +92,13 @@ export default {
         },
     },
     async created() {
-        this.emitter.on("updatePlayers", () => this.updatePlayers());
+        this.emitter.on("updatePlayers", this.updatePlayers);
         this.updatePlayers();
     },
+    unmounted(){
+        this.emitter.off("updatePlayers", this.updatePlayers);
+    }
+
 };
 </script>
 

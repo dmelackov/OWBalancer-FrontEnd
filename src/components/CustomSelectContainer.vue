@@ -101,11 +101,15 @@ export default {
         },
     },
     created() {
-        this.emitter.on("openCustomMenu", (e) => this.open(e));
-        this.emitter.on("closeCustomMenu", () => this.close());
+        this.emitter.on("openCustomMenu", this.open);
+        this.emitter.on("closeCustomMenu", this.close);
     },
     updated() {
         this.resize()
+    },
+    unmounted(){
+        this.emitter.off("openCustomMenu", this.open);
+        this.emitter.off("closeCustomMenu", this.close);
     }
 };
 </script>

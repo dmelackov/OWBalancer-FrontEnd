@@ -59,8 +59,11 @@ export default {
 
     async created() {
         this.updateLobby();
-        this.emitter.on("updateLobby", () => this.updateLobby());
+        this.emitter.on("updateLobby", this.updateLobby);
     },
+    unmounted(){
+        this.emitter.off("updateLobby", this.updateLobby);
+    }
 };
 
 async function sendPOST(url, params) {

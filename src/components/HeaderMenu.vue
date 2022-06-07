@@ -77,6 +77,11 @@ export default {
     created() {
         this.emitter.on("UpdateLoginState", () => this.getUserData());
         this.getUserData();
+        document.body.addEventListener("mousedown", (e) => {
+            if (!e.target.closest(".profileMenu") && !e.target.closest(".menu-right")) {
+                this.menuOpened = false
+            }
+        });
     },
 };
 </script>
@@ -85,7 +90,7 @@ export default {
 @import "../assets/css/global.css";
 
 .header {
-    height: 64px;
+    height: 52px;
     background-color: #161b22;
     display: flex;
     .menu {
@@ -128,17 +133,17 @@ export default {
 
                 .username {
                     color: #ffffff;
-                    width: 128px;
+                    width: 164px;
                     padding: 0 16px 0 16px;
                     text-overflow: clip;
                     height: 100%;
                     text-align: center;
-                    line-height: 64px;
+                    line-height: 52px;
                 }
                 .link {
                     text-align: center;
-                    line-height: 64px;
-                    width: 128px;
+                    line-height: 52px;
+                    width: 164px;
                     padding: 0 16px 0 16px;
                 }
                 &.usernameMenuOpened {
@@ -156,14 +161,14 @@ export default {
 .profileMenu {
     position: absolute;
     right: 0;
-    top: 64px;
+    top: 52px;
 
     background: #1b222b;
-    border-radius: 0 0 0 10px;
+    border-radius: 0 0 0 6px;
 
     height: max-content;
-    width: 160px;
-
+    width: 196px;
+    opacity: .9;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -197,6 +202,9 @@ export default {
             &.exit {
                 cursor: pointer;
                 color: rgb(253, 191, 191);
+                &:hover {
+                    border-radius: 0 0 0 6px;
+                }
             }
         }
     }

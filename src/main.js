@@ -24,8 +24,6 @@ import Notifications from '@kyvg/vue3-notification'
             .then((response) => (perms = response.data));
     })
 
-    axios.defaults.headers.common["X-CSRF-TOKEN"] = (await axios.get("/api/profile/auth/getCSRF")).data
-
     const app = createApp(App)
 
 

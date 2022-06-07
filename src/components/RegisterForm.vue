@@ -61,7 +61,6 @@ import axios from "axios";
 export default {
     data() {
         return {
-            csrf: "",
             form: {
                 login: "",
                 password: "",
@@ -70,17 +69,11 @@ export default {
             form_error: "",
         };
     },
-    created() {
-        this.updateCSRF();
-    },
+
     methods: {
-        async updateCSRF() {
-            this.csrf = (await axios.get("/api/profile/auth/getCSRF")).data;
-        },
         async submit() {
             this.form_error = "";
             let bodyFormData = new FormData();
-            bodyFormData.set("csrf_token", this.csrf);
             bodyFormData.set("login", this.form.login);
             bodyFormData.set("password", this.form.password);
             bodyFormData.set("password_again", this.form.repeat_password);
