@@ -12,16 +12,14 @@ import Notifications from '@kyvg/vue3-notification'
     const emitter = mitt();
 
     let perms = [];
-    axios
-        .get("/api/profile/getPermissions")
-        .then((response) => (perms = response.data));
+    let res = await axios.get("/api/profile/getPermissions")
+    perms = res.data
 
     let UserInfo = (await axios.get("/api/profile/getCurrentUserInfo")).data
     emitter.on("UpdateLoginState", async () => {
         UserInfo = (await axios.get("/api/profile/getCurrentUserInfo")).data
-        axios
-            .get("/api/profile/getPermissions")
-            .then((response) => (perms = response.data));
+        let res = await axios.get("/api/profile/getPermissions")
+    perms = res.data
     })
 
     const app = createApp(App)
