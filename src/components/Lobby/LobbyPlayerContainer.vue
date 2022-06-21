@@ -145,8 +145,8 @@ async function sendPOST(url, params) {
 </script>
 
 <style scoped>
-@import "../assets/css/global.css";
-@import "../assets/css/playerContainer.css";
+
+@import "../../assets/css/playerContainer.css";
 
 .error {
     box-shadow: 0 1px 0 #c72727a8;

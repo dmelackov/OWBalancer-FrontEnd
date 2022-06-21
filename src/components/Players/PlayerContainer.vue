@@ -33,8 +33,8 @@ export default {
 </script>
 
 <style scoped>
-@import "../assets/css/global.css";
-@import "../assets/css/playerContainer.css";
+
+@import "../../assets/css/playerContainer.css";
 
 .cursor {
     font-size: 22px;

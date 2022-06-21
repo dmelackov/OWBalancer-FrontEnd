@@ -13,7 +13,7 @@ export default {
 
 
 <style scoped>
-@import "../assets/css/global.css";
+
 .content {
     height: 100%;
     max-width: 100vw;

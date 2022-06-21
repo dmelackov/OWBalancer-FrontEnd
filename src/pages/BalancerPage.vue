@@ -8,10 +8,10 @@
 </template>
 
 <script>
-import LobbyColumn from "../components/LobbyColumn.vue";
-import PlayerColumn from "../components/PlayerColumn.vue";
-import CustomSelectContainer from "../components/CustomSelectContainer.vue";
-import BalanceContainer from "../components/BalanceContainer.vue";
+import LobbyColumn from "../components/Lobby/LobbyColumn.vue";
+import PlayerColumn from "../components/Players/PlayerColumn.vue";
+import CustomSelectContainer from "../components/Players/CustomSelectContainer.vue";
+import BalanceContainer from "../components/Balancer/BalanceContainer.vue";
 
 export default {
     components: {
@@ -36,7 +36,7 @@ export default {
 
 
 <style scoped>
-@import "../assets/css/global.css";
+
 .content {
     height: 100%;
     display: flex;

@@ -12,7 +12,7 @@
                 <div class="sr_icon">
                     <div class="roleSr">
                         <img
-                            src="../../public/img/T_icon.png"
+                            src="/img/T_icon.png"
                             alt=""
                             width="12"
                             :class="{
@@ -24,7 +24,7 @@
                     </div>
                     <div class="roleSr">
                         <img
-                            src="../../public/img/D_icon.png"
+                            src="/img/D_icon.png"
                             alt=""
                             width="12"
                             :class="{
@@ -36,7 +36,7 @@
                     </div>
                     <div class="roleSr">
                         <img
-                            src="../../public/img/H_icon.png"
+                            src="/img/H_icon.png"
                             alt=""
                             width="12"
                             :class="{
@@ -90,8 +90,8 @@ export default {
 </script>
 
 <style scoped>
-@import "../assets/css/global.css";
-@import "../assets/css/playerContainer.css";
+
+@import "../../assets/css/playerContainer.css";
 
 .my_custom_warn {
     box-shadow: 0 1px 0 #1abe5fa8;

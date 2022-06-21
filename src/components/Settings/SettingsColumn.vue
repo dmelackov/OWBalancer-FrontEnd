@@ -13,7 +13,7 @@ export default {
 }
 </script>
 <style scoped>
-@import "../assets/css/global.css";
+
 
 .column_widget {
     display: flex;

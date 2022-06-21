@@ -68,7 +68,7 @@ export default {
 </script>
 
 <style scoped>
-@import "../assets/css/global.css";
+
 
 .role {
     display: flex;

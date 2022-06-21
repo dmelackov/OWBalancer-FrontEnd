@@ -42,7 +42,9 @@ export default {
     },
 };
 </script>
-
+<style>
+@import "../assets/css/global.css";
+</style>
 <style lang="scss" scoped>
 #app_content {
     width: 100%;

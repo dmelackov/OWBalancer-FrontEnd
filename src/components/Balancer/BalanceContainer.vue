@@ -182,7 +182,7 @@ export default {
 </script>
 
 <style scoped>
-@import "../assets/css/global.css";
+
 
 .balance_container {
     margin-right: 50px;

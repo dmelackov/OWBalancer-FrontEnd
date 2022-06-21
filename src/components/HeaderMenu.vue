@@ -87,7 +87,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import "../assets/css/global.css";
+
 
 .header {
     height: 52px;

@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import GeneralSettings from "../components/GeneralSettings.vue";
-import BalanceSettings from "../components/BalanceSettings.vue";
+import GeneralSettings from "../components/Settings/GeneralSettings.vue";
+import BalanceSettings from "../components/Settings/BalanceSettings.vue";
 export default {
     components: {
         GeneralSettings,
@@ -17,7 +17,7 @@ export default {
 </script>
 
 <style scoped>
-@import "../assets/css/global.css";
+
 .content {
     height: 100%;
     display: flex;

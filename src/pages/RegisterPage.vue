@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import RegisterForm from "../components/RegisterForm.vue";
-import Contacts from "../components/Contacts.vue";
+import RegisterForm from "../components/Authorization/RegisterForm.vue";
+import Contacts from "../components/Authorization/Contacts.vue";
 
 export default {
     components: {
@@ -18,7 +18,7 @@ export default {
 </script>
 
 <style scoped>
-@import "../assets/css/global.css";
+
 .content {
     display: flex;
     flex-direction: column;

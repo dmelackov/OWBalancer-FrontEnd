@@ -72,7 +72,7 @@ async function sendPOST(url, params) {
 </script>
 
 <style scoped>
-@import "../assets/css/global.css";
+
 .column_widget {
     display: flex;
     flex-direction: column;

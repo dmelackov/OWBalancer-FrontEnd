@@ -115,7 +115,7 @@ export default {
 </script>
 
 <style scoped>
-@import "../assets/css/global.css";
+@import "/src/assets/css/global.css";
 
 .customSelect {
     position: fixed;
