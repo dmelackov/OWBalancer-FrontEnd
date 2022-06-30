@@ -16,12 +16,13 @@
                 </button>
             </div>
             <div class="customsControl">
-                <Scrollbar class="lobby_list">
-                    <template v-for="custom in customs" :key="custom.ID">
-                        <EditMenuCustom :custom="custom" />
-                    </template>
+                <Scrollbar>
+                    <div class="lobby_list">
+                        <template v-for="custom in customs" :key="custom.ID">
+                            <EditMenuCustom :custom="custom" />
+                        </template>
+                    </div>
                 </Scrollbar>
-
             </div>
             <div class="formControl">
                 <button class="cancelButton btn" @click="close">Cancel</button>
@@ -41,14 +42,22 @@
 </template>
 
 <script>
-import EditMenuCustom from "./EditMenuCustom.vue"
+import EditMenuCustom from "./EditMenuCustom.vue";
 import Scrollbar from "vue3-smooth-scrollbar";
 import axios from "axios";
+import useLoginState from "/src/store/LoginState";
 
 export default {
+    setup() {
+        const { Settings, UserInfo } = useLoginState();
+        return {
+            Settings,
+            UserInfo,
+        };
+    },
     components: {
         Scrollbar,
-        EditMenuCustom
+        EditMenuCustom,
     },
     data() {
         return {
@@ -60,23 +69,23 @@ export default {
                 ID: 0,
                 Creator: {
                     ID: 0,
-                    Username: ""
+                    Username: "",
                 },
             },
-            customs: []
+            customs: [],
         };
     },
     computed: {
-        edited(){
-            return this.changed || this.deleted
-        }
-    }, 
+        edited() {
+            return this.changed || this.deleted;
+        },
+    },
     methods: {
         async open(player) {
             this.player = player;
             this.deleted = false;
             this.changed = false;
-            await this.loadCustoms()
+            await this.loadCustoms();
             this.opened = true;
         },
         close() {
@@ -95,10 +104,10 @@ export default {
         change() {
             this.changed = true;
         },
-        async loadCustoms(){
+        async loadCustoms() {
             const res = await axios.get("/api/customs/getCustoms/" + this.player.ID);
             this.customs = res.data;
-        }
+        },
     },
     created() {
         this.emitter.on("openPlayerEditMenu", this.open);
@@ -119,7 +128,7 @@ export default {
     width: 100vw;
     height: calc(100vh - 52px);
     background: rgba(0, 0, 0, 0.75);
-    
+
     display: flex;
     justify-content: center;
     align-items: center;
@@ -169,6 +178,11 @@ export default {
             background-color: $back1;
             border-radius: 6px;
             padding: 16px;
+            .lobby_list {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+            }
         }
         .formControl {
             display: flex;
@@ -197,7 +211,6 @@ export default {
                     background-color: $back4;
                 }
             }
-            
         }
     }
 }

@@ -32,7 +32,16 @@
 <script>
 import CustomPattern from "./CustomPattern.vue";
 import axios from "axios";
+import useLoginState from "/src/store/LoginState";
+
 export default {
+    setup() {
+        const { Settings, UserInfo } = useLoginState();
+        return {
+            Settings,
+            UserInfo,
+        };
+    },
     components: {
         CustomPattern,
     },
@@ -47,25 +56,45 @@ export default {
     },
     methods: {
         async createCustom() {
-            let custom = (await axios.post("/api/customs/createCustom", { id: this.target.player.ID })).data;
-            // TODO
-            this.close();
-            this.emitter.emit("updateLobby");
+            let custom = (
+                await axios.post("/api/customs/createCustom", {
+                    id: this.target.player.ID,
+                })
+            ).data;
+
+            axios.post("/api/lobby/addToLobby", {
+                id: custom.ID,
+            }).catch(() => {
+
+            }).finally(() => {
+                this.close();
+                this.emitter.emit("updateLobby");
+            });
+
+
         },
         async open(target) {
             this.target = target;
             const res = await axios.get("/api/customs/getCustoms/" + target.player.ID);
             const resData = res.data;
-            if(this.Settings.AutoCustom) {
-                await axios.post("/api/lobby/addToLobby", {
-                    id: resData.data.ID,
-                });
-                this.close();
-                this.emitter.emit("updateLobby");
-                return;
-            } else {
-                this.customList = resData;
+            if (this.Settings.AutoCustom && resData.lenght != 0) {
+                let myCustom = null;
+                for (const custom of resData) {
+                    if (custom.Creator.Profile == this.UserInfo.ID) {
+                        myCustom = custom;
+                        break;
+                    }
+                }
+                if (myCustom != null) {
+                    await axios.post("/api/lobby/addToLobby", {
+                        id: resData.ID,
+                    });
+                    this.close();
+                    this.emitter.emit("updateLobby");
+                    return;
+                }
             }
+            this.customList = resData;
             this.customMenuVisible = true;
         },
 
@@ -95,7 +124,7 @@ export default {
     watch: {
         customMenuVisible(newVisible, oldVisible) {
             if (!newVisible) return;
-            this.resize()
+            this.resize();
         },
     },
     created() {
@@ -103,12 +132,12 @@ export default {
         this.emitter.on("closeCustomMenu", this.close);
     },
     updated() {
-        this.resize()
+        this.resize();
     },
-    unmounted(){
+    unmounted() {
         this.emitter.off("openCustomMenu", this.open);
         this.emitter.off("closeCustomMenu", this.close);
-    }
+    },
 };
 </script>
 

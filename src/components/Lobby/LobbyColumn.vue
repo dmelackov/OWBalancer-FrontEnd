@@ -17,8 +17,8 @@
 
         <hr />
         <Scrollbar class="lobby_list">
-            <template v-for="player in lobbyPlayerList" :key="player.ID">
-                <LobbyPlayerContainer :player="player" />
+            <template v-for="custom in lobbyPlayerList" :key="custom.ID">
+                <LobbyPlayerContainer :custom="custom" />
             </template>
         </Scrollbar>
     </div>

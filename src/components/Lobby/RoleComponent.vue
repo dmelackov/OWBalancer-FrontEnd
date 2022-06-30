@@ -56,7 +56,7 @@ export default {
                 if (tempActive) newRoleStr += role.role;
             }
             await axios.post("/api/players/setRoles", {
-                id: this.custom.ID,
+                id: this.custom.Player.ID,
                 roles: newRoleStr,
             });
             this.emitter.emit("updateLobby");

@@ -1,7 +1,7 @@
 <template>
     <div
         :class="{
-            error: player.warn,
+            error: custom.warn,
             lobby_container: true,
             player_container: true,
         }"
@@ -12,38 +12,38 @@
             @mouseenter="active = true"
             @mouseleave="active = false"
         >
-            <p class="player_username">{{ player.Player.Username }}</p>
+            <p class="player_username">{{ custom.Player.Username }}</p>
             <div class="sr_lobby" v-show="!active">
-                <div class="sr_lobby_icon" v-show="!player.isFlex">
+                <div class="sr_lobby_icon" v-show="!custom.isFlex">
                     <img
                         :src="getRoleIco(role.role)"
                         alt=""
                         width="15"
                         :class="{ role_icon: true, innactive: !role.active }"
-                        v-for="(role, index) in player.Roles"
+                        v-for="(role, index) in custom.Roles"
                         :key="index"
                     />
                 </div>
                 <img
                     src="/img/flex.svg"
                     alt=""
-                    v-if="player.isFlex"
+                    v-if="custom.isFlex"
                     width="16"
                 />
             </div>
-            <p class="author-right">{{ player.Creator.Profile.username }}</p>
+            <p class="author-right">{{ custom.Creator.Profile.username }}</p>
             <p class="X" v-show="active" @click="deleteFromLobby">✖</p>
         </div>
         <div class="lobby_menu" :style="styleObj">
             <hr />
             <div class="sr lobby_sr">
-                <template v-for="(role, index) in player.Roles" :key="role">
-                    <RoleComponent :role="role" :custom="player" />
+                <template v-for="(role, index) in custom.Roles" :key="role">
+                    <RoleComponent :role="role" :custom="custom" />
                     <p
                         :class="{
                             switch_button: true
                         }"
-                        v-if="index != 2 && !player.isFlex && isPerm('change_player_roles')"
+                        v-if="index != 2 && !custom.isFlex && isPerm('change_player_roles')"
                         @click="swapRoles(index)"
                     >
                         ⇆
@@ -55,7 +55,7 @@
                     width="30"
                     :class="{
                         role_icon: true,
-                        innactive: !player.isFlex,
+                        innactive: !custom.isFlex,
                     }"
                     @click="toggleFlex"
                 />
@@ -69,7 +69,7 @@ import axios from "axios";
 import RoleComponent from "./RoleComponent.vue";
 
 export default {
-    props: ["player"],
+    props: ["custom"],
     components: {
         RoleComponent,
     },
@@ -112,16 +112,16 @@ export default {
         },
         async deleteFromLobby() {
             await sendPOST("/api/lobby/deleteFromLobby", {
-                id: this.player.ID,
+                id: this.custom.ID,
             });
             this.emitter.emit("updateLobby");
         },
         async swapRoles(index) {
-            if(this.player.isFlex) return;
+            if(this.custom.isFlex) return;
             let newRoleStr = "";
             let roleIndex;
-            for (roleIndex in this.player.Roles) {
-                let role = this.player.Roles[roleIndex];
+            for (roleIndex in this.custom.Roles) {
+                let role = this.custom.Roles[roleIndex];
                 if (role.active) newRoleStr += role.role;
             }
             let tempMass = newRoleStr.split("");
@@ -129,15 +129,15 @@ export default {
             tempMass[index] = tempMass[index + 1];
             tempMass[index + 1] = tempChar;
             await sendPOST("/api/players/setRoles", {
-                id: this.player.ID,
+                id: this.custom.Player.ID,
                 roles: tempMass.join(""),
             });
             this.emitter.emit("updateLobby");
         },
         async toggleFlex() {
             await sendPOST("/api/players/setFlex", {
-                id: this.player.ID,
-                status: !this.player.isFlex,
+                id: this.custom.Player.ID,
+                status: !this.custom.isFlex,
             });
             this.emitter.emit("updateLobby");
         },

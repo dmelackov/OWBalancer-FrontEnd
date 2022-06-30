@@ -67,8 +67,16 @@
 
 <script>
 import BalancePlayer from "./BalancePlayer.vue";
-
+import useLoginState from "/src/store/LoginState"
 export default {
+    setup() {
+        const {UserInfo, Settings, updateLoginState} = useLoginState()
+        return {
+            UserInfo,
+            Settings,
+            updateLoginState
+        }
+    },
     components: { BalancePlayer },
     props: ["Balance"],
     data() {

@@ -47,7 +47,16 @@
 </template>
 
 <script>
+import useLoginState from "/src/store/LoginState";
+
 export default {
+    setup() {
+        const { Settings, UserInfo } = useLoginState();
+        return {
+            Settings,
+            UserInfo,
+        };
+    },
     props: ["custom"],
     data() {
         return {
@@ -81,7 +90,7 @@ export default {
     },
     created() {
         this.getRolesInfo();
-        if (this.custom.Creator.Profile.ID == this.status.UserInfo.ID) this.isMyCustom = true;
+        if (this.custom.Creator.Profile.ID == this.UserInfo.ID) this.isMyCustom = true;
     },
 };
 </script>

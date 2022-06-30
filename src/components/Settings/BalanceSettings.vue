@@ -99,7 +99,15 @@
 import SettingsColumn from "./SettingsColumn.vue";
 import axios from "axios";
 
+import useLoginState from "/src/store/LoginState"
+
 export default {
+    setup() {
+        const {Settings} = useLoginState()
+        return {
+            Settings
+        }
+    },
     components: {
         SettingsColumn,
     },

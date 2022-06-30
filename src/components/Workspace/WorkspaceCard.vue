@@ -1,17 +1,26 @@
 <template>
-        <div :class="{workspace: true, selected: (status.UserInfo.Workspace != null && workspace.ID == status.UserInfo.Workspace.ID)}" @click="select">
+        <div :class="{workspace: true, selected: (UserInfo.Workspace != null && workspace.ID == UserInfo.Workspace.ID)}" @click="select">
             <p class="workspaceName">{{ workspace.Name }}</p>
         </div>
 </template>
 
 <script>
 import axios from 'axios'
+import useLoginState from "/src/store/LoginState"
 export default {
+    setup() {
+        const {UserInfo, Settings, updateLoginState} = useLoginState()
+        return {
+            UserInfo,
+            Settings,
+            updateLoginState
+        }
+    },
     props: ["workspace"],
     methods: {
         async select(){
             await axios.post("/api/profile/workspace/setWorkspace", {"ID": this.workspace.ID})
-            this.status.UserInfo = (await axios.get("/api/profile/getCurrentUserInfo")).data
+            await this.updateLoginState()
         }
     }
 }

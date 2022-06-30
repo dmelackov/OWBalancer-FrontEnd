@@ -14,8 +14,8 @@
             </div>
             <div class="menu-right" >
                 <div :class="{ usernameMenuOpened: menuOpened }">
-                    <p class="username" v-if="status.UserInfo.Auth" @click="toggleMenu">
-                        {{ status.UserInfo.username }}
+                    <p class="username" v-if="UserInfo.Auth" @click="toggleMenu">
+                        {{ UserInfo.username }}
                     </p>
                     <router-link class="link" to="/login" v-else
                         >Authorization</router-link
@@ -25,8 +25,8 @@
         </div>
     </div>
     <div class="profileMenu" v-show="menuOpened">
-        <p class="workspaceName" v-if="status.UserInfo.Workspace != null">{{status.UserInfo.Workspace.Name}}</p>
-        <p class="workspaceStatus" v-if="status.UserInfo.Workspace != null">{{status.UserInfo.Role}}</p>
+        <p class="workspaceName" v-if="UserInfo.Workspace != null">{{UserInfo.Workspace.Name}}</p>
+        <p class="workspaceStatus" v-if="UserInfo.Workspace != null">{{UserInfo.Role}}</p>
         <hr />
         <div class="linkContainer">
             <router-link class="link" to="/profile">Profile</router-link>
@@ -46,7 +46,16 @@
 <script>
 import axios from "axios";
 import router from "../router";
+import useLoginState from "/src/store/LoginState"
 export default {
+    setup() {
+        const {UserInfo, Settings, updateLoginState} = useLoginState()
+        return {
+            UserInfo,
+            Settings,
+            updateLoginState
+        }
+    },
     data() {
         return {
             menuOpened: false,
