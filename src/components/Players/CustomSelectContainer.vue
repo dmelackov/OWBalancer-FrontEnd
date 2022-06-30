@@ -47,7 +47,8 @@ export default {
     },
     methods: {
         async createCustom() {
-            await axios.post("/api/customs/createCustom", { id: this.target.player.ID });
+            let custom = (await axios.post("/api/customs/createCustom", { id: this.target.player.ID })).data;
+            // TODO
             this.close();
             this.emitter.emit("updateLobby");
         },
@@ -55,18 +56,15 @@ export default {
             this.target = target;
             const res = await axios.get("/api/customs/getCustoms/" + target.player.ID);
             const resData = res.data;
-            if (resData.type == "custom") {
-                this.close();
+            if(this.Settings.AutoCustom) {
                 await axios.post("/api/lobby/addToLobby", {
                     id: resData.data.ID,
                 });
+                this.close();
                 this.emitter.emit("updateLobby");
                 return;
-            }
-            if (resData.data) {
-                this.customList = resData.data;
             } else {
-                this.customList = [];
+                this.customList = resData;
             }
             this.customMenuVisible = true;
         },

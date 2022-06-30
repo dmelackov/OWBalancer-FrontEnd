@@ -5,6 +5,7 @@
         <BalanceContainer />
     </div>
     <CustomSelectContainer />
+    <PlayerEditMenu />
 </template>
 
 <script>
@@ -12,6 +13,7 @@ import LobbyColumn from "../components/Lobby/LobbyColumn.vue";
 import PlayerColumn from "../components/Players/PlayerColumn.vue";
 import CustomSelectContainer from "../components/Players/CustomSelectContainer.vue";
 import BalanceContainer from "../components/Balancer/BalanceContainer.vue";
+import PlayerEditMenu from "../components/Players/PlayerEditMenu.vue";
 
 export default {
     components: {
@@ -19,6 +21,7 @@ export default {
         PlayerColumn,
         CustomSelectContainer,
         BalanceContainer,
+        PlayerEditMenu,
     },
     data() {
         return { perms: [] };
@@ -34,9 +37,7 @@ export default {
 };
 </script>
 
-
 <style scoped>
-
 .content {
     height: 100%;
     display: flex;

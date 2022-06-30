@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import BalancerPage from "./pages/BalancerPage"
 import LoginPage from "./pages/LoginPage"
 import RegisterPage from "./pages/RegisterPage"
-import GamesPage from "./pages/GamesPage"
+import WorkspacePage from "./pages/WorkspacePage"
 import SettingsPage from "./pages/SettingsPage"
 
 const router = createRouter({
@@ -13,6 +13,7 @@ const router = createRouter({
             component: BalancerPage,
             meta: {
                 title: "OWBalancer",
+                requiresWorkspace: true,
                 requiresAuth: true
             }
         },
@@ -45,7 +46,7 @@ const router = createRouter({
         },
         {
             path: "/workspace",
-            //component: SettingsPage,
+            component: WorkspacePage,
             meta: {
                 requiresAuth: true,
                 title: "Workspace"
@@ -57,6 +58,7 @@ const router = createRouter({
             //component: BalancerPage,
             meta: {
                 requiresAuth: true,
+                requiresWorkspace: true,
                 title: "Statistics"
             },
 

@@ -12,7 +12,7 @@
                 <div class="sr_icon">
                     <div class="roleSr">
                         <img
-                            src="/img/T_icon.png"
+                            src="/img/role_icons/tank.svg"
                             alt=""
                             width="12"
                             :class="{
@@ -24,7 +24,7 @@
                     </div>
                     <div class="roleSr">
                         <img
-                            src="/img/D_icon.png"
+                            src="/img/role_icons/dps.svg"
                             alt=""
                             width="12"
                             :class="{
@@ -36,7 +36,7 @@
                     </div>
                     <div class="roleSr">
                         <img
-                            src="/img/H_icon.png"
+                            src="/img/role_icons/support.svg"
                             alt=""
                             width="12"
                             :class="{
@@ -48,7 +48,7 @@
                     </div>
                 </div>
             </div>
-            <p class="author-left">by {{ custom.Creator.username }}</p>
+            <p class="author-left">by {{ custom.Creator.Profile.username }}</p>
         </div>
     </div>
 </template>
@@ -84,12 +84,12 @@ export default {
     },
     created() {
         this.getRolesInfo();
-        if (this.custom.Creator.ID == this.UserInfo.ID) this.isMyCustom = true;
+        if (this.custom.Creator.Profile.ID == this.status.UserInfo.ID) this.isMyCustom = true;
     },
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 
 @import "../../assets/css/playerContainer.css";
 

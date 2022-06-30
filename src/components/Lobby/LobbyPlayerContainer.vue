@@ -16,7 +16,7 @@
             <div class="sr_lobby" v-show="!active">
                 <div class="sr_lobby_icon" v-show="!player.isFlex">
                     <img
-                        :src="'/img/' + role.role + '_icon.png'"
+                        :src="getRoleIco(role.role)"
                         alt=""
                         width="15"
                         :class="{ role_icon: true, innactive: !role.active }"
@@ -31,7 +31,7 @@
                     width="16"
                 />
             </div>
-            <p class="author-right">{{ player.Creator.username }}</p>
+            <p class="author-right">{{ player.Creator.Profile.username }}</p>
             <p class="X" v-show="active" @click="deleteFromLobby">✖</p>
         </div>
         <div class="lobby_menu" :style="styleObj">
@@ -87,6 +87,17 @@ export default {
     },
     
     methods: {
+        getRoleIco(role) {
+            let iconImages = {
+                T: "img/role_icons/tank.svg",
+                D: "img/role_icons/dps.svg",
+                H: "img/role_icons/support.svg",
+                0: "img/role_icons/tank.svg",
+                1: "img/role_icons/dps.svg",
+                2: "img/role_icons/support.svg",
+            };
+            return iconImages[role];
+        },
         lobbyCustomMenuOpen(e) {
             if(e != this) this.close()
         },

@@ -2,6 +2,7 @@
     <div
         :class="{ player_container: true, active: active }"
         @click="openCustomsMenu"
+        @contextmenu="openPlayerEdit"
     >
         <nav class="player_inner_container">
             <p class="player_username">
@@ -15,6 +16,7 @@
 </template>
 
 <script>
+
 export default {
     props: ["player", "index"],
     data() {
@@ -26,23 +28,24 @@ export default {
         openCustomsMenu() {
             if (!this.isPerm("add_customs_tolobby")) return;
             this.active = true;
-            this.emitter.emit("openCustomMenu", this)
-        }
+            this.emitter.emit("openCustomMenu", this);
+        },
+        openPlayerEdit(e) {
+            this.emitter.emit("openPlayerEditMenu", this.player)
+            e.preventDefault();
+        },
     },
 };
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
 @import "../../assets/css/playerContainer.css";
 
 .cursor {
     font-size: 22px;
     color: #445368;
+    &::selection {
+        background: transparent;
+    }
 }
-
-.cursor::selection {
-    background: transparent;
-}
-
 </style>

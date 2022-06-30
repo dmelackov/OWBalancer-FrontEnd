@@ -41,30 +41,36 @@
             <div class="column_title">Role amount settings</div>
             <div class="role_count_settings">
                 <div class="role">
-                    <img src="/img/T_icon.png" alt="" width="30" />
+                    <img src="/img/role_icons/tank.svg" alt="" width="30" />
                     <input
                         type="number"
                         class="custom_input"
                         v-model="Settings.Amount.T"
                         @change="sendNewSettings"
+                        @focus="$event.target.select()"
+                        @keydown.enter="$event.target.blur()"
                     />
                 </div>
                 <div class="role">
-                    <img src="/img/D_icon.png" alt="" width="30" />
+                    <img src="/img/role_icons/dps.svg" alt="" width="30" />
                     <input
                         type="number"
                         class="custom_input"
                         v-model="Settings.Amount.D"
                         @change="sendNewSettings"
+                        @focus="$event.target.select()"
+                        @keydown.enter="$event.target.blur()"
                     />
                 </div>
                 <div class="role">
-                    <img src="/img/H_icon.png" alt="" width="30" />
+                    <img src="/img/role_icons/support.svg" alt="" width="30" />
                     <input
                         type="number"
                         class="custom_input"
                         v-model="Settings.Amount.H"
                         @change="sendNewSettings"
+                        @focus="$event.target.select()"
+                        @keydown.enter="$event.target.blur()"
                     />
                 </div>
             </div>
@@ -78,6 +84,7 @@
                         class="custom_input"
                         v-model="Settings.TeamNames['1']"
                         @change="sendNewSettings"
+                        @keydown.enter="$event.target.blur()"
                     />
                 </div>
                 <div class="team">
@@ -97,6 +104,7 @@
                         class="custom_input"
                         v-model="Settings.TeamNames['2']"
                         @change="sendNewSettings"
+                        @keydown.enter="$event.target.blur()"
                     />
                 </div>
                 <div class="team">
@@ -130,41 +138,13 @@ export default {
     },
     data() {
         return {
-            Settings: {
-                Amount: { D: null, H: null, T: null },
-                Math: {
-                    alpha: null,
-                    beta: null,
-                    gamma: null,
-                    p: null,
-                    q: null,
-                    tWeight: null,
-                    dWeight: null,
-                    hWeight: null,
-                },
-                AutoCustom: null,
-                Autoincrement: null,
-                BalanceLimit: null,
-                ExtendedLobby: null,
-                ExpandedResult: null,
-                TeamNames: {
-                    1: null,
-                    2: null,
-                },
-                fColor: null,
-                sColor: null,
-            },
             themeID: 0,
         };
     },
     async created() {
-        this.getValuesFromServer();
         this.themeID = this.getTheme();
     },
     methods: {
-        async getValuesFromServer() {
-            this.Settings = (await axios.get("/api/profile/settings/getSettings")).data;
-        },
         async sendNewSettings() {
             let seti = this.Settings;
             seti.Amount.T = parseInt(seti.Amount.T);
@@ -198,8 +178,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
-
 .role {
     margin: auto;
     display: flex;

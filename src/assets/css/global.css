@@ -35,6 +35,11 @@ p {
 .btn {
     width: max-content;
     padding: 5px 10px 5px 10px;
+    cursor: pointer;
+    height: max-content;
+    background-color: #11161d;
+    border-radius: 6px;
+    box-shadow: 0 1px 0 #3a4b68a8;
 }
 
 .btn-submit {

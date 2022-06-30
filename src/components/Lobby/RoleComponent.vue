@@ -1,7 +1,7 @@
 <template>
     <div class="role">
         <img
-            :src="'/img/' + roleInst.role + '_icon.png'"
+            :src="getRoleIco(roleInst.role)"
             alt=""
             width="30"
             :class="{
@@ -34,6 +34,17 @@ export default {
         };
     },
     methods: {
+        getRoleIco(role) {
+            let iconImages = {
+                T: "img/role_icons/tank.svg",
+                D: "img/role_icons/dps.svg",
+                H: "img/role_icons/support.svg",
+                0: "img/role_icons/tank.svg",
+                1: "img/role_icons/dps.svg",
+                2: "img/role_icons/support.svg",
+            };
+            return iconImages[role];
+        },
         async toggleRole(ARGrole) {
             if (this.custom.isFlex) return;
             let newRoleStr = "";

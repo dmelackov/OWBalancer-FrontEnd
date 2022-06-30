@@ -2,7 +2,6 @@
     <div class="balance_container">
         <Balancer
             :Balance="currentBalance"
-            :USettings="Settings"
             v-if="this.imageSrc == null"
         />
         <img
@@ -64,11 +63,10 @@ export default {
     components: { Balancer },
     data: function () {
         return {
-            imageSrc: "./img/balance_alt.png",
+            imageSrc: "./img/balancer_placeholder/balance_alt.png",
             currentImageIndex: 0,
             balanceLenght: 0,
-            currentBalance: {},
-            Settings: {},
+            currentBalance: {}
         };
     },
     methods: {
@@ -82,7 +80,7 @@ export default {
             this.emitter.emit("updateBalanceImage");
         },
         async getBalances() {
-            this.imageSrc = "/img/balance_load.png";
+            this.imageSrc = "/img/balancer_placeholder/balance_load.png";
             let res = await axios.get("/api/profile/balance/getBalances");
             let balance = res.data;
             if (balance["result"] == 200) {
@@ -91,7 +89,7 @@ export default {
                 localStorage.setItem("balance_index", 0);
                 this.emitter.emit("updateBalanceImage");
             } else {
-                this.imageSrc = "/img/balance_404.png";
+                this.imageSrc = "/img/balancer_placeholder/balance_404.png";
                 this.$notify({ title: balance["status"], type: "error" });
                 if (localStorage.getItem("balance_static"))
                     localStorage.removeItem("balance_static");
@@ -133,13 +131,9 @@ export default {
             this.currentBalance.active = balance_active[index];
             this.currentBalance.static = balance_static;
         },
-        async getValuesFromServer() {
-            this.Settings = (await axios.get("/api/profile/settings/getSettings")).data;
-        },
         async copyBalance() {
             let balance = document.getElementById("svgBalance");
             let img = await domtoimage.toBlob(balance)
-            console.log(img)
             // eslint-disable-next-line no-undef
             const item = new ClipboardItem({ "image/png": img });
             navigator.clipboard.write([item]);
@@ -160,7 +154,6 @@ export default {
                 "/api/profile/balance/calcBalance",
                 this.currentBalance
             );
-            console.log("DROP");
             if (res == false) {
                 return;
             }
@@ -171,7 +164,6 @@ export default {
         this.emitter.on("updateBalanceImage", this.updateBalanceImage);
         this.emitter.on("BalancerDragEnd", this.balancerDragEnd);
         this.setBalanceLenght();
-        await this.getValuesFromServer();
         this.emitter.emit("updateBalanceImage");
     },
     unmounted(){

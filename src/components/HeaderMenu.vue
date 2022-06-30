@@ -14,8 +14,8 @@
             </div>
             <div class="menu-right" >
                 <div :class="{ usernameMenuOpened: menuOpened }">
-                    <p class="username" v-if="Username != null" @click="toggleMenu">
-                        {{ Username }}
+                    <p class="username" v-if="status.UserInfo.Auth" @click="toggleMenu">
+                        {{ status.UserInfo.username }}
                     </p>
                     <router-link class="link" to="/login" v-else
                         >Authorization</router-link
@@ -25,8 +25,8 @@
         </div>
     </div>
     <div class="profileMenu" v-show="menuOpened">
-        <p class="workspaceName">WorkspaceName</p>
-        <p class="workspaceStatus">WorkspaceStatus</p>
+        <p class="workspaceName" v-if="status.UserInfo.Workspace != null">{{status.UserInfo.Workspace.Name}}</p>
+        <p class="workspaceStatus" v-if="status.UserInfo.Workspace != null">{{status.UserInfo.Role}}</p>
         <hr />
         <div class="linkContainer">
             <router-link class="link" to="/profile">Profile</router-link>
@@ -49,16 +49,10 @@ import router from "../router";
 export default {
     data() {
         return {
-            Username: "",
             menuOpened: false,
         };
     },
     methods: {
-        async getUserData() {
-            let info = await axios.get("/api/profile/getCurrentUserInfo");
-            let infoContent = info.data;
-            this.Username = infoContent.Username;
-        },
         toggleMenu() {
             this.menuOpened = !this.menuOpened;
         },
@@ -75,8 +69,6 @@ export default {
         },
     },
     created() {
-        this.emitter.on("UpdateLoginState", () => this.getUserData());
-        this.getUserData();
         document.body.addEventListener("mousedown", (e) => {
             if (!e.target.closest(".profileMenu") && !e.target.closest(".menu-right")) {
                 this.menuOpened = false

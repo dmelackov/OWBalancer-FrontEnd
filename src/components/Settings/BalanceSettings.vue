@@ -7,7 +7,8 @@
                     type="number"
                     class="custom_input"
                     v-model="Settings.BalanceLimit"
-                    @change="sendNewSettings"
+                    @change="changeBalanceLimit"
+                    @keydown.enter="$event.target.blur()"
                 />
             </div>
             <div class="num_input">
@@ -16,7 +17,8 @@
                     type="number"
                     class="custom_input"
                     v-model="Settings.Math.alpha"
-                    @change="sendNewSettings"
+                    @change="changeAlpha"
+                    @keydown.enter="$event.target.blur()"
                 />
             </div>
             <div class="num_input">
@@ -25,7 +27,8 @@
                     type="number"
                     class="custom_input"
                     v-model="Settings.Math.beta"
-                    @change="sendNewSettings"
+                    @change="changeBeta"
+                    @keydown.enter="$event.target.blur()"
                 />
             </div>
             <div class="num_input">
@@ -34,7 +37,8 @@
                     type="number"
                     class="custom_input"
                     v-model="Settings.Math.gamma"
-                    @change="sendNewSettings"
+                    @change="changeGamma"
+                    @keydown.enter="$event.target.blur()"
                 />
             </div>
             <div class="num_input">
@@ -43,7 +47,8 @@
                     type="number"
                     class="custom_input"
                     v-model="Settings.Math.tWeight"
-                    @change="sendNewSettings"
+                    @change="changeTWeight"
+                    @keydown.enter="$event.target.blur()"
                 />
             </div>
             <div class="num_input">
@@ -52,7 +57,8 @@
                     type="number"
                     class="custom_input"
                     v-model="Settings.Math.dWeight"
-                    @change="sendNewSettings"
+                    @change="changeDWeight"
+                    @keydown.enter="$event.target.blur()"
                 />
             </div>
             <div class="num_input">
@@ -61,7 +67,8 @@
                     type="number"
                     class="custom_input"
                     v-model="Settings.Math.hWeight"
-                    @change="sendNewSettings"
+                    @change="changeHWeight"
+                    @keydown.enter="$event.target.blur()"
                 />
             </div>
             <div class="num_input">
@@ -70,7 +77,8 @@
                     type="number"
                     class="custom_input"
                     v-model="Settings.Math.p"
-                    @change="sendNewSettings"
+                    @change="changeP"
+                    @keydown.enter="$event.target.blur()"
                 />
             </div>
             <div class="num_input">
@@ -79,7 +87,8 @@
                     type="number"
                     class="custom_input"
                     v-model="Settings.Math.q"
-                    @change="sendNewSettings"
+                    @change="changeQ"
+                    @keydown.enter="$event.target.blur()"
                 />
             </div>
         </slot>
@@ -96,41 +105,13 @@ export default {
     },
     data() {
         return {
-            Settings: {
-                Amount: { D: null, H: null, T: null },
-                Math: {
-                    alpha: null,
-                    beta: null,
-                    gamma: null,
-                    p: null,
-                    q: null,
-                    tWeight: null,
-                    dWeight: null,
-                    hWeight: null,
-                },
-                AutoCustom: null,
-                Autoincrement: null,
-                BalanceLimit: null,
-                ExtendedLobby: null,
-                ExpandedResult: null,
-                TeamNames: {
-                    1: null,
-                    2: null,
-                },
-                fColor: null,
-                sColor: null,
-            },
             themeID: 0,
         };
     },
     async created() {
-        this.getValuesFromServer();
         this.themeID = this.getTheme();
     },
     methods: {
-        async getValuesFromServer() {
-            this.Settings = (await axios.get("/api/profile/settings/getSettings")).data;
-        },
         async sendNewSettings() {
             let seti = this.Settings;
             seti.BalanceLimit = parseInt(seti.BalanceLimit);
@@ -140,6 +121,69 @@ export default {
             return localStorage.getItem("theme") != null
                 ? parseInt(localStorage.getItem("theme"))
                 : 0;
+        },
+        changeBalanceLimit() {
+            if (this.Settings.BalanceLimit <= 0) {
+                this.Settings.BalanceLimit = 0;
+            }
+            if (this.Settings.BalanceLimit >= 10000) {
+                this.Settings.BalanceLimit = 10000;
+            }
+            this.sendNewSettings();
+        },
+        changeAlpha() {
+            this.sendNewSettings();
+        },
+        changeBeta() {
+            this.sendNewSettings();
+        },
+        changeGamma() {
+            this.sendNewSettings();
+        },
+        changeTWeight() {
+            if (this.Settings.Math.tWeight <= -100) {
+                this.Settings.Math.tWeight = -100;
+            }
+            if (this.Settings.Math.tWeight >= 100) {
+                this.Settings.Math.tWeight = 100;
+            }
+            this.sendNewSettings();
+        },
+        changeDWeight() {
+            if (this.Settings.Math.dWeight <= -100) {
+                this.Settings.Math.dWeight = -100;
+            }
+            if (this.Settings.Math.dWeight >= 100) {
+                this.Settings.Math.dWeight = 100;
+            }
+            this.sendNewSettings();
+        },
+        changeHWeight() {
+            if (this.Settings.Math.hWeight <= -100) {
+                this.Settings.Math.hWeight = -100;
+            }
+            if (this.Settings.Math.hWeight >= 100) {
+                this.Settings.Math.hWeight = 100;
+            }
+            this.sendNewSettings();
+        },
+        changeP() {
+            if (this.Settings.Math.p <= 1) {
+                this.Settings.Math.p = 1;
+            }
+            if (this.Settings.Math.p >= 10) {
+                this.Settings.Math.p = 10;
+            }
+            this.sendNewSettings();
+        },
+        changeQ() {
+            if (this.Settings.Math.q <= 1) {
+                this.Settings.Math.q = 1;
+            }
+            if (this.Settings.Math.q >= 10) {
+                this.Settings.Math.q = 10;
+            }
+            this.sendNewSettings();
         },
     },
     computed: {
@@ -162,8 +206,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
-
 .role {
     margin: auto;
     display: flex;

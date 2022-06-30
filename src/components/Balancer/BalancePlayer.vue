@@ -44,7 +44,7 @@
 
 <script>
 export default {
-    props: ["PlayerStatic", "USettings", "PlayerRole", "PlayerTeam", "StaticID"],
+    props: ["PlayerStatic", "PlayerRole", "PlayerTeam", "StaticID"],
     data(){
         return {
             dragCount: 0
@@ -52,25 +52,25 @@ export default {
     },
     methods: {
         getColor() {
-            if (this.PlayerTeam == 1) return this.USettings.fColor;
-            return this.USettings.sColor;
+            if (this.PlayerTeam == 1) return this.Settings.fColor;
+            return this.Settings.sColor;
         },
         getRankIco(sr) {
             switch (true) {
                 case sr < 1500:
-                    return "icons/bronse.png";
+                    return "img/sr_icons/bronse.png";
                 case sr < 2000:
-                    return "icons/silver.png";
+                    return "img/sr_icons/silver.png";
                 case sr < 2500:
-                    return "icons/gold.png";
+                    return "img/sr_icons/gold.png";
                 case sr < 3000:
-                    return "icons/plat.png";
+                    return "img/sr_icons/plat.png";
                 case sr < 3500:
-                    return "icons/diamond.png";
+                    return "img/sr_icons/diamond.png";
                 case sr < 4000:
-                    return "icons/masters.png";
+                    return "img/sr_icons/masters.png";
                 default:
-                    return "icons/gm.png";
+                    return "img/sr_icons/gm.png";
             }
         },
         getRoleSR() {
@@ -85,12 +85,12 @@ export default {
         },
         getRoleIco(role) {
             let iconImages = {
-                T: "icons/Tank1.png",
-                D: "icons/Dps1.png",
-                H: "icons/Heal1.png",
-                0: "icons/Tank1.png",
-                1: "icons/Dps1.png",
-                2: "icons/Heal1.png",
+                T: "img/role_icons/tank.svg",
+                D: "img/role_icons/dps.svg",
+                H: "img/role_icons/support.svg",
+                0: "img/role_icons/tank.svg",
+                1: "img/role_icons/dps.svg",
+                2: "img/role_icons/support.svg",
             };
             return iconImages[role];
         },
@@ -127,7 +127,6 @@ export default {
             this.dragCount = 0
             this.$el.classList.remove("overDrag");
             ev.preventDefault();
-            console.log(ev.dataTransfer.getData("text"));
             this.emitter.emit("BalancerDragEnd", [
                 parseInt(ev.dataTransfer.getData("text")),
                 this.StaticID,

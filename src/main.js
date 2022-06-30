@@ -11,37 +11,44 @@ import Notifications from '@kyvg/vue3-notification'
 
     const emitter = mitt();
 
-    let perms = [];
-    let res = await axios.get("/api/profile/getPermissions")
-    perms = res.data
+    const status = {}
+    status.perms = (await axios.get("/api/profile/getPermissions")).data
+    status.Settings = (await axios.get("/api/profile/settings/getSettings")).data
+    status.UserInfo = (await axios.get("/api/profile/getCurrentUserInfo")).data
+    
+    emitter.on("updateUserInfo", async () => {
+        status.UserInfo = (await axios.get("/api/profile/getCurrentUserInfo")).data
+    })
 
-    let UserInfo = (await axios.get("/api/profile/getCurrentUserInfo")).data
     emitter.on("UpdateLoginState", async () => {
-        UserInfo = (await axios.get("/api/profile/getCurrentUserInfo")).data
+        status.UserInfo = (await axios.get("/api/profile/getCurrentUserInfo")).data
         let res = await axios.get("/api/profile/getPermissions")
-    perms = res.data
+        status.perms = res.data
     })
 
     const app = createApp(App)
 
+    app.config.globalProperties.status = status
 
     router.beforeEach((to, from, next) => {
         if (to.matched.some((route) => route.meta.requiresAuth)) {
-            if (UserInfo.Auth) {
-                next();
-            } else {
+            if (!status.UserInfo.Auth) {
                 next("/login");
             }
-        } else if (to.matched.some((route) => route.meta.requiresNotAuth)) {
-            if (UserInfo.Auth) {
+        }
+        if (to.matched.some((route) => route.meta.requiresNotAuth)) {
+            if (status.UserInfo.Auth) {
                 next("/");
-            } else {
-                next();
             }
         }
-        else {
-            next();
+        if (to.matched.some((route) => route.meta.requiresWorkspace)) {
+            if (status.UserInfo.Workspace == null) {
+                next("/workspace");
+            }
         }
+
+        next();
+
     });
 
     app.use(router)
@@ -49,12 +56,14 @@ import Notifications from '@kyvg/vue3-notification'
     app.mixin({
         data() {
             return {
-                UserInfo: UserInfo
+                UserInfo: status.UserInfo,
+                Settings: status.Settings,
+                status: status
             };
         },
         methods: {
             isPerm(perm) {
-                return perms.includes(perm);
+                return status.perms.includes(perm);
             }
         },
     });

@@ -4,18 +4,18 @@
             <body xmlns="http://www.w3.org/1999/xhtml" width="100%">
                 <div id="balance">
                     <div class="balanceInfo">
-                        <p class="leftTeamName">{{ USettings.TeamNames[1] }}</p>
+                        <p class="leftTeamName">{{ Settings.TeamNames[1] }}</p>
                         <div class="evaluation">
                             <div class="stat">
                                 <p class="infoStat">Evaluation:</p>
                                 <p class="statValue">{{ Balance.active.result }}</p>
                             </div>
                         </div>
-                        <p class="rightTeamName">{{ USettings.TeamNames[2] }}</p>
+                        <p class="rightTeamName">{{ Settings.TeamNames[2] }}</p>
                     </div>
                     <div class="players">
                         <div class="playerColumnLeft">
-                            <div class="stat" v-if="USettings.ExpandedResult">
+                            <div class="stat" v-if="Settings.ExpandedResult">
                                 <p class="infoStat extStat">Fairness:</p>
                                 <p class="statValue extStat">
                                     {{
@@ -32,7 +32,6 @@
                                     v-for="item in fTeam"
                                     :key="item.staticId"
                                     :PlayerStatic="Balance.static[item.staticId]"
-                                    :USettings="USettings"
                                     :PlayerRole="item.roleMask"
                                     :PlayerTeam="1"
                                     :StaticID="item.staticId"
@@ -42,7 +41,7 @@
 
                         <p class="vs">VS</p>
                         <div class="playerColumnRight">
-                            <div class="stat" v-if="USettings.ExpandedResult">
+                            <div class="stat" v-if="Settings.ExpandedResult">
                                 <p class="infoStat extStat">Uniformity:</p>
                                 <p class="statValue extStat">
                                     {{ Balance.active.vqUniformity }}
@@ -53,7 +52,6 @@
                                     v-for="item in sTeam"
                                     :key="item.staticId"
                                     :PlayerStatic="Balance.static[item.staticId]"
-                                    :USettings="USettings"
                                     :PlayerRole="item.roleMask"
                                     :PlayerTeam="2"
                                     :StaticID="item.staticId"
@@ -72,7 +70,7 @@ import BalancePlayer from "./BalancePlayer.vue";
 
 export default {
     components: { BalancePlayer },
-    props: ["Balance", "USettings"],
+    props: ["Balance"],
     data() {
         return {
             viewbox: "0 0 1920 1080"
