@@ -61,7 +61,7 @@ export default {
             let res = await axios.post("/api/profile/auth/logout");
             let ResData = res.data;
             if (ResData.status == 200) {
-                this.emitter.emit("UpdateLoginState");
+                await this.updateLoginState()
                 setTimeout(() => {
                     router.push("/login");
                 }, 100);

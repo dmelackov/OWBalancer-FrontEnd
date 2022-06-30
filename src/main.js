@@ -13,18 +13,9 @@ import Notifications from '@kyvg/vue3-notification'
 
     const status = {}
     status.perms = (await axios.get("/api/profile/getPermissions")).data
-    status.Settings = (await axios.get("/api/profile/settings/getSettings")).data
     status.UserInfo = (await axios.get("/api/profile/getCurrentUserInfo")).data
-    
-    emitter.on("updateUserInfo", async () => {
-        status.UserInfo = (await axios.get("/api/profile/getCurrentUserInfo")).data
-    })
 
-    emitter.on("UpdateLoginState", async () => {
-        status.UserInfo = (await axios.get("/api/profile/getCurrentUserInfo")).data
-        let res = await axios.get("/api/profile/getPermissions")
-        status.perms = res.data
-    })
+    if(status.UserInfo.Auth) status.Settings = (await axios.get("/api/profile/settings/getSettings")).data
 
     const app = createApp(App)
 
@@ -34,21 +25,22 @@ import Notifications from '@kyvg/vue3-notification'
         if (to.matched.some((route) => route.meta.requiresAuth)) {
             if (!status.UserInfo.Auth) {
                 next("/login");
+                return
             }
         }
         if (to.matched.some((route) => route.meta.requiresNotAuth)) {
             if (status.UserInfo.Auth) {
                 next("/");
+                return
             }
         }
         if (to.matched.some((route) => route.meta.requiresWorkspace)) {
             if (status.UserInfo.Workspace == null) {
                 next("/workspace");
+                return
             }
         }
-
         next();
-
     });
 
     app.use(router)
@@ -64,6 +56,12 @@ import Notifications from '@kyvg/vue3-notification'
         methods: {
             isPerm(perm) {
                 return status.perms.includes(perm);
+            },
+            async updateLoginState(){
+                this.UserInfo = (await axios.get("/api/profile/getCurrentUserInfo")).data
+                if(this.UserInfo.Auth) this.Settings = (await axios.get("/api/profile/settings/getSettings")).data
+                let res = await axios.get("/api/profile/getPermissions")
+                this.perms = res.data
             }
         },
     });
