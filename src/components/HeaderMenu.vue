@@ -12,7 +12,7 @@
                     <router-link class="link" to="/statistics">Statistics</router-link>
                 </div>
             </div>
-            <div class="menu-right" >
+            <div class="menu-right">
                 <div :class="{ usernameMenuOpened: menuOpened }">
                     <p class="username" v-if="UserInfo.Auth" @click="toggleMenu">
                         {{ UserInfo.username }}
@@ -25,8 +25,12 @@
         </div>
     </div>
     <div class="profileMenu" v-show="menuOpened">
-        <p class="workspaceName" v-if="UserInfo.Workspace != null">{{UserInfo.Workspace.Name}}</p>
-        <p class="workspaceStatus" v-if="UserInfo.Workspace != null">{{UserInfo.Role}}</p>
+        <p class="workspaceName" v-if="UserInfo.Workspace != null">
+            {{ UserInfo.Workspace.Name }}
+        </p>
+        <p class="workspaceStatus" v-if="UserInfo.Workspace != null">
+            {{ UserInfo.Role }}
+        </p>
         <hr />
         <div class="linkContainer">
             <router-link class="link" to="/profile">Profile</router-link>
@@ -35,7 +39,12 @@
             <router-link class="link" to="/settings">Settings</router-link>
         </div>
         <div class="linkContainer">
-            <a class="link" href="">Guide</a>
+            <a
+                class="link"
+                href="https://github.com/dmelackov/OWBalancer/blob/master/README.md"
+                target="_blank"
+                >Guide</a
+            >
         </div>
         <div class="linkContainer">
             <a class="link exit" @click="exit">Exit</a>
@@ -46,15 +55,15 @@
 <script>
 import axios from "axios";
 import router from "../router";
-import useLoginState from "/src/store/LoginState"
+import useLoginState from "/src/store/LoginState";
 export default {
     setup() {
-        const {UserInfo, Settings, updateLoginState} = useLoginState()
+        const { UserInfo, Settings, updateLoginState } = useLoginState();
         return {
             UserInfo,
             Settings,
-            updateLoginState
-        }
+            updateLoginState,
+        };
     },
     data() {
         return {
@@ -67,20 +76,15 @@ export default {
         },
         async exit() {
             this.menuOpened = false;
-            let res = await axios.post("/api/profile/auth/logout");
-            let ResData = res.data;
-            if (ResData.status == 200) {
-                await this.updateLoginState()
-                setTimeout(() => {
-                    router.push("/login");
-                }, 100);
-            } 
+            await axios.post("/api/profile/auth/logout");
+            await this.updateLoginState();
+            router.push("/login");
         },
     },
     created() {
         document.body.addEventListener("mousedown", (e) => {
             if (!e.target.closest(".profileMenu") && !e.target.closest(".menu-right")) {
-                this.menuOpened = false
+                this.menuOpened = false;
             }
         });
     },
@@ -88,8 +92,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
-
 .header {
     height: 52px;
     background-color: #161b22;
@@ -169,7 +171,7 @@ export default {
 
     height: max-content;
     width: 196px;
-    opacity: .9;
+    opacity: 0.9;
     display: flex;
     flex-direction: column;
     align-items: center;

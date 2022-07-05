@@ -89,9 +89,7 @@ export default {
             let ResData = res.data;
             if (ResData.status == 200) {
                 await this.updateLoginState()
-                setTimeout(() => {
-                    router.push("/");
-                }, 100);
+                router.push("/");
             } else {
                 if (ResData.status == 400 && ResData.message) {
                     this.form_error = ResData.message;

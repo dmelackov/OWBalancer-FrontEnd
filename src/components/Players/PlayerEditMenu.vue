@@ -94,13 +94,33 @@ export default {
             this.player = player;
             this.deleted = false;
             this.changed = false;
+            this.deleteCustomList = new Set();
             await this.loadCustoms();
             this.opened = true;
         },
         close() {
             this.opened = false;
         },
-        save() {
+        async save() {
+            if (!this.edited) return;
+            if (this.deleted) {
+                await axios.delete("/api/players/deletePlayer/" + this.player.ID);
+                this.emitter.emit("updateLobby");
+                this.emitter.emit("updatePlayers");
+                this.close();
+                return;
+            }
+            if (this.changed) { 
+                await axios.put("/api/players/changeNickname/" + this.player.ID, {Username: this.player.Username}); 
+                this.emitter.emit("updateLobby");
+                this.emitter.emit("updatePlayers");
+            }
+            let promises = [];
+            for (const i of this.deleteCustomList) {
+                promises.push(axios.delete("/api/customs/deleteCustom/" + i));
+            }
+            await Promise.all(promises);
+            this.emitter.emit("updateLobby");
             this.close();
         },
         del() {

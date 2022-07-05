@@ -12,7 +12,7 @@
                 />
             </div>
             <div class="num_input">
-                <p class="checkbox_title">alpha</p>
+                <p class="checkbox_title">Linear Fairness Coef</p>
                 <input
                     type="number"
                     class="custom_input"
@@ -22,7 +22,7 @@
                 />
             </div>
             <div class="num_input">
-                <p class="checkbox_title">beta</p>
+                <p class="checkbox_title">Linear Roles Coef</p>
                 <input
                     type="number"
                     class="custom_input"
@@ -32,7 +32,7 @@
                 />
             </div>
             <div class="num_input">
-                <p class="checkbox_title">gamma</p>
+                <p class="checkbox_title">Offroles Penalty</p>
                 <input
                     type="number"
                     class="custom_input"
@@ -42,7 +42,7 @@
                 />
             </div>
             <div class="num_input">
-                <p class="checkbox_title">tWeight</p>
+                <p class="checkbox_title">Tank Multiplier</p>
                 <input
                     type="number"
                     class="custom_input"
@@ -52,7 +52,7 @@
                 />
             </div>
             <div class="num_input">
-                <p class="checkbox_title">dWeight</p>
+                <p class="checkbox_title">Dps Multiplier</p>
                 <input
                     type="number"
                     class="custom_input"
@@ -62,7 +62,7 @@
                 />
             </div>
             <div class="num_input">
-                <p class="checkbox_title">hWeight</p>
+                <p class="checkbox_title">Heal Multiplier</p>
                 <input
                     type="number"
                     class="custom_input"
@@ -72,7 +72,7 @@
                 />
             </div>
             <div class="num_input">
-                <p class="checkbox_title">p</p>
+                <p class="checkbox_title">Fairness Power Approximation</p>
                 <input
                     type="number"
                     class="custom_input"
@@ -82,7 +82,7 @@
                 />
             </div>
             <div class="num_input">
-                <p class="checkbox_title">q</p>
+                <p class="checkbox_title">Unifomity Power Approximation</p>
                 <input
                     type="number"
                     class="custom_input"
@@ -242,12 +242,15 @@ export default {
     align-items: center;
     margin-bottom: 3px;
     height: max-content;
-    .title {
-        min-width: max-content;
+    justify-content: space-between;
+
+    .checkbox_title {
+        width: 50%;
         margin: 0;
         margin-right: 6px;
     }
     input {
+        width: 50%;
         height: 30px;
         margin: 0;
     }
@@ -259,4 +262,5 @@ export default {
 .checkbox_title {
     min-width: 25%;
 }
+
 </style>

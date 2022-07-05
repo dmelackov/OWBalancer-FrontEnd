@@ -127,9 +127,7 @@ export default {
         this.emitter.on("openCustomMenu", this.open);
         this.emitter.on("closeCustomMenu", this.close);
     },
-    updated() {
-        this.resize();
-    },
+
     unmounted() {
         this.emitter.off("openCustomMenu", this.open);
         this.emitter.off("closeCustomMenu", this.close);
