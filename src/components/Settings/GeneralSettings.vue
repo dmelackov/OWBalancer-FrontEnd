@@ -157,7 +157,7 @@ export default {
             seti.Amount.T = parseInt(seti.Amount.T);
             seti.Amount.D = parseInt(seti.Amount.D);
             seti.Amount.H = parseInt(seti.Amount.H);
-            await axios.post("/api/profile/settings/setSettings", seti);
+            await axios.put("/api/profile/settings/setSettings", seti);
         },
         getTheme() {
             return localStorage.getItem("theme") != null

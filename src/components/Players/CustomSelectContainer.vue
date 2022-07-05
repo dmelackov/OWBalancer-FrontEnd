@@ -17,7 +17,7 @@
                 </div>
             </div>
             <button
-                v-if="isPerm('create_custom')"
+                v-if="isPerm('create_custom') && !hasMyCustom"
                 :class="{
                     create_container: true,
                 }"
@@ -49,6 +49,7 @@ export default {
         return {
             customList: [],
             customMenuVisible: false,
+            hasMyCustom: false,
             target: null,
             left: 0,
             top: 0,
@@ -62,37 +63,32 @@ export default {
                 })
             ).data;
 
-            axios.post("/api/lobby/addToLobby", {
-                id: custom.ID,
-            }).catch(() => {
-
-            }).finally(() => {
-                this.close();
-                this.emitter.emit("updateLobby");
-            });
-
-
+            axios
+                .post("/api/lobby/addToLobby/" + custom.ID)
+                .catch(() => {})
+                .finally(() => {
+                    this.close();
+                    this.emitter.emit("updateLobby");
+                });
         },
         async open(target) {
+            this.hasMyCustom = false;
             this.target = target;
             const res = await axios.get("/api/customs/getCustoms/" + target.player.ID);
             const resData = res.data;
-            if (this.Settings.AutoCustom && resData.lenght != 0) {
-                let myCustom = null;
-                for (const custom of resData) {
-                    if (custom.Creator.Profile == this.UserInfo.ID) {
-                        myCustom = custom;
-                        break;
-                    }
+            let myCustom = null;
+            for (const custom of resData) {
+                if (custom.Creator.Profile.ID == this.UserInfo.ID) {
+                    myCustom = custom;
+                    this.hasMyCustom = true;
+                    break;
                 }
-                if (myCustom != null) {
-                    await axios.post("/api/lobby/addToLobby", {
-                        id: resData.ID,
-                    });
-                    this.close();
-                    this.emitter.emit("updateLobby");
-                    return;
-                }
+            }
+            if (this.Settings.AutoCustom && myCustom) {
+                await axios.post("/api/lobby/addToLobby/" + resData.id);
+                this.close();
+                this.emitter.emit("updateLobby");
+                return;
             }
             this.customList = resData;
             this.customMenuVisible = true;

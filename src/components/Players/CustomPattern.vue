@@ -75,9 +75,7 @@ export default {
     methods: {
         async addToLobby() {
             this.emitter.emit("closeCustomMenu");
-            await axios.post("/api/lobby/addToLobby", {
-                id: this.custom.ID,
-            });
+            await axios.post("/api/lobby/addToLobby/" + this.custom.ID);
             this.emitter.emit("updateLobby");
         },
         getRolesInfo() {

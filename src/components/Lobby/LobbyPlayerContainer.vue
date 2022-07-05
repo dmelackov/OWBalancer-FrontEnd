@@ -111,9 +111,7 @@ export default {
             this.menuOpened = false;
         },
         async deleteFromLobby() {
-            await sendPOST("/api/lobby/deleteFromLobby", {
-                id: this.custom.ID,
-            });
+            await axios.delete("/api/lobby/deleteFromLobby/" + this.custom.ID);
             this.emitter.emit("updateLobby");
         },
         async swapRoles(index) {
@@ -128,15 +126,13 @@ export default {
             let tempChar = tempMass[index];
             tempMass[index] = tempMass[index + 1];
             tempMass[index + 1] = tempChar;
-            await sendPOST("/api/players/setRoles", {
-                id: this.custom.Player.ID,
+            await axios.put("/api/players/setRoles/" + this.custom.Player.ID, {
                 roles: tempMass.join(""),
             });
             this.emitter.emit("updateLobby");
         },
         async toggleFlex() {
-            await sendPOST("/api/players/setFlex", {
-                id: this.custom.Player.ID,
+            await axios.put("/api/players/setFlex/" + this.custom.Player.ID, {
                 status: !this.custom.isFlex,
             });
             this.emitter.emit("updateLobby");
@@ -150,9 +146,6 @@ export default {
         },
     },
 };
-async function sendPOST(url, params) {
-    await axios.post(url, params);
-}
 </script>
 
 <style scoped>

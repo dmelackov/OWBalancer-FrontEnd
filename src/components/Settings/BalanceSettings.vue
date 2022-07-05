@@ -123,7 +123,7 @@ export default {
         async sendNewSettings() {
             let seti = this.Settings;
             seti.BalanceLimit = parseInt(seti.BalanceLimit);
-            await axios.post("/api/profile/settings/setSettings", seti);
+            await axios.put("/api/profile/settings/setSettings", seti);
         },
         getTheme() {
             return localStorage.getItem("theme") != null

@@ -55,8 +55,7 @@ export default {
                 if (role.role == ARGrole) tempActive = !tempActive;
                 if (tempActive) newRoleStr += role.role;
             }
-            await axios.post("/api/players/setRoles", {
-                id: this.custom.Player.ID,
+            await axios.put("/api/players/setRoles/" + this.custom.Player.ID, {
                 roles: newRoleStr,
             });
             this.emitter.emit("updateLobby");
@@ -67,10 +66,9 @@ export default {
             } else if (this.role.sr < 0) {
                 this.roleInst.sr = 0;
             }
-            await axios.post("/api/customs/changeRoleSr", {
+            await axios.put("/api/customs/changeRoleSr/" + this.custom.ID, {
                 role: this.role.role,
                 rating: this.role.sr,
-                customId: this.custom.ID,
             });
             this.emitter.emit("updateLobby");
         },
@@ -79,8 +77,6 @@ export default {
 </script>
 
 <style scoped>
-
-
 .role {
     display: flex;
     flex-direction: column;

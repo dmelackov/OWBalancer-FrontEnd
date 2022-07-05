@@ -77,9 +77,11 @@ export default {
         },
         del() {
             this.deleted = true;
+            this.$emit("delete", this.custom.ID)
         },
         cancelDel() {
             this.deleted = false;
+            this.$emit("cancel-delete", this.custom.ID)
         },
     },
 

@@ -4,7 +4,11 @@
             <div class="playerControl">
                 <input
                     type="text"
-                    class="playerNickname custom_input"
+                    :class="{
+                        playerNickname: true,
+                        custom_input: true,
+                        innactive: this.deleted,
+                    }"
                     @change="change"
                     v-model="player.Username"
                 />
@@ -15,11 +19,15 @@
                     Cancel delete
                 </button>
             </div>
-            <div class="customsControl">
+            <div :class="{ customsControl: true, innactive: this.deleted }">
                 <Scrollbar>
                     <div class="lobby_list">
                         <template v-for="custom in customs" :key="custom.ID">
-                            <EditMenuCustom :custom="custom" />
+                            <EditMenuCustom
+                                :custom="custom"
+                                @delete="deleteCustom"
+                                @cancel-delete="cancelDeleteCustom"
+                            />
                         </template>
                     </div>
                 </Scrollbar>
@@ -64,6 +72,7 @@ export default {
             opened: false,
             deleted: false,
             changed: false,
+            deleteCustomList: new Set(),
             player: {
                 Username: "",
                 ID: 0,
@@ -77,7 +86,7 @@ export default {
     },
     computed: {
         edited() {
-            return this.changed || this.deleted;
+            return this.changed || this.deleted || this.deleteCustomList.size > 0;
         },
     },
     methods: {
@@ -92,7 +101,6 @@ export default {
             this.opened = false;
         },
         save() {
-            if (!this.changed) return;
             this.close();
         },
         del() {
@@ -107,6 +115,12 @@ export default {
         async loadCustoms() {
             const res = await axios.get("/api/customs/getCustoms/" + this.player.ID);
             this.customs = res.data;
+        },
+        deleteCustom(customID) {
+            this.deleteCustomList.add(customID);
+        },
+        cancelDeleteCustom(customID) {
+            this.deleteCustomList.delete(customID);
         },
     },
     created() {
@@ -151,6 +165,10 @@ export default {
                 width: 200px;
                 font-size: 18px;
                 box-shadow: 0 1px 0 #3a4b68a8;
+                &.innactive {
+                    pointer-events: none;
+                    opacity: 0.5;
+                }
             }
             .deleteButton {
                 background-color: $errorRed;
@@ -182,6 +200,10 @@ export default {
                 display: flex;
                 flex-direction: column;
                 gap: 5px;
+            }
+            &.innactive {
+                pointer-events: none;
+                opacity: 0.5;
             }
         }
         .formControl {

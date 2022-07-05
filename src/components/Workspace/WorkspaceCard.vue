@@ -19,7 +19,7 @@ export default {
     props: ["workspace"],
     methods: {
         async select(){
-            await axios.post("/api/profile/workspace/setWorkspace", {"ID": this.workspace.ID})
+            await axios.put("/api/profile/workspace/setWorkspace/" + this.workspace.ID)
             await this.updateLoginState()
         }
     }
