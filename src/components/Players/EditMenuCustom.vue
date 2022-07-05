@@ -85,7 +85,7 @@ export default {
 
     computed: {
         canDelete() {
-            return this.isMyCustom;
+            return this.isMyCustom || this.isPerm("delete_custom");
         },
     },
     created() {
