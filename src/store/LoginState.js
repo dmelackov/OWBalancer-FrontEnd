@@ -1,6 +1,5 @@
 import { reactive, toRefs } from "vue";
-import axios from "axios";
-
+import api from "/src/api"
 
 const state = reactive({
     UserInfo: {},
@@ -12,9 +11,9 @@ const state = reactive({
 export default function useLoginState() {
     const updateLoginState = async () => {
         state.loading = true;
-        state.perms = (await axios.get("/api/profile/getPermissions")).data
-        state.UserInfo = (await axios.get("/api/profile/getCurrentUserInfo")).data
-        if(state.UserInfo.Auth) state.Settings = (await axios.get("/api/profile/settings/getSettings")).data
+        state.perms = await api.profile_api.getPermissions()
+        state.UserInfo = await api.profile_api.getCurrentUserInfo()
+        if (state.UserInfo.Auth) state.Settings = await api.profile_api.settings_api.getSettings()
         state.loading = false;
     }
 

@@ -54,17 +54,17 @@
 </template>
 
 <script>
-import axios from "axios";
+import api from "/src/api";
 import router from "/src/router";
-import useLoginState from "/src/store/LoginState"
+import useLoginState from "/src/store/LoginState";
 export default {
     setup() {
-        const {UserInfo, Settings, updateLoginState} = useLoginState()
+        const { UserInfo, Settings, updateLoginState } = useLoginState();
         return {
             UserInfo,
             Settings,
-            updateLoginState
-        }
+            updateLoginState,
+        };
     },
     data() {
         return {
@@ -77,18 +77,14 @@ export default {
         };
     },
     methods: {
-
         async submit() {
-            let bodyFormData = new FormData();
-            bodyFormData.set("login", this.form.login);
-            bodyFormData.set("password", this.form.password);
-            bodyFormData.set("remember_me", this.form.remember_me);
-            let res = await axios.post("/api/profile/auth/login", bodyFormData, {
-                headers: { "Content-Type": "multipart/form-data" },
-            });
-            let ResData = res.data;
+            let ResData = await api.profile_api.auth_api.login(
+                this.form.login,
+                this.form.password,
+                this.form.remember_me
+            );
             if (ResData.status == 200) {
-                await this.updateLoginState()
+                await this.updateLoginState();
                 router.push("/");
             } else {
                 if (ResData.status == 400 && ResData.message) {
@@ -102,7 +98,7 @@ export default {
 
 <style scoped>
 p {
-    margin: 0
+    margin: 0;
 }
 .title {
     margin-bottom: 20px;

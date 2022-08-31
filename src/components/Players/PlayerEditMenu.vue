@@ -52,7 +52,7 @@
 <script>
 import EditMenuCustom from "./EditMenuCustom.vue";
 import Scrollbar from "vue3-smooth-scrollbar";
-import axios from "axios";
+import api from "/src/api"
 import useLoginState from "/src/store/LoginState";
 
 export default {
@@ -104,20 +104,20 @@ export default {
         async save() {
             if (!this.edited) return;
             if (this.deleted) {
-                await axios.delete("/api/players/deletePlayer/" + this.player.ID);
+                await api.players_api.deletePlayer(this.player.ID)
                 this.emitter.emit("updateLobby");
                 this.emitter.emit("updatePlayers");
                 this.close();
                 return;
             }
             if (this.changed) { 
-                await axios.put("/api/players/changeNickname/" + this.player.ID, {Username: this.player.Username}); 
+                await api.player_api.changeNickname(this.player.ID, this.player.Username)
                 this.emitter.emit("updateLobby");
                 this.emitter.emit("updatePlayers");
             }
             let promises = [];
             for (const i of this.deleteCustomList) {
-                promises.push(axios.delete("/api/customs/deleteCustom/" + i));
+                promises.push(api.customs_api.deleteCustom(i));
             }
             await Promise.all(promises);
             this.emitter.emit("updateLobby");
@@ -133,8 +133,7 @@ export default {
             this.changed = true;
         },
         async loadCustoms() {
-            const res = await axios.get("/api/customs/getCustoms/" + this.player.ID);
-            this.customs = res.data;
+            this.customs = await api.customs_api.getCustoms(this.player.ID);
         },
         deleteCustom(customID) {
             this.deleteCustomList.add(customID);

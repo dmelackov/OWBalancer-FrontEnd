@@ -48,7 +48,7 @@
 
 <script>
 import PlayerContainer from "./PlayerContainer.vue";
-import axios from "axios";
+import api from "/src/api"
 import Scrollbar from "vue3-smooth-scrollbar";
 
 export default {
@@ -65,16 +65,12 @@ export default {
     },
     methods: {
         async createPlayer() {
-            await axios.post("/api/players/createPlayer", {
-                Username: this.createPlayerNickname,
-            });
+            await api.players_api.createPlayer(this.createPlayerNickname)
             this.createPlayerNickname = "";
             this.emitter.emit("updatePlayers");
         },
-        updatePlayers() {
-            axios
-                .get("/api/players/getPlayers/")
-                .then((response) => (this.playerList = response.data));
+        async updatePlayers() {
+            this.playerList = await api.players_api.getPlayers()
         },
         createPlayerEnter(e) {
             if (e.code === "Enter") this.createPlayer();

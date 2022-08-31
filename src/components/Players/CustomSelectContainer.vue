@@ -31,7 +31,7 @@
 
 <script>
 import CustomPattern from "./CustomPattern.vue";
-import axios from "axios";
+import api from "/src/api"
 import useLoginState from "/src/store/LoginState";
 
 export default {
@@ -57,25 +57,15 @@ export default {
     },
     methods: {
         async createCustom() {
-            let custom = (
-                await axios.post("/api/customs/createCustom", {
-                    id: this.target.player.ID,
-                })
-            ).data;
-
-            axios
-                .post("/api/lobby/addToLobby/" + custom.ID)
-                .catch(() => {})
-                .finally(() => {
-                    this.close();
-                    this.emitter.emit("updateLobby");
-                });
+            let custom = await api.customs_api.createCustom(this.target.player.ID)
+            await api.lobby_api.addToLobby(custom.ID)
+            this.close();
+            this.emitter.emit("updateLobby");
         },
         async open(target) {
             this.hasMyCustom = false;
             this.target = target;
-            const res = await axios.get("/api/customs/getCustoms/" + target.player.ID);
-            const resData = res.data;
+            const resData = await api.customs_api.getCustoms(target.player.ID);
             let myCustom = null;
             for (const custom of resData) {
                 if (custom.Creator.Profile.ID == this.UserInfo.ID) {
@@ -85,7 +75,7 @@ export default {
                 }
             }
             if (this.Settings.AutoCustom && myCustom) {
-                await axios.post("/api/lobby/addToLobby/" + resData.id);
+                await api.lobby_apu.addToLobby(resData.id)
                 this.close();
                 this.emitter.emit("updateLobby");
                 return;

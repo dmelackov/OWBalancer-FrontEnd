@@ -53,9 +53,9 @@
 </template>
 
 <script>
-import axios from "axios";
 import router from "../router";
 import useLoginState from "/src/store/LoginState";
+import api from "../api.js"
 export default {
     setup() {
         const { UserInfo, Settings, updateLoginState } = useLoginState();
@@ -76,7 +76,7 @@ export default {
         },
         async exit() {
             this.menuOpened = false;
-            await axios.post("/api/profile/auth/logout");
+            await api.profile_api.auth_api.logout()
             await this.updateLoginState();
             router.push("/login");
         },

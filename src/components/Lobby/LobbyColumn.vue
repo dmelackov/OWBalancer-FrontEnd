@@ -25,12 +25,13 @@
 </template>
 
 <script>
-import axios from "axios";
+import api from "/src/api";
 import LobbyPlayerContainer from "./LobbyPlayerContainer.vue";
 import Scrollbar from "vue3-smooth-scrollbar";
 export default {
     components: {
-        LobbyPlayerContainer, Scrollbar
+        LobbyPlayerContainer,
+        Scrollbar,
     },
 
     data() {
@@ -40,13 +41,11 @@ export default {
     },
 
     methods: {
-        updateLobby() {
-            axios
-                .get("/api/lobby/getLobby")
-                .then((response) => (this.lobbyPlayerList = response.data));
+        async updateLobby() {
+            this.lobbyPlayerList = await api.lobby_api.getLobby();
         },
         async clearLobby() {
-            await sendPOST("/api/lobby/clearLobby", {});
+            await api.lobby_api.clearLobby();
             this.emitter.emit("updateLobby");
         },
     },
@@ -61,18 +60,13 @@ export default {
         this.updateLobby();
         this.emitter.on("updateLobby", this.updateLobby);
     },
-    unmounted(){
+    unmounted() {
         this.emitter.off("updateLobby", this.updateLobby);
-    }
+    },
 };
-
-async function sendPOST(url, params) {
-    await axios.post(url, params);
-}
 </script>
 
 <style scoped>
-
 .column_widget {
     display: flex;
     flex-direction: column;

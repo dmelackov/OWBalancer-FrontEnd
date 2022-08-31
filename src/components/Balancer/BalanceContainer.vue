@@ -1,9 +1,6 @@
 <template>
     <div class="balance_container">
-        <Balancer
-            :Balance="currentBalance"
-            v-if="this.imageSrc == null"
-        />
+        <Balancer :Balance="currentBalance" v-if="this.imageSrc == null" />
         <img
             :src="this.imageSrc"
             alt=""
@@ -55,7 +52,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import api from "/src/api"
 import Balancer from "./Balancer.vue";
 import * as domtoimage from "html-to-image";
 
@@ -66,7 +63,7 @@ export default {
             imageSrc: "./img/balancer_placeholder/balance_alt.png",
             currentImageIndex: 0,
             balanceLenght: 0,
-            currentBalance: {}
+            currentBalance: {},
         };
     },
     methods: {
@@ -81,8 +78,7 @@ export default {
         },
         async getBalances() {
             this.imageSrc = "/img/balancer_placeholder/balance_load.png";
-            let res = await axios.get("/api/profile/balance/getBalances");
-            let balance = res.data;
+            let balance = await api.profile_api.balance_api.getBalances();
             if (balance["result"] == 200) {
                 localStorage.setItem("balance_static", JSON.stringify(balance.static));
                 localStorage.setItem("balance_active", JSON.stringify(balance.active));
@@ -132,33 +128,40 @@ export default {
             this.currentBalance.static = balance_static;
         },
         async copyBalance() {
-            let balance = document.getElementById("svgBalance");
-            let img = await domtoimage.toBlob(balance)
+            let balance = document.getElementById("balance");
+            let img = await domtoimage.toBlob(balance);
             // eslint-disable-next-line no-undef
-            const item = new ClipboardItem({ "image/png": img });
-            navigator.clipboard.write([item]);
-            this.$notify({ title: "Balance success copy to clipboard", type: "success" });
+            try {
+                const item = new window.ClipboardItem({ "image/png": img });
+                navigator.clipboard.write([item]);
+                this.$notify({
+                    title: "Balance success copy to clipboard",
+                    type: "success",
+                });
+            } catch (error) {
+                this.$notify({
+                    title: "Unsupported browser",
+                    type: "error",
+                });
+            }
         },
-        updateBalanceImage(){
+        updateBalanceImage() {
             this.setCurrentImageIndex();
             this.updateImage();
         },
-        async balancerDragEnd(players){
+        async balancerDragEnd(players) {
             if (players[0] == players[1]) return;
             let tempEl = this.currentBalance.static[players[0]];
             this.currentBalance.static[players[0]] = this.currentBalance.static[
                 players[1]
             ];
             this.currentBalance.static[players[1]] = tempEl;
-            let res = await axios.post(
-                "/api/profile/balance/calcBalance",
-                this.currentBalance
-            );
-            if (res == false) {
+            let resData = await api.profile_api.balance_api.calcBalance(this.currentBalance)
+            if (resData.status != 400) {
                 return;
             }
-            this.currentBalance.active = res.data;
-        }
+            this.currentBalance.active = resData;
+        },
     },
     async created() {
         this.emitter.on("updateBalanceImage", this.updateBalanceImage);
@@ -166,16 +169,14 @@ export default {
         this.setBalanceLenght();
         this.emitter.emit("updateBalanceImage");
     },
-    unmounted(){
+    unmounted() {
         this.emitter.off("updateBalanceImage", this.updateBalanceImage);
         this.emitter.off("BalancerDragEnd", this.balancerDragEnd);
-    }
+    },
 };
 </script>
 
 <style scoped>
-
-
 .balance_container {
     margin-right: 50px;
     margin-left: 50px;

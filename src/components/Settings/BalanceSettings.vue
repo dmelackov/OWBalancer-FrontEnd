@@ -97,8 +97,7 @@
 
 <script>
 import SettingsColumn from "./SettingsColumn.vue";
-import axios from "axios";
-
+import api from "/src/api"
 import useLoginState from "/src/store/LoginState"
 
 export default {
@@ -123,7 +122,7 @@ export default {
         async sendNewSettings() {
             let seti = this.Settings;
             seti.BalanceLimit = parseInt(seti.BalanceLimit);
-            await axios.put("/api/profile/settings/setSettings", seti);
+            await api.profile_api_settings_api.setSettings(seti)
         },
         getTheme() {
             return localStorage.getItem("theme") != null

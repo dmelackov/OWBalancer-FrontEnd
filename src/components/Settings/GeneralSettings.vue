@@ -130,7 +130,7 @@
 
 <script>
 import SettingsColumn from "./SettingsColumn.vue";
-import axios from "axios";
+import api from "/src/api"
 import useLoginState from "/src/store/LoginState"
 
 export default {
@@ -157,7 +157,7 @@ export default {
             seti.Amount.T = parseInt(seti.Amount.T);
             seti.Amount.D = parseInt(seti.Amount.D);
             seti.Amount.H = parseInt(seti.Amount.H);
-            await axios.put("/api/profile/settings/setSettings", seti);
+            await api.profile_api.settings_api.setSettings(seti)
         },
         getTheme() {
             return localStorage.getItem("theme") != null

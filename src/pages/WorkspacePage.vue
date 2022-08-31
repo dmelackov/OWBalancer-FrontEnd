@@ -1,6 +1,7 @@
 <template>
     <div class="content">
         <WorkspaceList class="workspaceList"/>
+        <WorkspaceInfo class="workspaceInfo"/>
     </div>
 </template>
 
@@ -11,7 +12,8 @@ import WorkspaceInfo from '../components/Workspace/WorkspaceInfo.vue';
 
 export default {
     components: {
-        WorkspaceList
+        WorkspaceList,
+        WorkspaceInfo
     },
     data(){
         return {
@@ -33,6 +35,11 @@ export default {
         width: 20vw;
         height: 100%;
         box-sizing: border-box;
+    }
+    .workspaceInfo {
+        height: 50%;
+        flex: 1;
+        margin-left: 8px;
     }
 }
 </style>

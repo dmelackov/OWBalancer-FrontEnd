@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import api from "/src/api"
 import RoleComponent from "./RoleComponent.vue";
 
 export default {
@@ -111,7 +111,7 @@ export default {
             this.menuOpened = false;
         },
         async deleteFromLobby() {
-            await axios.delete("/api/lobby/deleteFromLobby/" + this.custom.ID);
+            await api.lobby_api.deleteFromLobby(this.custom.ID)
             this.emitter.emit("updateLobby");
         },
         async swapRoles(index) {
@@ -126,15 +126,11 @@ export default {
             let tempChar = tempMass[index];
             tempMass[index] = tempMass[index + 1];
             tempMass[index + 1] = tempChar;
-            await axios.put("/api/players/setRoles/" + this.custom.Player.ID, {
-                roles: tempMass.join(""),
-            });
+            await api.players_api.setRoles(this.custom.Player.ID, tempMass.join(""))
             this.emitter.emit("updateLobby");
         },
         async toggleFlex() {
-            await axios.put("/api/players/setFlex/" + this.custom.Player.ID, {
-                status: !this.custom.isFlex,
-            });
+            await api.players_api.setRoles(this.custom.Player.ID, !this.custom.isFlex)
             this.emitter.emit("updateLobby");
         },
     },

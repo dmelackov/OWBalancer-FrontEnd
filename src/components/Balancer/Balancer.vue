@@ -1,5 +1,10 @@
 <template>
-    <svg id="svgBalance" xmlns="http://www.w3.org/2000/svg" width="100%" :viewBox="viewbox">
+    <svg
+        id="svgBalance"
+        xmlns="http://www.w3.org/2000/svg"
+        width="100%"
+        :viewBox="viewbox"
+    >
         <foreignObject class="node" x="0" y="0" width="1920px" height="100%">
             <body xmlns="http://www.w3.org/1999/xhtml" width="100%">
                 <div id="balance">
@@ -67,22 +72,22 @@
 
 <script>
 import BalancePlayer from "./BalancePlayer.vue";
-import useLoginState from "/src/store/LoginState"
+import useLoginState from "/src/store/LoginState";
 export default {
     setup() {
-        const {UserInfo, Settings, updateLoginState} = useLoginState()
+        const { UserInfo, Settings, updateLoginState } = useLoginState();
         return {
             UserInfo,
             Settings,
-            updateLoginState
-        }
+            updateLoginState,
+        };
     },
     components: { BalancePlayer },
     props: ["Balance"],
     data() {
         return {
-            viewbox: "0 0 1920 1080"
-        }
+            viewbox: "0 0 1920 1080",
+        };
     },
     computed: {
         fTeam: {
@@ -131,13 +136,13 @@ export default {
         },
     },
     mounted() {
-        this.viewbox = "0 0 1920 "
-        this.viewbox += document.getElementById("balance").offsetHeight
+        this.viewbox = "0 0 1920 ";
+        this.viewbox += document.getElementById("balance").offsetHeight;
     },
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 @font-face {
     font-family: "TeamFont";
     src: url("/TeamFont.ttf");
@@ -151,62 +156,79 @@ export default {
 p {
     margin: 0;
 }
-#balance {
-    width: 1920px;
-    background-color: #090c10;
-    color: #ffffff;
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
-    border: solid transparent 16px;
-}
 
-.players {
-    flex-grow: 3;
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: nowrap;
-    align-items: center;
-    margin: 10px 20px 20px 20px;
-}
-.leftPlayers,
-.rightPlayers {
-    background-color: #161b22;
-    width: 100%;
-    padding: 10px;
-}
-.playerColumnRight,
-.playerColumnLeft {
-    width: 45%;
-    height: max-content;
-    display: flex;
-    flex-direction: column;
-}
+#svgBalance {
+    body {
+        margin: 0;
+        width: 1920px;
+    }
+    #balance {
+        width: 1920px;
+        background-color: #090c10;
+        color: #ffffff;
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+        border: solid transparent 16px;
+        .balanceInfo {
+            display: flex;
+            justify-content: space-between;
+            justify-content: center;
+            .leftTeamName,
+            .rightTeamName {
+                font-size: 96px;
+                font-family: TeamFont;
+                width: 45%;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+            .rightTeamName {
+                text-align: right;
+            }
+            .evaluation {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding-bottom: 40px;
+            }
+        }
+        .players {
+            flex-grow: 3;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: nowrap;
+            align-items: center;
+            margin: 10px 5px 20px 5px;
+            .playerColumnRight,
+            .playerColumnLeft {
+                width: 45%;
+                height: max-content;
+                display: flex;
+                flex-direction: column;
+                
+                .leftPlayers,
+                .rightPlayers {
+                    background-color: #161b22;
+                    width: 100%;
+                    padding: 10px;
+                    box-sizing: border-box;
+                }
+            }
 
-.playerColumnRight {
-    align-items: flex-start;
-}
-.playerColumnLeft {
-    align-items: flex-end;
-}
-
-.leftTeamName,
-.rightTeamName {
-    font-size: 96px;
-    font-family: TeamFont;
-    width: 45%;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-}
-.rightTeamName {
-    text-align: right;
-}
-
-.balanceInfo {
-    display: flex;
-    justify-content: space-between;
-    justify-content: center;
+            .playerColumnRight {
+                align-items: flex-start;
+            }
+            .playerColumnLeft {
+                align-items: flex-end;
+            }
+            .vs {
+                font-size: 84px;
+                font-family: VSFont;
+            }
+        }
+    }
 }
 
 .infoStat,
@@ -216,10 +238,6 @@ p {
     color: #46494d;
 }
 
-.vs {
-    font-size: 84px;
-    font-family: VSFont;
-}
 .infoStat {
     margin-right: 8px;
 }
@@ -231,13 +249,7 @@ p {
     display: flex;
     gap: 250px;
 }
-.evaluation {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding-bottom: 40px;
-}
+
 .extStat {
     margin-top: -60px;
 }

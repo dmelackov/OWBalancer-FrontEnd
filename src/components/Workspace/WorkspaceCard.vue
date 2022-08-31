@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import api from "/src/api"
 import useLoginState from "/src/store/LoginState"
 export default {
     setup() {
@@ -19,7 +19,7 @@ export default {
     props: ["workspace"],
     methods: {
         async select(){
-            await axios.put("/api/profile/workspace/setWorkspace/" + this.workspace.ID)
+            await api.profile_api.workspace_api.setWorkspace(this.workspace.ID)
             await this.updateLoginState()
         }
     }

@@ -55,9 +55,8 @@
     </div>
 </template>
 
-
 <script>
-import axios from "axios";
+import api from "/src/api";
 export default {
     data() {
         return {
@@ -73,18 +72,13 @@ export default {
     methods: {
         async submit() {
             this.form_error = "";
-            let bodyFormData = new FormData();
-            bodyFormData.set("login", this.form.login);
-            bodyFormData.set("password", this.form.password);
-            bodyFormData.set("password_again", this.form.repeat_password);
-            let res = await axios.post(
-                "/api/profile/auth/registration",
-                bodyFormData,
-                { headers: { "Content-Type": "multipart/form-data" } }
+            let ResData = api.profile_api.auth_api.registration(
+                this.form.login,
+                this.form.password,
+                this.form.repeat_password
             );
-            let ResData = res.data;
             if (ResData.status == 200) {
-                this.$router.push('/login')
+                this.$router.push("/login");
             } else {
                 if (ResData.status == 400 && ResData.message) {
                     this.form_error = ResData.message;
@@ -95,10 +89,9 @@ export default {
 };
 </script>
 
-
 <style scoped>
 p {
-    margin: 0
+    margin: 0;
 }
 .title {
     margin-bottom: 20px;

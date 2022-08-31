@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import api from "/src/api"
 
 export default {
     props: ["role", "custom"],
@@ -55,9 +55,7 @@ export default {
                 if (role.role == ARGrole) tempActive = !tempActive;
                 if (tempActive) newRoleStr += role.role;
             }
-            await axios.put("/api/players/setRoles/" + this.custom.Player.ID, {
-                roles: newRoleStr,
-            });
+            await api.players_api.setRoles(this.custom.Player.ID, newRoleStr)
             this.emitter.emit("updateLobby");
         },
         async setSR() {
@@ -66,10 +64,11 @@ export default {
             } else if (this.role.sr < 0) {
                 this.roleInst.sr = 0;
             }
-            await axios.put("/api/customs/changeRoleSr/" + this.custom.ID, {
-                role: this.role.role,
-                rating: this.role.sr,
-            });
+            await api.customs_api.changeRoleSr(
+                this.custom.ID,
+                this.role.role,
+                this.role.sr
+            )
             this.emitter.emit("updateLobby");
         },
     },

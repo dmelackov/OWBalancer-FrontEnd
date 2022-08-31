@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import api from "/src/api"
 import useLoginState from "/src/store/LoginState"
 
 export default {
@@ -75,7 +75,7 @@ export default {
     methods: {
         async addToLobby() {
             this.emitter.emit("closeCustomMenu");
-            await axios.post("/api/lobby/addToLobby/" + this.custom.ID);
+            await api.lobby_api.addToLobby(this.custom.ID)
             this.emitter.emit("updateLobby");
         },
         getRolesInfo() {

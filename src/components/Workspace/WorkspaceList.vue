@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import api from "/src/api";
 import Scrollbar from "vue3-smooth-scrollbar";
 import WorkspaceCard from "./WorkspaceCard.vue";
 
@@ -31,9 +31,7 @@ export default {
     },
     methods: {
         async getWorkspaceList() {
-            this.Workspaces = (
-                await axios.get("/api/profile/workspace/getWorkspaces")
-            ).data;
+            this.Workspaces = await api.profile_api.workspace_api.getWorkspaces();
         },
     },
     created() {
