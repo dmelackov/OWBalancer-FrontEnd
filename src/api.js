@@ -1,13 +1,20 @@
 import axios from "axios"
 
+class APIError {
+    constructor(code, message){
+        this.code = code
+        this.message = message
+    }
+}
 
 const settings_api = {
     async getSettings() {
         let res = await axios.get("/api/profile/settings/getSettings")
         return res.data
     },
-    setSettings(Settings) {
-        return axios.put("/api/profile/settings/setSettings", Settings);
+    async setSettings(Settings) {
+        let res = await axios.put("/api/profile/settings/setSettings", Settings);
+        return res.data
     }
 }
 
@@ -135,17 +142,36 @@ const players_api = {
 
 const lobby_api = {
     async getLobby() {
-        let res = await axios.get("/api/lobby/getLobby")
-        return res.data
+        try {
+            let res = await axios.get("/api/lobby/getLobby")
+            return res.data
+        } catch (error) {
+            throw new APIError(error.response.status, error.response.data);
+        }
     },
-    addToLobby(customID) {
-        return axios.post("/api/lobby/addToLobby/" + customID)
+    async addToLobby(customID) {
+        try {
+            let res = await axios.post("/api/lobby/addToLobby/" + customID)
+            return res.data
+        } catch (error) {
+            throw new APIError(error.response.status, error.response.data);
+        }
     },
-    deleteFromLobby(customID) {
-        return axios.delete("/api/lobby/deleteFromLobby/" + customID);
+    async deleteFromLobby(customID) {
+        try {
+            let res = await axios.delete("/api/lobby/deleteFromLobby/" + customID)
+            return res.data
+        } catch (error) {
+            throw new APIError(error.response.status, error.response.data);
+        }
     },
-    clearLobby() {
-        return axios.delete("/api/lobby/clearLobby")
+    async clearLobby() {
+        try {
+            let res = await axios.delete("/api/lobby/clearLobby")
+            return res.data
+        } catch (error) {
+            throw new APIError(error.response.status, error.response.data);
+        }
     }
 }
 

@@ -1,13 +1,9 @@
 <template>
-    <div
-        id="customSelect"
-        :class="['customSelect']"
-        :style="{
-            display: this.customMenuVisible ? 'block' : 'none',
-            left: left + 'px',
-            top: top + 'px',
-        }"
-    >
+    <div id="customSelect" :class="['customSelect']" :style="{
+        display: this.customMenuVisible ? 'block' : 'none',
+        left: left + 'px',
+        top: top + 'px',
+    }">
         <div class="custom_select">
             <div class="customs" v-if="customList.length > 0">
                 <div id="CustomTableSelect">
@@ -16,13 +12,9 @@
                     </template>
                 </div>
             </div>
-            <button
-                v-if="isPerm('create_custom') && !hasMyCustom"
-                :class="{
-                    create_container: true,
-                }"
-                @click="createCustom"
-            >
+            <button v-if="isPerm('create_custom') && !hasMyCustom" :class="{
+                create_container: true,
+            }" @click="createCustom">
                 + Create custom
             </button>
         </div>
@@ -57,8 +49,19 @@ export default {
     },
     methods: {
         async createCustom() {
-            let custom = await api.customs_api.createCustom(this.target.player.ID)
-            await api.lobby_api.addToLobby(custom.ID)
+            let custom;
+            try {
+                custom = await api.customs_api.createCustom(this.target.player.ID)
+            } catch (error) {
+                this.$notify({ title: error.message, type: "error" });
+                return;
+            }
+            try {
+                await api.lobby_api.addToLobby(custom.ID)
+            } catch (error) {
+                this.$notify({ title: error.message, type: "error" });
+                return;
+            }
             this.close();
             this.emitter.emit("updateLobby");
         },
@@ -145,6 +148,7 @@ export default {
     height: 250px;
     margin-bottom: 10px;
 }
+
 .create_container {
     margin-bottom: 10px;
 }

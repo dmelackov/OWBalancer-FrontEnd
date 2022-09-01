@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import GeneralSettings from "../components/Settings/GeneralSettings.vue";
-import BalanceSettings from "../components/Settings/BalanceSettings.vue";
+import GeneralSettings from "@/components/Settings/GeneralSettings.vue";
+import BalanceSettings from "@/components/Settings/BalanceSettings.vue";
 export default {
     components: {
         GeneralSettings,

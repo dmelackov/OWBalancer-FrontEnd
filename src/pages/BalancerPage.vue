@@ -9,11 +9,11 @@
 </template>
 
 <script>
-import LobbyColumn from "../components/Lobby/LobbyColumn.vue";
-import PlayerColumn from "../components/Players/PlayerColumn.vue";
-import CustomSelectContainer from "../components/Players/CustomSelectContainer.vue";
-import BalanceContainer from "../components/Balancer/BalanceContainer.vue";
-import PlayerEditMenu from "../components/Players/PlayerEditMenu.vue";
+import LobbyColumn from "@/components/Lobby/LobbyColumn.vue";
+import PlayerColumn from "@/components/Players/PlayerColumn.vue";
+import CustomSelectContainer from "@/components/Players/CustomSelectContainer.vue";
+import BalanceContainer from "@/components/Balancer/BalanceContainer.vue";
+import PlayerEditMenu from "@/components/Players/PlayerEditMenu.vue";
 
 export default {
     components: {

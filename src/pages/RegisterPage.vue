@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import RegisterForm from "../components/Authorization/RegisterForm.vue";
-import Contacts from "../components/Authorization/Contacts.vue";
+import RegisterForm from "@/components/Authorization/RegisterForm.vue";
+import Contacts from "@/components/Authorization/Contacts.vue";
 
 export default {
     components: {

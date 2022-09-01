@@ -6,8 +6,8 @@
         duration="3"
         style="top: 70px"
     >
-        <template #body="{ item }" @click="close">
-            <div class="notification-template">
+        <template #body="{ item }">
+            <div class="notification-template" :class="item.type" @click="close">
                 <div class="notification-template-content">
                     <div class="notification-template-title">
                         {{ item.title }}
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import HeaderMenu from "../components/HeaderMenu.vue";
+import HeaderMenu from "@/components/HeaderMenu.vue";
 
 export default {
     name: "app",
@@ -57,16 +57,16 @@ export default {
     border-radius: 5px;
     margin-bottom: 3px;
     &.info {
-        box-shadow: 0 1px 0 #3a4b68;
+        border: solid 1px #3a4b68;
     }
     &.warn {
-        box-shadow: 0 1px 0 #bcc727;
+        border: solid 1px #bcc727;
     }
     &.error {
-        box-shadow: 0 1px 0 #c72727;
+        border: solid 1px #c72727;
     }
     &.success {
-        box-shadow: 0 1px 0 #1abe5e;
+        border: solid 1px #1abe5e;
     }
 }
 </style>

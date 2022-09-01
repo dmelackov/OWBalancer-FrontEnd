@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import LoginForm from "../components/Authorization/LoginForm.vue";
-import Contacts from "../components/Authorization/Contacts.vue"
+import LoginForm from "@/components/Authorization/LoginForm.vue";
+import Contacts from "@/components/Authorization/Contacts.vue"
 
 export default {
     components: {

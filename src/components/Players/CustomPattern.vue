@@ -1,49 +1,31 @@
 <template>
-    <div
-        :class="{
-            player_container: true,
-            my_custom_warn: isMyCustom,
-        }"
-        @click="addToLobby"
-    >
+    <div :class="{
+        player_container: true,
+        my_custom_warn: isMyCustom,
+    }" @click="addToLobby">
         <div class="player_inner_container">
             <p class="player_username">{{ custom.Player.Username }}</p>
             <div class="sr">
                 <div class="sr_icon">
                     <div class="roleSr">
-                        <img
-                            src="/img/role_icons/tank.svg"
-                            alt=""
-                            width="12"
-                            :class="{
-                                innactive: !roles.T,
-                                role_icon: true,
-                            }"
-                        />
+                        <img src="/img/role_icons/tank.svg" alt="" width="12" :class="{
+                            innactive: !roles.T,
+                            role_icon: true,
+                        }" />
                         <p>{{ SR.T }}</p>
                     </div>
                     <div class="roleSr">
-                        <img
-                            src="/img/role_icons/dps.svg"
-                            alt=""
-                            width="12"
-                            :class="{
-                                innactive: !roles.D,
-                                role_icon: true,
-                            }"
-                        />
+                        <img src="/img/role_icons/dps.svg" alt="" width="12" :class="{
+                            innactive: !roles.D,
+                            role_icon: true,
+                        }" />
                         <p>{{ SR.D }}</p>
                     </div>
                     <div class="roleSr">
-                        <img
-                            src="/img/role_icons/support.svg"
-                            alt=""
-                            width="12"
-                            :class="{
-                                innactive: !roles.H,
-                                role_icon: true,
-                            }"
-                        />
+                        <img src="/img/role_icons/support.svg" alt="" width="12" :class="{
+                            innactive: !roles.H,
+                            role_icon: true,
+                        }" />
                         <p>{{ SR.H }}</p>
                     </div>
                 </div>
@@ -59,7 +41,7 @@ import useLoginState from "@/store/LoginState"
 
 export default {
     setup() {
-        const {UserInfo} = useLoginState()
+        const { UserInfo } = useLoginState()
         return {
             UserInfo
         }
@@ -75,7 +57,12 @@ export default {
     methods: {
         async addToLobby() {
             this.emitter.emit("closeCustomMenu");
-            await api.lobby_api.addToLobby(this.custom.ID)
+            try {
+                await api.lobby_api.addToLobby(this.custom.ID)
+            } catch (error) {
+                this.$notify({ title: error.message, type: "error" });
+                return;
+            }
             this.emitter.emit("updateLobby");
         },
         getRolesInfo() {
@@ -95,7 +82,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 @import "../../assets/css/playerContainer.css";
 
 .my_custom_warn {
@@ -124,14 +110,17 @@ export default {
     line-height: 1px;
     font-size: 12px;
 }
-.roleSr > p {
+
+.roleSr>p {
     font-size: 14px;
 }
+
 .roleSr {
     display: flex;
     flex-direction: row;
     align-items: center;
 }
+
 .author-left {
     position: absolute;
     color: #3b4b5f;

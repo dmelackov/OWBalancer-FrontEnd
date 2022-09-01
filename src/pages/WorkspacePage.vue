@@ -7,8 +7,8 @@
 
 <script>
 
-import WorkspaceList from '../components/Workspace/WorkspaceList.vue';
-import WorkspaceInfo from '../components/Workspace/WorkspaceInfo.vue';
+import WorkspaceList from '@/components/Workspace/WorkspaceList.vue';
+import WorkspaceInfo from '@/components/Workspace/WorkspaceInfo.vue';
 
 export default {
     components: {
