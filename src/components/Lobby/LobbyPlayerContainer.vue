@@ -1,35 +1,15 @@
 <template>
-    <div
-        :class="{
-            error: custom.warn,
-            lobby_container: true,
-            player_container: true,
-        }"
-    >
-        <div
-            class="player_inner_container"
-            @click="open($event)"
-            @mouseenter="active = true"
-            @mouseleave="active = false"
-        >
+    <div class="lobby_container player_container" :class="{ error: warn, }">
+        <div class="player_inner_container" @click="open($event)" @mouseenter="active = true"
+            @mouseleave="active = false">
             <p class="player_username">{{ custom.Player.Username }}</p>
             <div class="sr_lobby" v-show="!active">
                 <div class="sr_lobby_icon" v-show="!custom.isFlex">
-                    <img
-                        :src="getRoleIco(role.role)"
-                        alt=""
-                        width="15"
-                        :class="{ role_icon: true, innactive: !role.active }"
-                        v-for="(role, index) in custom.Roles"
-                        :key="index"
-                    />
+                    <img :src="getRoleIco(role.role)" alt="" width="15"
+                        :class="{ role_icon: true, innactive: !role.active }" v-for="(role, index) in custom.Roles"
+                        :key="index" />
                 </div>
-                <img
-                    src="/img/flex.svg"
-                    alt=""
-                    v-if="custom.isFlex"
-                    width="16"
-                />
+                <img src="/img/flex.svg" alt="" v-if="custom.isFlex" width="16" />
             </div>
             <p class="author-right">{{ custom.Creator.Profile.username }}</p>
             <p class="X" v-show="active" @click="deleteFromLobby">✖</p>
@@ -39,26 +19,16 @@
             <div class="sr lobby_sr">
                 <template v-for="(role, index) in custom.Roles" :key="role">
                     <RoleComponent :role="role" :custom="custom" />
-                    <p
-                        :class="{
-                            switch_button: true
-                        }"
-                        v-if="index != 2 && !custom.isFlex && isPerm('change_player_roles')"
-                        @click="swapRoles(index)"
-                    >
+                    <p :class="{
+                        switch_button: true
+                    }" v-if="index != 2 && !custom.isFlex && isPerm('change_player_roles')" @click="swapRoles(index)">
                         ⇆
                     </p>
                 </template>
-                <img
-                    src="/img/flex.svg"
-                    alt=""
-                    width="30"
-                    :class="{
-                        role_icon: true,
-                        innactive: !custom.isFlex,
-                    }"
-                    @click="toggleFlex"
-                />
+                <img src="/img/flex.svg" alt="" width="30" :class="{
+                    role_icon: true,
+                    innactive: !custom.isFlex,
+                }" @click="toggleFlex" />
             </div>
         </div>
     </div>
@@ -67,6 +37,7 @@
 <script>
 import api from "@/api"
 import RoleComponent from "@/components/Lobby/RoleComponent.vue";
+import { throwStatement } from "@babel/types";
 
 export default {
     props: ["custom"],
@@ -79,13 +50,13 @@ export default {
             active: false,
         };
     },
-    created(){
+    created() {
         this.emitter.on("lobbyCustomMenuOpen", this.lobbyCustomMenuOpen)
     },
-    unmounted(){
+    unmounted() {
         this.emitter.off("lobbyCustomMenuOpen", this.lobbyCustomMenuOpen)
     },
-    
+
     methods: {
         getRoleIco(role) {
             let iconImages = {
@@ -99,11 +70,11 @@ export default {
             return iconImages[role];
         },
         lobbyCustomMenuOpen(e) {
-            if(e != this) this.close()
+            if (e != this) this.close()
         },
         open(event) {
             if (event.target.classList.contains("X")) return;
-            if (this.menuOpened) {this.close(); return}
+            if (this.menuOpened) { this.close(); return }
             this.menuOpened = true;
             this.emitter.emit("lobbyCustomMenuOpen", this)
         },
@@ -115,7 +86,7 @@ export default {
             this.emitter.emit("updateLobby");
         },
         async swapRoles(index) {
-            if(this.custom.isFlex) return;
+            if (this.custom.isFlex) return;
             let newRoleStr = "";
             let roleIndex;
             for (roleIndex in this.custom.Roles) {
@@ -130,7 +101,7 @@ export default {
             this.emitter.emit("updateLobby");
         },
         async toggleFlex() {
-            await api.players_api.setRoles(this.custom.Player.ID, !this.custom.isFlex)
+            await api.players_api.setFlex(this.custom.Player.ID, !this.custom.isFlex)
             this.emitter.emit("updateLobby");
         },
     },
@@ -140,17 +111,29 @@ export default {
                 display: this.menuOpened ? "block" : "none",
             };
         },
+        warn: function () {
+            let warn = false;
+            if (this.custom.isFlex) {
+                this.custom.Roles.forEach(element => {
+                    if (element.sr == 0) warn = true;
+                });
+            }
+            this.custom.Roles.forEach(element => {
+                if (element.active && element.sr == 0) warn = true;
+            });
+            return warn
+        }
     },
 };
 </script>
 
 <style scoped>
-
 @import "../../assets/css/playerContainer.css";
 
 .error {
     box-shadow: 0 1px 0 #c72727a8;
 }
+
 .sr_lobby_icon {
     display: flex;
 }
@@ -172,7 +155,7 @@ export default {
     align-items: center;
 }
 
-.role > p {
+.role>p {
     text-align: center;
     margin: 0;
 }
@@ -205,6 +188,7 @@ export default {
     flex-direction: row;
     justify-content: space-between;
 }
+
 .switch_button {
     font-size: 30px;
     margin: 0;
@@ -221,6 +205,7 @@ export default {
     -moz-appearance: textfield;
     appearance: none;
 }
+
 .role_with_swap {
     display: flex;
 }
