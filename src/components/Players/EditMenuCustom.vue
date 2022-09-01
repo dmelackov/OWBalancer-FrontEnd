@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import useLoginState from "/src/store/LoginState";
+import useLoginState from "@/store/LoginState";
 
 export default {
     setup() {

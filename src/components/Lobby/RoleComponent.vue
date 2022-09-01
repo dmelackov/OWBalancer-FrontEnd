@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import api from "/src/api"
+import api from "@/api"
 
 export default {
     props: ["role", "custom"],

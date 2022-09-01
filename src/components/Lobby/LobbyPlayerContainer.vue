@@ -65,8 +65,8 @@
 </template>
 
 <script>
-import api from "/src/api"
-import RoleComponent from "./RoleComponent.vue";
+import api from "@/api"
+import RoleComponent from "@/components/Lobby/RoleComponent.vue";
 
 export default {
     props: ["custom"],

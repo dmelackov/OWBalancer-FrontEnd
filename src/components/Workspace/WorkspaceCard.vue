@@ -5,8 +5,8 @@
 </template>
 
 <script>
-import api from "/src/api"
-import useLoginState from "/src/store/LoginState"
+import api from "@/api"
+import useLoginState from "@/store/LoginState"
 export default {
     setup() {
         const {UserInfo, Settings, updateLoginState} = useLoginState()

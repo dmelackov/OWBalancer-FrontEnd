@@ -96,9 +96,9 @@
 </template>
 
 <script>
-import SettingsColumn from "./SettingsColumn.vue";
-import api from "/src/api"
-import useLoginState from "/src/store/LoginState"
+import SettingsColumn from "@/components/Settings/SettingsColumn.vue";
+import api from "@/api"
+import useLoginState from "@/store/LoginState"
 
 export default {
     setup() {
@@ -122,7 +122,7 @@ export default {
         async sendNewSettings() {
             let seti = this.Settings;
             seti.BalanceLimit = parseInt(seti.BalanceLimit);
-            await api.profile_api_settings_api.setSettings(seti)
+            await api.profile_api.settings_api.setSettings(seti)
         },
         getTheme() {
             return localStorage.getItem("theme") != null

@@ -50,10 +50,10 @@
 </template>
 
 <script>
-import EditMenuCustom from "./EditMenuCustom.vue";
+import EditMenuCustom from "@/components/Players/EditMenuCustom.vue";
 import Scrollbar from "vue3-smooth-scrollbar";
-import api from "/src/api"
-import useLoginState from "/src/store/LoginState";
+import api from "@/api"
+import useLoginState from "@/store/LoginState";
 
 export default {
     setup() {

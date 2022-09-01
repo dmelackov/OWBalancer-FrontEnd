@@ -129,9 +129,9 @@
 </template>
 
 <script>
-import SettingsColumn from "./SettingsColumn.vue";
-import api from "/src/api"
-import useLoginState from "/src/store/LoginState"
+import SettingsColumn from "@/components/Settings/SettingsColumn.vue";
+import api from "@/api"
+import useLoginState from "@/store/LoginState"
 
 export default {
     setup() {

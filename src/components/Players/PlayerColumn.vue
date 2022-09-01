@@ -47,8 +47,8 @@
 </template>
 
 <script>
-import PlayerContainer from "./PlayerContainer.vue";
-import api from "/src/api"
+import PlayerContainer from "@/components/Players/PlayerContainer.vue";
+import api from "@/api"
 import Scrollbar from "vue3-smooth-scrollbar";
 
 export default {

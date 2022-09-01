@@ -30,9 +30,9 @@
 </template>
 
 <script>
-import CustomPattern from "./CustomPattern.vue";
-import api from "/src/api"
-import useLoginState from "/src/store/LoginState";
+import CustomPattern from "@/components/Players/CustomPattern.vue";
+import api from "@/api"
+import useLoginState from "@/store/LoginState";
 
 export default {
     setup() {

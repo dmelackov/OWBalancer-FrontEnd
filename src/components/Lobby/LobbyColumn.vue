@@ -25,8 +25,8 @@
 </template>
 
 <script>
-import api from "/src/api";
-import LobbyPlayerContainer from "./LobbyPlayerContainer.vue";
+import api from "@/api";
+import LobbyPlayerContainer from "@/components/Lobby/LobbyPlayerContainer.vue";
 import Scrollbar from "vue3-smooth-scrollbar";
 export default {
     components: {

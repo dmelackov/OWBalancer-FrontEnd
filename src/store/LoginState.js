@@ -1,5 +1,5 @@
 import { reactive, toRefs } from "vue";
-import api from "/src/api"
+import api from "@/api"
 
 const state = reactive({
     UserInfo: {},

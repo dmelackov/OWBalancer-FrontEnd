@@ -52,8 +52,8 @@
 </template>
 
 <script>
-import api from "/src/api"
-import Balancer from "./Balancer.vue";
+import api from "@/api"
+import Balancer from "@/components/Balancer/Balancer.vue";
 import * as domtoimage from "html-to-image";
 
 export default {

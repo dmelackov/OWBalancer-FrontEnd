@@ -72,7 +72,7 @@
 
 <script>
 import BalancePlayer from "./BalancePlayer.vue";
-import useLoginState from "/src/store/LoginState";
+import useLoginState from "@/store/LoginState";
 export default {
     setup() {
         const { UserInfo, Settings, updateLoginState } = useLoginState();

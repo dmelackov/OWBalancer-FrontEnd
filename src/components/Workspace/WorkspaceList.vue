@@ -15,9 +15,9 @@
 </template>
 
 <script>
-import api from "/src/api";
+import api from "@/api";
 import Scrollbar from "vue3-smooth-scrollbar";
-import WorkspaceCard from "./WorkspaceCard.vue";
+import WorkspaceCard from "@/components/Workspace/WorkspaceCard.vue";
 
 export default {
     components: {

@@ -54,9 +54,9 @@
 </template>
 
 <script>
-import api from "/src/api";
-import router from "/src/router";
-import useLoginState from "/src/store/LoginState";
+import api from "@/api";
+import router from "@/router";
+import useLoginState from "@/store/LoginState";
 export default {
     setup() {
         const { UserInfo, Settings, updateLoginState } = useLoginState();
