@@ -22,19 +22,19 @@ import useLoginState from "./store/LoginState"
         const {UserInfo} = useLoginState()
         const usrInfo = unref(UserInfo)
         if (to.matched.some((route) => route.meta.requiresAuth)) {
-            if (!usrInfo.Auth) {
+            if (!usrInfo.auth) {
                 next("/login");
                 return
             }
         }
         if (to.matched.some((route) => route.meta.requiresNotAuth)) {
-            if (usrInfo.Auth) {
+            if (usrInfo.auth) {
                 next("/");
                 return
             }
         }
         if (to.matched.some((route) => route.meta.requiresWorkspace)) {
-            if (usrInfo.Workspace == null) {
+            if (usrInfo.profile.workspace == null) {
                 next("/workspace");
                 return
             }

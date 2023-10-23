@@ -11,9 +11,9 @@ const state = reactive({
 export default function useLoginState() {
     const updateLoginState = async () => {
         state.loading = true;
-        state.perms = await api.profile_api.getPermissions()
         state.UserInfo = await api.profile_api.getCurrentUserInfo()
-        if (state.UserInfo.Auth) state.Settings = await api.profile_api.settings_api.getSettings()
+        if (state.UserInfo.auth) state.Settings = await api.profile_api.settings_api.getSettings()
+        if (state.UserInfo.auth && state.UserInfo.profile.workspace) state.perms = await api.profile_api.getPermissions()
         state.loading = false;
     }
 

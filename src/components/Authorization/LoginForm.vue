@@ -87,8 +87,8 @@ export default {
                 await this.updateLoginState();
                 router.push("/");
             } else {
-                if (ResData.status == 400 && ResData.message) {
-                    this.form_error = ResData.message;
+                if (ResData.status == 401) {
+                    this.form_error = "Invalid credentials";
                 }
             }
         },

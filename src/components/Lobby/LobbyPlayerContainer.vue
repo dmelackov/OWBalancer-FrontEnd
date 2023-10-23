@@ -11,7 +11,7 @@
                 </div>
                 <img src="/img/flex.svg" alt="" v-if="custom.isFlex" width="16" />
             </div>
-            <p class="author-right">{{ custom.Creator.Profile.username }}</p>
+            <p class="author-right">{{ custom.Creator.Profile.Username }}</p>
             <p class="X" v-show="active" @click="deleteFromLobby">✖</p>
         </div>
         <div class="lobby_menu" :style="styleObj">

@@ -9,11 +9,11 @@ class APIError {
 
 const settings_api = {
     async getSettings() {
-        let res = await axios.get("/api/profile/settings/getSettings")
+        let res = await axios.get("/api/settings/getSettings")
         return res.data
     },
     async setSettings(Settings) {
-        let res = await axios.put("/api/profile/settings/setSettings", Settings);
+        let res = await axios.post("/api/settings/setSettings", Settings);
         return res.data
     }
 }
@@ -21,52 +21,53 @@ const settings_api = {
 const auth_api = {
     async login(login, password, rememberMe) {
         let bodyFormData = new FormData();
-        bodyFormData.set("login", login);
+        bodyFormData.set("username", login);
         bodyFormData.set("password", password);
         bodyFormData.set("remember_me", rememberMe);
-        let res = await axios.post("/api/profile/auth/login", bodyFormData, {
+        let res = await axios.post("/api/auth/login", bodyFormData, {
             headers: { "Content-Type": "multipart/form-data" },
+            validateStatus: false
         });
-        return res.data
+        return res
     },
     async registration(login, password, repeatPassword) {
         let bodyFormData = new FormData();
-        bodyFormData.set("login", login);
+        bodyFormData.set("username", login);
         bodyFormData.set("password", password);
         bodyFormData.set("password_again", repeatPassword);
         let res = await axios.post(
-            "/api/profile/auth/registration",
+            "/api/auth/registration",
             bodyFormData,
-            { headers: { "Content-Type": "multipart/form-data" } }
+            { headers: { "Content-Type": "multipart/form-data" }, validateStatus: false }
         );
-        return res.data
+        return res
     },
     logout() {
-        return axios.post("/api/profile/auth/logout")
+        return axios.post("/api/auth/logout")
     }
 }
 
 const balance_api = {
     async calcBalance(balance) {
         let res = await axios.post(
-            "/api/profile/balance/calcBalance",
+            "/api/balance/calcBalance",
             balance
         );
         return res.data
     },
     async getBalances() {
-        let res = await axios.get("/api/profile/balance/getBalances");
+        let res = await axios.get("/api/balance/getBalances");
         return res.data
     }
 }
 
 const workspace_api = {
     setWorkspace(workspaceID) {
-        return axios.put("/api/profile/workspace/setWorkspace/" + workspaceID)
+        return axios.put("/api/workspace/setWorkspace/" + workspaceID)
     },
     getWorkspace(workspaceID) { },
     async getWorkspaces() {
-        let res = await axios.get("/api/profile/workspace/getWorkspaces")
+        let res = await axios.get("/api/workspace/getWorkspaces")
         return res.data
     },
     createWorkspace(name, settings) { },
@@ -86,10 +87,10 @@ const customs_api = {
         })
         return res.data;
     },
-    changeRoleSr(customID, role, rating) {
+    changeRoleSr(customID, role, sr) {
         return axios.put("/api/customs/changeRoleSr/" + customID, {
             role: role,
-            rating: rating,
+            sr: sr,
         });
     },
     deleteCustom(customID) {
@@ -107,8 +108,12 @@ const profile_api = {
         return res.data
     },
     async getPermissions() {
-        let res = await axios.get("/api/profile/getPermissions")
+        try {
+            let res = await axios.get("/api/profile/getPermissions")
         return res.data
+        } catch (error) {
+            return []
+        }
     }
 }
 

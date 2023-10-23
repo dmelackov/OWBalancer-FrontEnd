@@ -14,8 +14,8 @@
             </div>
             <div class="menu-right">
                 <div :class="{ usernameMenuOpened: menuOpened }">
-                    <p class="username" v-if="UserInfo.Auth" @click="toggleMenu">
-                        {{ UserInfo.username }}
+                    <p class="username" v-if="UserInfo.auth" @click="toggleMenu">
+                        {{ UserInfo.profile.username }}
                     </p>
                     <router-link class="link" to="/login" v-else
                         >Authorization</router-link
@@ -25,11 +25,11 @@
         </div>
     </div>
     <div class="profileMenu" v-show="menuOpened">
-        <p class="workspaceName" v-if="UserInfo.Workspace != null">
-            {{ UserInfo.Workspace.Name }}
+        <p class="workspaceName" v-if="UserInfo.profile && UserInfo.profile.workspace != null">
+            {{ UserInfo.profile.workspace.Name }}
         </p>
-        <p class="workspaceStatus" v-if="UserInfo.Workspace != null">
-            {{ UserInfo.Role }}
+        <p class="workspaceStatus" v-if="UserInfo.profile && UserInfo.profile.workspace != null">
+            {{ UserInfo.profile.role }}
         </p>
         <hr />
         <div class="linkContainer">

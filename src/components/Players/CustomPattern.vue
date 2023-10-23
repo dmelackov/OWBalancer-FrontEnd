@@ -30,7 +30,7 @@
                     </div>
                 </div>
             </div>
-            <p class="author-left">by {{ custom.Creator.Profile.username }}</p>
+            <p class="author-left">by {{ custom.Creator.Profile.Username }}</p>
         </div>
     </div>
 </template>
@@ -76,7 +76,7 @@ export default {
     },
     created() {
         this.getRolesInfo();
-        if (this.custom.Creator.Profile.ID == this.UserInfo.ID) this.isMyCustom = true;
+        if (this.custom.Creator.Profile.ID == this.UserInfo.profile.ID) this.isMyCustom = true;
     },
 };
 </script>

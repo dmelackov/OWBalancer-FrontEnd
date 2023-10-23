@@ -13,21 +13,28 @@
         <input
             type="number"
             v-model="roleInst.sr"
-            v-if="custom.editable"
+            v-if="editable"
             class="lobby_sr_input"
             @focus="$event.target.select()"
             @keydown.enter="$event.target.blur()"
             @change="setSR()"
         />
-        <p v-if="!custom.editable">{{ roleInst.sr }}</p>
+        <p v-if="!editable">{{ roleInst.sr }}</p>
     </div>
 </template>
 
 <script>
 import api from "@/api"
+import useLoginState from "@/store/LoginState";
 
 export default {
     props: ["role", "custom"],
+    setup() {
+        const { UserInfo } = useLoginState();
+        return {
+            UserInfo
+        };
+    },
     data() {
         return {
             roleInst: this.role,
@@ -72,6 +79,13 @@ export default {
             this.emitter.emit("updateLobby");
         },
     },
+    computed: {
+        editable: {
+            get(){
+                return this.isPerm('change_your_custom') && this.custom.Creator.Profile.ID == this.UserInfo.profile.ID;
+            }
+        }
+    }
 };
 </script>
 

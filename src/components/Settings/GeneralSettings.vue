@@ -82,7 +82,7 @@
                     <input
                         type="text"
                         class="custom_input"
-                        v-model="Settings.TeamNames['1']"
+                        v-model="Settings.TeamNames.t1"
                         @change="sendNewSettings"
                         @keydown.enter="$event.target.blur()"
                     />
@@ -102,7 +102,7 @@
                     <input
                         type="text"
                         class="custom_input"
-                        v-model="Settings.TeamNames['2']"
+                        v-model="Settings.TeamNames.t2"
                         @change="sendNewSettings"
                         @keydown.enter="$event.target.blur()"
                     />
