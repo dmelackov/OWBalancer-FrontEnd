@@ -72,7 +72,7 @@ export default {
     methods: {
         async submit() {
             this.form_error = "";
-            let ResData = api.profile_api.auth_api.registration(
+            let ResData = await api.profile_api.auth_api.registration(
                 this.form.login,
                 this.form.password,
                 this.form.repeat_password

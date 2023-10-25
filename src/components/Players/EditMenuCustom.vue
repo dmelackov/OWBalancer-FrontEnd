@@ -1,7 +1,7 @@
 <template>
     <div class="custom">
         <div class="left">
-            <p class="creator">By {{ custom.Creator.Profile.username }}</p>
+            <p class="creator">By {{ custom.Creator.Profile.Username }}</p>
             <div class="roles">
                 <div class="roleSr">
                     <img
@@ -92,7 +92,7 @@ export default {
     },
     created() {
         this.getRolesInfo();
-        if (this.custom.Creator.Profile.ID == this.UserInfo.ID) this.isMyCustom = true;
+        if (this.custom.Creator.Profile.ID == this.UserInfo.profile.ID) this.isMyCustom = true;
     },
 };
 </script>

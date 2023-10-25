@@ -30,10 +30,9 @@ import useLoginState from "@/store/LoginState";
 export default {
     props: ["role", "custom"],
     setup() {
-        const { UserInfo, Settings, updateLoginState } = useLoginState();
+        const { UserInfo } = useLoginState();
         return {
-            UserInfo,
-            Settings
+            UserInfo
         };
     },
     data() {
@@ -81,8 +80,10 @@ export default {
         },
     },
     computed: {
-        editable: function () {
-            return this.UserInfo.ID == this.custom.Creator.ID && this.isPerm("change_your_custom");
+        editable: {
+            get(){
+                return this.isPerm('change_your_custom') && this.custom.Creator.Profile.ID == this.UserInfo.profile.ID;
+            }
         }
     }
 };
