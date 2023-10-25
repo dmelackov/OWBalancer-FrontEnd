@@ -1,5 +1,5 @@
 <template>
-        <div :class="{workspace: true, selected: (UserInfo.Workspace != null && workspace.ID == UserInfo.Workspace.ID)}" @click="select">
+        <div :class="{workspace: true, selected: (UserInfo.profile.workspace != null && workspace.ID == UserInfo.profile.workspace.ID)}" @click="select">
             <p class="workspaceName">{{ workspace.Name }}</p>
         </div>
 </template>

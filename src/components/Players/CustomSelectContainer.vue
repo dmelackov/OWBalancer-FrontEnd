@@ -78,9 +78,14 @@ export default {
                 }
             }
             if (this.Settings.AutoCustom && myCustom) {
-                await api.lobby_apu.addToLobby(resData.id)
-                this.close();
-                this.emitter.emit("updateLobby");
+                api.lobby_api.addToLobby(myCustom.ID)
+                .then(() => {this.emitter.emit("updateLobby")})
+                .catch((res) => {
+                    let errorMessage = res.message;
+                    if (res.message == "lobby_is_overflowing") errorMessage = "Lobby is overflowing"
+                    this.$notify({ title: errorMessage, type: "error" });
+                })
+                this.close()
                 return;
             }
             this.customList = resData;

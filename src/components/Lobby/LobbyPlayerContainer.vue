@@ -1,9 +1,8 @@
 <template>
     <div class="lobby_container player_container" :class="{ error: warn, }">
-        <div class="player_inner_container" @click="open($event)" @mouseenter="active = true"
-            @mouseleave="active = false">
+        <div class="player_inner_container" @click="open($event)" @mouseleave="active = false">
             <p class="player_username">{{ custom.Player.Username }}</p>
-            <div class="sr_lobby" v-show="!active">
+            <div class="sr_lobby">
                 <div class="sr_lobby_icon" v-show="!custom.isFlex">
                     <img :src="getRoleIco(role.role)" alt="" width="15"
                         :class="{ role_icon: true, innactive: !role.active }" v-for="(role, index) in custom.Roles"
@@ -12,7 +11,7 @@
                 <img src="/img/flex.svg" alt="" v-if="custom.isFlex" width="16" />
             </div>
             <p class="author-right">{{ custom.Creator.Profile.username }}</p>
-            <p class="X" v-show="active" @click="deleteFromLobby">✖</p>
+            <p class="X" @click="deleteFromLobby">✖</p>
         </div>
         <div class="lobby_menu" :style="styleObj">
             <hr />
@@ -20,15 +19,15 @@
                 <template v-for="(role, index) in custom.Roles" :key="role">
                     <RoleComponent :role="role" :custom="custom" />
                     <p :class="{
-                        switch_button: true
-                    }" v-if="index != 2 && !custom.isFlex && isPerm('change_player_roles')" @click="swapRoles(index)">
+    switch_button: true
+}" v-if="index != 2 && !custom.isFlex && isPerm('change_player_roles')" @click="swapRoles(index)">
                         ⇆
                     </p>
                 </template>
                 <img src="/img/flex.svg" alt="" width="30" :class="{
-                    role_icon: true,
-                    innactive: !custom.isFlex,
-                }" @click="toggleFlex" />
+    role_icon: true,
+    innactive: !custom.isFlex,
+}" @click="toggleFlex" />
             </div>
         </div>
     </div>
@@ -46,8 +45,7 @@ export default {
     },
     data() {
         return {
-            menuOpened: false,
-            active: false,
+            menuOpened: false
         };
     },
     created() {
@@ -117,18 +115,37 @@ export default {
                 this.custom.Roles.forEach(element => {
                     if (element.sr == 0) warn = true;
                 });
+            } else {
+                let innactive = 0;
+                this.custom.Roles.forEach(element => {
+                    if (element.active && element.sr == 0) warn = true;
+                    innactive += element.active ? 0 : 1
+                });
+                warn = warn || (innactive == 3)
             }
-            this.custom.Roles.forEach(element => {
-                if (element.active && element.sr == 0) warn = true;
-            });
+
             return warn
         }
     },
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 @import "../../assets/css/playerContainer.css";
+
+.player_inner_container:hover {
+    .X {
+        display: block;
+    }
+
+    .sr_lobby {
+        display: none;
+    }
+
+    .author-right {
+        display: none;
+    }
+}
 
 .error {
     box-shadow: 0 1px 0 #c72727a8;
@@ -165,6 +182,7 @@ export default {
 }
 
 .X {
+    display: none;
     margin-left: auto;
     justify-content: flex-end;
     margin: 0;
