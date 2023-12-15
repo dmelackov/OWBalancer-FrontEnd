@@ -140,7 +140,7 @@ export default {
                 parseInt(ev.dataTransfer.getData("text")),
                 this.StaticID,
             ]);
-            ev.dataTransfer.clearData();
+            //ev.dataTransfer.clearData();
         },
     },
 };

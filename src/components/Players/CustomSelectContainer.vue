@@ -1,5 +1,5 @@
 <template>
-    <div id="customSelect" :class="['customSelect']" :style="{
+    <div ref="container" id="customSelect" :class="['customSelect']" :style="{
         display: this.customMenuVisible ? 'block' : 'none',
         left: left + 'px',
         top: top + 'px',
@@ -25,13 +25,16 @@
 import CustomPattern from "@/components/Players/CustomPattern.vue";
 import api from "@/api"
 import useLoginState from "@/store/LoginState";
+import { ref } from "vue"
 
 export default {
     setup() {
         const { Settings, UserInfo } = useLoginState();
+        const container = ref(null)
         return {
             Settings,
             UserInfo,
+            container
         };
     },
     components: {
@@ -100,14 +103,14 @@ export default {
         resize() {
             let lineRect = this.target.$el.getBoundingClientRect();
             let totalHeight = lineRect.y;
-            let thiselementRect = this.$el.getBoundingClientRect();
+            let thisElementRect = this.container.getBoundingClientRect();
             if (
-                lineRect.y + thiselementRect.height >
+                lineRect.y + 304 >
                 document.documentElement.clientHeight - 20
             ) {
                 totalHeight -=
                     lineRect.y +
-                    thiselementRect.height -
+                    304 -
                     document.documentElement.clientHeight +
                     20;
             }

@@ -1,49 +1,33 @@
 <template>
     <div class="balance_container">
         <Balancer :Balance="currentBalance" v-if="this.imageSrc == null" />
-        <img
-            :src="this.imageSrc"
-            alt=""
-            v-if="this.imageSrc != null"
-            id="balance_image"
-        />
-        <div
-            v-if="isPerm('do_balance')"
-            :class="{
-                balance_controlls: true,
-            }"
-            class="balance_controlls"
-        >
+        <img :src="this.imageSrc" alt="" v-if="this.imageSrc != null" id="balance_image" />
+        <div v-if="isPerm('do_balance')" :class="{
+            balance_controlls: true,
+        }" class="balance_controlls">
             <div class="balance_controlls_left">
-                <button
-                    class="btn balance_button"
-                    id="balance_button"
-                    @click="getBalances"
-                >
+                <button class="btn balance_button" :class="{ load: loading }" id="balance_button" @click="getBalances">
                     Balance teams
                 </button>
-                <button
-                    class="btn copy_button btn-submit"
-                    id="copy_button"
-                    @click="copyBalance"
-                >
+                <button class="btn copy_button btn-submit" id="copy_button" @click="copyBalance">
                     Copy
+                </button>
+                <button class="btn btn1" @click="firstTeamWin">
+                    First Team Win
+                </button>
+                <button class="btn btn1" @click="secondTeamWin">
+                    Second Team Win
+                </button>
+                <button class="btn btn1" @click="draw">
+                    Draw
                 </button>
             </div>
             <div class="balance_controlls_right">
-                <button
-                    class="btn balance_button"
-                    id="balance_button_left"
-                    @click="changeImageIndex(-1)"
-                >
+                <button class="btn balance_button balance_button_left" @click="changeImageIndex(-1)">
                     ❮
                 </button>
-                <p id="balance_count">{{ currentImageIndex }}/{{ balanceLenght }}</p>
-                <button
-                    class="btn balance_button"
-                    id="balance_button_right"
-                    @click="changeImageIndex(1)"
-                >
+                <p class="balance_count">{{ currentImageIndex }}/{{ balanceLenght }}</p>
+                <button class="btn balance_button balance_button_right" @click="changeImageIndex(1)">
                     ❱
                 </button>
             </div>
@@ -55,9 +39,22 @@
 import api from "@/api"
 import Balancer from "@/components/Balancer/Balancer.vue";
 import * as domtoimage from "html-to-image";
+import useLobbyState from "@/store/LobbyState";
+import useLoginState from "@/store/LoginState";
+import _ from "underscore"
 
 export default {
     components: { Balancer },
+    setup() {
+        const { loading, Settings } = useLoginState()
+        const { customs, updateLobbyState } = useLobbyState()
+        return {
+            loading,
+            customs,
+            Settings,
+            updateLobbyState
+        }
+    },
     data: function () {
         return {
             imageSrc: "./img/balancer_placeholder/balance_alt.png",
@@ -67,6 +64,23 @@ export default {
         };
     },
     methods: {
+        async sendResult(firstTeamPoints, secondTeamPoints) {
+            await api.game_api.sendResult(firstTeamPoints, secondTeamPoints, this.currentBalance.active, this.currentBalance.static)
+            this.$notify({
+                    title: "Result sendet to server",
+                    type: "success",
+                });
+            this.updateLobbyState();
+        },
+        firstTeamWin() {
+            this.sendResult(1, 0)
+        },
+        secondTeamWin() {
+            this.sendResult(0, 1)
+        },
+        draw(){
+            this.sendResult(1, 1)
+        },
         changeImageIndex(diff) {
             let index = parseInt(localStorage.getItem("balance_index"));
             let newIndex = index + diff;
@@ -78,7 +92,35 @@ export default {
         },
         async getBalances() {
             this.imageSrc = "/img/balancer_placeholder/balance_load.png";
-            let balance = await api.profile_api.balance_api.getBalances();
+
+            let playerAmount = this.Settings.Amount.D + this.Settings.Amount.H + this.Settings.Amount.T
+
+            let customsIDs = []
+            let randomCustomIDs = []
+            for (let i = 0; i < this.customs.length; i++) {
+                const custom = this.customs[i];
+                if (custom.checkmark) {
+                    customsIDs.push(custom.ID)
+                } else {
+                    randomCustomIDs.push(custom.ID)
+                }
+            }
+            if (customsIDs.length + randomCustomIDs.length < playerAmount * 2) {
+                this.$notify({ title: "Not enough players in lobby", type: "error" });
+                this.imageSrc = "./img/balancer_placeholder/balance_alt.png"
+                return
+            }
+
+            if (customsIDs.length > playerAmount * 2) {
+                this.$notify({ title: "Too many checkmark", type: "error" });
+                this.imageSrc = "./img/balancer_placeholder/balance_alt.png"
+                return
+            }
+
+            customsIDs = customsIDs.concat(_.sample(randomCustomIDs, playerAmount * 2 - customsIDs.length))
+
+
+            let balance = await api.profile_api.balance_api.getBalances(customsIDs);
             if (balance["result"] == 200) {
                 localStorage.setItem("balance_static", JSON.stringify(balance.static));
                 localStorage.setItem("balance_active", JSON.stringify(balance.active));
@@ -160,6 +202,7 @@ export default {
             if (resData.status != 400) {
                 return;
             }
+            console.log(resData)
             this.currentBalance.active = resData;
         },
     },
@@ -176,7 +219,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .balance_container {
     margin-right: 50px;
     margin-left: 50px;
@@ -185,73 +228,82 @@ export default {
     flex-wrap: nowrap;
     justify-content: center;
     width: 60%;
+
+    .balance_controlls {
+        border-radius: 6px;
+        padding: 8px 16px;
+        height: max-content;
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        align-content: center;
+        justify-content: space-between;
+
+        .balance_button {
+            cursor: pointer;
+            height: max-content;
+            background-color: #11161d;
+            border-radius: 6px;
+            padding: 8px 32px;
+            box-shadow: 0 1px 0 #3a4b68a8;
+
+            &:hover {
+                background-color: #242e3b;
+            }
+
+            &.load {
+                filter: brightness(80%);
+            }
+        }
+
+        .balance_controlls_right {
+            display: flex;
+            flex-wrap: nowrap;
+            align-content: center;
+            align-items: center;
+            height: max-content;
+
+            .balance_button_left .balance_button_right {
+                padding-left: 20px;
+                padding-right: 20px;
+                margin: 0;
+            }
+            .balance_count {
+                margin: 0 20px;
+            }
+        }
+
+        .balance_controlls_left {
+            display: flex;
+            align-items: center;
+            height: max-content;
+            gap: 20px;
+
+            .copy_button {
+                cursor: pointer;
+                height: max-content;
+                border-radius: 6px;
+                padding: 8px 32px;
+                box-shadow: 0 1px 0 #082c0aa8;
+            }
+
+            .btn1 {
+                cursor: pointer;
+                height: max-content;
+                border-radius: 6px;
+                padding: 8px 32px;
+                box-shadow: 0 1px 0 #3a4b68a8;
+
+                &:hover {
+                    background-color: #242e3b;
+                }
+            }
+
+        }
+    }
 }
 
 #balance_image {
     width: 100%;
-}
-
-.balance_controlls {
-    border-radius: 6px;
-    padding: 8px 16px;
-    height: max-content;
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    align-content: center;
-    justify-content: space-between;
-}
-
-.balance_button {
-    cursor: pointer;
-    height: max-content;
-    background-color: #11161d;
-    border-radius: 6px;
-    padding: 8px 32px;
-    box-shadow: 0 1px 0 #3a4b68a8;
-}
-
-.balance_button:hover {
-    background-color: #242e3b;
-}
-
-.balance_button::selection {
-    background: transparent;
-}
-
-#balance_count {
-    padding-left: 20px;
-    padding-right: 20px;
-    margin: 0;
-}
-
-#balance_count::selection {
-    background: transparent;
-}
-
-.balance_controlls_right {
-    display: flex;
-    flex-wrap: nowrap;
-    align-content: center;
-    align-items: center;
-    height: max-content;
-}
-
-.balance_controlls_left {
-    display: flex;
-    align-items: center;
-    height: max-content;
-    gap: 20px;
-}
-.balance_controlls {
-    padding: 8px 0;
-}
-
-.copy_button {
-    cursor: pointer;
-    height: max-content;
-    border-radius: 6px;
-    padding: 8px 32px;
-    box-shadow: 0 1px 0 #082c0aa8;
 }
 </style>

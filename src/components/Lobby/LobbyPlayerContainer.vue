@@ -1,7 +1,8 @@
 <template>
     <div class="lobby_container player_container" :class="{ error: warn, }">
-        <div class="player_inner_container" @click="open($event)" @mouseleave="active = false">
-            <p class="player_username">{{ custom.Player.Username }}</p>
+        <div class="player_inner_container">
+            <input type="checkbox" class="checkmark" v-model="checkmark"/>
+            <p class="player_username" @click="open($event)">{{ custom.Player.Username }}</p>
             <div class="sr_lobby">
                 <div class="sr_lobby_icon" v-show="!custom.isFlex">
                     <img :src="getRoleIco(role.role)" alt="" width="15"
@@ -10,10 +11,8 @@
                 </div>
                 <img src="/img/flex.svg" alt="" v-if="custom.isFlex" width="16" />
             </div>
-            <p class="author-right">{{ custom.Creator.Profile.username }}</p>
-            <p class="X" @click="deleteFromLobby">✖</p>
             <p class="author-right">{{ custom.Creator.Profile.Username }}</p>
-            <p class="X" v-show="active" @click="deleteFromLobby">✖</p>
+            <p class="X" @click="deleteFromLobby(this.custom.ID)">✖</p>
         </div>
         <div class="lobby_menu" :style="styleObj">
             <hr />
@@ -21,15 +20,15 @@
                 <template v-for="(role, index) in custom.Roles" :key="role">
                     <RoleComponent :role="role" :custom="custom" />
                     <p :class="{
-    switch_button: true
-}" v-if="index != 2 && !custom.isFlex && isPerm('change_player_roles')" @click="swapRoles(index)">
+                        switch_button: true
+                    }" v-if="index != 2 && !custom.isFlex && isPerm('change_player_roles')" @click="swapRoles(index)">
                         ⇆
                     </p>
                 </template>
                 <img src="/img/flex.svg" alt="" width="30" :class="{
-    role_icon: true,
-    innactive: !custom.isFlex,
-}" @click="toggleFlex" />
+                    role_icon: true,
+                    innactive: !custom.isFlex,
+                }" @click="toggleFlex" />
             </div>
         </div>
     </div>
@@ -38,12 +37,20 @@
 <script>
 import api from "@/api"
 import RoleComponent from "@/components/Lobby/RoleComponent.vue";
-import { throwStatement } from "@babel/types";
+import useLobbyState from "@/store/LobbyState";
 
 export default {
     props: ["custom"],
     components: {
         RoleComponent,
+    },
+    setup() {
+        const { customs, updateLobbyState, deleteFromLobby } = useLobbyState();
+        return {
+            customs,
+            updateLobbyState,
+            deleteFromLobby
+        };
     },
     data() {
         return {
@@ -81,10 +88,6 @@ export default {
         close() {
             this.menuOpened = false;
         },
-        async deleteFromLobby() {
-            await api.lobby_api.deleteFromLobby(this.custom.ID)
-            this.emitter.emit("updateLobby");
-        },
         async swapRoles(index) {
             if (this.custom.isFlex) return;
             let newRoleStr = "";
@@ -101,7 +104,9 @@ export default {
             this.emitter.emit("updateLobby");
         },
         async toggleFlex() {
-            await api.players_api.setFlex(this.custom.Player.ID, !this.custom.isFlex)
+            let currentFlex = this.custom.isFlex
+            this.customs[this.customs.indexOf(this.custom)].isFlex = !currentFlex
+            await api.players_api.setFlex(this.custom.Player.ID, !currentFlex)
             this.emitter.emit("updateLobby");
         },
     },
@@ -127,6 +132,14 @@ export default {
             }
 
             return warn
+        },
+        checkmark: {
+            set(v){
+                this.customs.find((el) => el.ID == this.custom.ID).checkmark = v
+            },
+            get(){
+                return this.custom.checkmark
+            }
         }
     },
 };
@@ -136,8 +149,11 @@ export default {
 @import "../../assets/css/playerContainer.css";
 
 .player_inner_container:hover {
+    
     .X {
         display: block;
+        padding-left: 10px;
+        padding-right: 10px;
     }
 
     .sr_lobby {

@@ -9,14 +9,14 @@
             <body xmlns="http://www.w3.org/1999/xhtml" width="100%">
                 <div id="balance">
                     <div class="balanceInfo">
-                        <p class="leftTeamName">{{ Settings.TeamNames[1] }}</p>
+                        <p class="leftTeamName">{{ Settings.TeamNames.t1 }}</p>
                         <div class="evaluation">
                             <div class="stat">
                                 <p class="infoStat">Evaluation:</p>
                                 <p class="statValue">{{ Balance.active.result }}</p>
                             </div>
                         </div>
-                        <p class="rightTeamName">{{ Settings.TeamNames[2] }}</p>
+                        <p class="rightTeamName">{{ Settings.TeamNames.t2 }}</p>
                     </div>
                     <div class="players">
                         <div class="playerColumnLeft">

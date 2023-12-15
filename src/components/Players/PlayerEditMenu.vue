@@ -11,11 +11,12 @@
                     }"
                     @change="change"
                     v-model="player.Username"
+                    :disabled="!canChangeNickname"
                 />
-                <button class="deleteButton btn" v-show="!deleted" @click="del">
+                <button class="deleteButton btn" v-show="!deleted && canDeletePlayer" @click="del">
                     Delete
                 </button>
-                <button class="cancelButton btn" v-show="deleted" @click="cancelDel">
+                <button class="cancelButton btn" v-show="deleted && canDeletePlayer" @click="cancelDel">
                     Cancel delete
                 </button>
             </div>
@@ -88,6 +89,12 @@ export default {
         edited() {
             return this.changed || this.deleted || this.deleteCustomList.size > 0;
         },
+        canDeletePlayer(){
+            return this.opened && (this.isPerm("delete_player") || this.isPerm("delete_your_player") && this.player.Creator.Profile.ID == this.UserInfo.profile.ID)
+        },
+        canChangeNickname(){
+            return this.opened && (this.isPerm("change_player") || this.isPerm("change_your_player") && this.player.Creator.Profile.ID == this.UserInfo.profile.ID)
+        }
     },
     methods: {
         async open(player) {
@@ -111,7 +118,7 @@ export default {
                 return;
             }
             if (this.changed) { 
-                await api.player_api.changeNickname(this.player.ID, this.player.Username)
+                await api.players_api.changeNickname(this.player.ID, this.player.Username)
                 this.emitter.emit("updateLobby");
                 this.emitter.emit("updatePlayers");
             }

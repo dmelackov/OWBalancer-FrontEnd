@@ -28,26 +28,23 @@
 import api from "@/api";
 import LobbyPlayerContainer from "@/components/Lobby/LobbyPlayerContainer.vue";
 import Scrollbar from "vue3-smooth-scrollbar";
+import useLobbyState from "@/store/LobbyState"
 export default {
     components: {
         LobbyPlayerContainer,
         Scrollbar,
     },
+    setup() {
+        const { customs, updateLobbyState, clearLobby } = useLobbyState();
 
-    data() {
+        let updateLobby = updateLobbyState;
+        let lobbyPlayerList = customs;
+
         return {
-            lobbyPlayerList: [],
+            lobbyPlayerList,
+            updateLobby,
+            clearLobby,
         };
-    },
-
-    methods: {
-        async updateLobby() {
-            this.lobbyPlayerList = await api.lobby_api.getLobby();
-        },
-        async clearLobby() {
-            await api.lobby_api.clearLobby();
-            this.emitter.emit("updateLobby");
-        },
     },
 
     computed: {

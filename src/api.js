@@ -1,7 +1,7 @@
 import axios from "axios"
 
 class APIError {
-    constructor(code, message){
+    constructor(code, message) {
         this.code = code
         this.message = message
     }
@@ -55,8 +55,8 @@ const balance_api = {
         );
         return res.data
     },
-    async getBalances() {
-        let res = await axios.get("/api/balance/getBalances");
+    async getBalances(customIDs) {
+        let res = await axios.post("/api/balance/balance", { customIDs });
         return res.data
     }
 }
@@ -110,7 +110,7 @@ const profile_api = {
     async getPermissions() {
         try {
             let res = await axios.get("/api/profile/getPermissions")
-        return res.data
+            return res.data
         } catch (error) {
             return []
         }
@@ -180,9 +180,27 @@ const lobby_api = {
     }
 }
 
+const game_api = {
+    async sendResult(firstTeamPoints, secondTeamPoints, balanceActive, balanceStatic) {
+        try {
+            let res = await axios.post("/api/game/sendResult",
+                {
+                    FirstTeamPoints: firstTeamPoints,
+                    SecondTeamPoints: secondTeamPoints,
+                    active: balanceActive,
+                    static: balanceStatic
+                })
+            return res.data
+        } catch (error) {
+            throw new APIError(error.response.status, error.response.data);
+        }
+    }
+}
+
 export default {
     profile_api,
     customs_api,
     players_api,
-    lobby_api
+    lobby_api,
+    game_api
 }
