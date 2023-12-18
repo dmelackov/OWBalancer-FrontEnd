@@ -30,3 +30,4 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: owbalancer.ddns.net/${{ secrets.DOCKER_HUB_USERNAME }}/owbalancer-dev-frontend:latest
+          driver-opts: 'image=moby/buildkit:v0.10.5'
