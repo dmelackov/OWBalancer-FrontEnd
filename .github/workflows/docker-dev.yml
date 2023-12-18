@@ -28,7 +28,6 @@ jobs:
     - name: Build and push
       uses: docker/build-push-action@v5
       with:
-          context: w.
           file: ./Dockerfile
           push: true
           tags: owbalancer.ddns.net/${{ secrets.DOCKER_HUB_USERNAME }}/owbalancer-dev-frontend:latest
